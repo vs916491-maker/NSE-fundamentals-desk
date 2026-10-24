@@ -1,3439 +1,546 @@
 {
- "page1": {
-  "len": 20,
-  "meta": {
-   "size": 20,
-   "page": -1,
-   "totalCount": 259
-  },
-  "first_sym": "RHETAN",
-  "last_sym": "OFSS",
-  "qe": [
+ "{\"index\": \"equities\", \"symbol\": \"TCS\", \"type\": \"Integrated Filing- Financials\"}": {
+  "total": 14,
+  "rows": [
    [
+    "TCS",
     "30-SEP-2026",
-    15
+    "Consolidated",
+    "Original",
+    "08-Oct-2026 22:08:10",
+    "/xbrl/INTEGRATED_FILING_INDAS_1734607_08102026100810_WEB.xml"
    ],
    [
+    "TCS",
+    "30-SEP-2026",
+    "Standalone",
+    "Original",
+    "08-Oct-2026 22:07:52",
+    "/xbrl/INTEGRATED_FILING_INDAS_1734606_08102026100748_WEB.xml"
+   ],
+   [
+    "TCS",
     "30-JUN-2026",
-    3
+    "Consolidated",
+    "Original",
+    "09-Jul-2026 18:36:20",
+    "/xbrl/INTEGRATED_FILING_INDAS_1690004_09072026063620_WEB.xml"
    ],
    [
+    "TCS",
+    "30-JUN-2026",
+    "Standalone",
+    "Original",
+    "09-Jul-2026 18:36:13",
+    "/xbrl/INTEGRATED_FILING_INDAS_1690003_09072026063612_WEB.xml"
+   ],
+   [
+    "TCS",
     "31-MAR-2026",
-    2
-   ]
-  ]
- },
- "page2": {
-  "len": 20,
-  "meta": {
-   "size": 20,
-   "page": 1,
-   "totalCount": 259
-  },
-  "first_sym": "OFSS",
-  "last_sym": "RUNWALENTR",
-  "qe": [
-   [
-    "30-SEP-2026",
-    19
+    "Consolidated",
+    "Original",
+    "09-Apr-2026 23:42:18",
+    "/xbrl/INTEGRATED_FILING_INDAS_1648408_09042026114218_WEB.xml"
    ],
    [
-    "30-JUN-2026",
-    1
-   ]
-  ]
- },
- "size100": {
-  "len": 100,
-  "meta": {
-   "size": 100,
-   "page": -1,
-   "totalCount": 259
-  },
-  "first_sym": "RHETAN",
-  "last_sym": "JINDALSTEL",
-  "qe": [
-   [
-    "30-SEP-2026",
-    92
-   ],
-   [
-    "30-JUN-2026",
-    6
-   ],
-   [
+    "TCS",
     "31-MAR-2026",
-    2
-   ]
-  ]
- },
- "size100_p2": {
-  "len": 100,
-  "meta": {
-   "size": 100,
-   "page": 1,
-   "totalCount": 259
-  },
-  "first_sym": "JLHL",
-  "last_sym": "MARATHON",
-  "qe": [
-   [
-    "30-SEP-2026",
-    96
+    "Standalone",
+    "Original",
+    "09-Apr-2026 23:41:35",
+    "/xbrl/INTEGRATED_FILING_INDAS_1648407_09042026114131_WEB.xml"
    ],
    [
-    "30-JUN-2026",
-    2
+    "TCS",
+    "31-DEC-2025",
+    "Consolidated",
+    "Original",
+    "12-Jan-2026 18:43:16",
+    "/xbrl/INTEGRATED_FILING_INDAS_1599094_12012026064316_WEB.xml"
    ],
    [
-    "31-MAR-2025",
-    1
+    "TCS",
+    "31-DEC-2025",
+    "Standalone",
+    "Original",
+    "12-Jan-2026 18:43:09",
+    "/xbrl/INTEGRATED_FILING_INDAS_1599093_12012026064308_WEB.xml"
    ],
    [
+    "TCS",
     "30-SEP-2025",
-    1
+    "Consolidated",
+    "Original",
+    "09-Oct-2025 23:56:25",
+    "/xbrl/INTEGRATED_FILING_INDAS_1543879_09102025115624_WEB.xml"
+   ],
+   [
+    "TCS",
+    "30-SEP-2025",
+    "Standalone",
+    "Original",
+    "09-Oct-2025 23:52:59",
+    "/xbrl/INTEGRATED_FILING_INDAS_1543878_09102025115254_WEB.xml"
+   ],
+   [
+    "TCS",
+    "30-JUN-2025",
+    "Consolidated",
+    "Original",
+    "10-Jul-2025 18:40:12",
+    "/xbrl/INTEGRATED_FILING_INDAS_1480382_10072025064011_WEB.xml"
+   ],
+   [
+    "TCS",
+    "30-JUN-2025",
+    "Standalone",
+    "Original",
+    "10-Jul-2025 18:37:35",
+    "/xbrl/INTEGRATED_FILING_INDAS_1480379_10072025063733_WEB.xml"
+   ],
+   [
+    "TCS",
+    "31-MAR-2025",
+    "Consolidated",
+    "Original",
+    "11-Apr-2025 07:41:38",
+    "/xbrl/INTEGRATED_FILING_INDAS_1412101_11042025074137_WEB.xml"
+   ],
+   [
+    "TCS",
+    "31-MAR-2025",
+    "Standalone",
+    "Original",
+    "11-Apr-2025 00:10:08",
+    "/xbrl/INTEGRATED_FILING_INDAS_1412100_11042025121002_WEB.xml"
+   ]
+  ],
+  "types": [
+   [
+    "Integrated Filing- Financials",
+    14
    ]
   ]
  },
- "pageNo2": {
-  "len": 20,
-  "meta": {
-   "size": 20,
-   "page": -1,
-   "totalCount": 259
-  },
-  "first_sym": "RHETAN",
-  "last_sym": "OFSS",
-  "qe": [
+ "{\"index\": \"equities\", \"symbol\": \"TCS\"}": {
+  "total": 21,
+  "rows": [
    [
+    "TCS",
     "30-SEP-2026",
-    15
+    "Consolidated",
+    "Original",
+    "08-Oct-2026 22:08:10",
+    "/xbrl/INTEGRATED_FILING_INDAS_1734607_08102026100810_WEB.xml"
    ],
    [
+    "TCS",
+    "30-SEP-2026",
+    "Standalone",
+    "Original",
+    "08-Oct-2026 22:07:52",
+    "/xbrl/INTEGRATED_FILING_INDAS_1734606_08102026100748_WEB.xml"
+   ],
+   [
+    "TCS",
     "30-JUN-2026",
-    3
+    null,
+    "New",
+    "30-Jul-2026 10:38:26",
+    "/INTEGRATED_FILING_GOVERNANCE_1704700_30072026103826_WEB.xml"
    ],
    [
+    "TCS",
+    "30-JUN-2026",
+    "Consolidated",
+    "Original",
+    "09-Jul-2026 18:36:20",
+    "/xbrl/INTEGRATED_FILING_INDAS_1690004_09072026063620_WEB.xml"
+   ],
+   [
+    "TCS",
+    "30-JUN-2026",
+    "Standalone",
+    "Original",
+    "09-Jul-2026 18:36:13",
+    "/xbrl/INTEGRATED_FILING_INDAS_1690003_09072026063612_WEB.xml"
+   ],
+   [
+    "TCS",
     "31-MAR-2026",
-    2
+    null,
+    "New",
+    "23-Apr-2026 19:48:15",
+    "/INTEGRATED_FILING_GOVERNANCE_1657992_23042026074814_WEB.xml"
+   ],
+   [
+    "TCS",
+    "31-MAR-2026",
+    "Consolidated",
+    "Original",
+    "09-Apr-2026 23:42:18",
+    "/xbrl/INTEGRATED_FILING_INDAS_1648408_09042026114218_WEB.xml"
+   ],
+   [
+    "TCS",
+    "31-MAR-2026",
+    "Standalone",
+    "Original",
+    "09-Apr-2026 23:41:35",
+    "/xbrl/INTEGRATED_FILING_INDAS_1648407_09042026114131_WEB.xml"
+   ],
+   [
+    "TCS",
+    "31-DEC-2025",
+    null,
+    "New",
+    "29-Jan-2026 12:16:56",
+    "/INTEGRATED_FILING_GOVERNANCE_1612569_29012026121656_WEB.xml"
+   ],
+   [
+    "TCS",
+    "31-DEC-2025",
+    "Consolidated",
+    "Original",
+    "12-Jan-2026 18:43:16",
+    "/xbrl/INTEGRATED_FILING_INDAS_1599094_12012026064316_WEB.xml"
+   ],
+   [
+    "TCS",
+    "31-DEC-2025",
+    "Standalone",
+    "Original",
+    "12-Jan-2026 18:43:09",
+    "/xbrl/INTEGRATED_FILING_INDAS_1599093_12012026064308_WEB.xml"
+   ],
+   [
+    "TCS",
+    "30-SEP-2025",
+    null,
+    "New",
+    "29-Oct-2025 20:33:13",
+    "/INTEGRATED_FILING_GOVERNANCE_1560680_29102025083311_WEB.xml"
+   ],
+   [
+    "TCS",
+    "30-SEP-2025",
+    "Consolidated",
+    "Original",
+    "09-Oct-2025 23:56:25",
+    "/xbrl/INTEGRATED_FILING_INDAS_1543879_09102025115624_WEB.xml"
+   ],
+   [
+    "TCS",
+    "30-SEP-2025",
+    "Standalone",
+    "Original",
+    "09-Oct-2025 23:52:59",
+    "/xbrl/INTEGRATED_FILING_INDAS_1543878_09102025115254_WEB.xml"
+   ],
+   [
+    "TCS",
+    "30-JUN-2025",
+    null,
+    "New",
+    "25-Jul-2025 15:16:24",
+    "/INTEGRATED_FILING_GOVERNANCE_1493262_25072025031622_WEB.xml"
+   ],
+   [
+    "TCS",
+    "30-JUN-2025",
+    "Consolidated",
+    "Original",
+    "10-Jul-2025 18:40:12",
+    "/xbrl/INTEGRATED_FILING_INDAS_1480382_10072025064011_WEB.xml"
+   ],
+   [
+    "TCS",
+    "30-JUN-2025",
+    "Standalone",
+    "Original",
+    "10-Jul-2025 18:37:35",
+    "/xbrl/INTEGRATED_FILING_INDAS_1480379_10072025063733_WEB.xml"
+   ],
+   [
+    "TCS",
+    "31-MAR-2025",
+    null,
+    "New",
+    "29-Apr-2025 15:37:25",
+    "/INTEGRATED_FILING_GOVERNANCE_1427605_29042025033724_WEB.xml"
+   ],
+   [
+    "TCS",
+    "31-MAR-2025",
+    "Consolidated",
+    "Original",
+    "11-Apr-2025 07:41:38",
+    "/xbrl/INTEGRATED_FILING_INDAS_1412101_11042025074137_WEB.xml"
+   ],
+   [
+    "TCS",
+    "31-MAR-2025",
+    "Standalone",
+    "Original",
+    "11-Apr-2025 00:10:08",
+    "/xbrl/INTEGRATED_FILING_INDAS_1412100_11042025121002_WEB.xml"
+   ]
+  ],
+  "types": [
+   [
+    "Integrated Filing- Financials",
+    14
+   ],
+   [
+    "Integrated Filing- Governance",
+    6
    ]
   ]
  },
- "collected": 259,
- "q2_count": 239,
- "q2_samples": [
-  {
-   "attFileSize": "0 Bytes",
-   "audited": "Audited",
-   "broadcast_Date": "23-Oct-2026 23:59:11",
-   "cmName": "Unicommerce Esolutions Limited",
-   "consolidated": "Consolidated",
-   "creation_Date": "23-Oct-2026 23:59:27",
-   "diff": "00:00:16",
-   "ixbrl": "https://nsearchives.nseindia.com/corporate/ixbrl/INTEGRATED_FILING_INDAS_203818_23102026235926_iXBRL_WEB.html",
-   "ixbrlFileSize": "77.28 KB",
-   "pdf_attach": "https://nsearchives.nseindia.com/corporate/null",
-   "qe_Date": "30-SEP-2026",
-   "revised_Date": null,
-   "revision_Remark": null,
-   "seq_Id": "203818",
-   "smName": "Unicommerce Esolutions Limited",
-   "symbol": "UNIECOM",
-   "type": "Integrated Filing- Financials",
-   "type_Sub": "Original",
-   "xbrl": "https://nsearchives.nseindia.com/corporate/xbrl/INTEGRATED_FILING_INDAS_1745177_23102026115926_WEB.xml",
-   "xbrlFileSize": "56.98 KB"
-  },
-  {
-   "attFileSize": "0 Bytes",
-   "audited": "Un-Audited",
-   "broadcast_Date": "23-Oct-2026 22:29:57",
-   "cmName": "Panache Digilife Limited",
-   "consolidated": "Consolidated",
-   "creation_Date": "23-Oct-2026 22:29:57",
-   "diff": "00:00:00",
-   "ixbrl": "https://nsearchives.nseindia.com/corporate/ixbrl/INTEGRATED_FILING_INDAS_203803_23102026222957_iXBRL_WEB.html",
-   "ixbrlFileSize": "79.28 KB",
-   "pdf_attach": null,
-   "qe_Date": "30-SEP-2026",
-   "revised_Date": null,
-   "revision_Remark": null,
-   "seq_Id": "203803",
-   "smName": "Panache Digilife Limited",
-   "symbol": "PANACHE",
-   "type": "Integrated Filing- Financials",
-   "type_Sub": "Original",
-   "xbrl": "https://nsearchives.nseindia.com/corporate/xbrl/INTEGRATED_FILING_INDAS_1745153_23102026102957_WEB.xml",
-   "xbrlFileSize": "53.01 KB"
-  },
-  {
-   "attFileSize": "0 Bytes",
-   "audited": "Un-Audited",
-   "broadcast_Date": "23-Oct-2026 22:27:08",
-   "cmName": "Panache Digilife Limited",
-   "consolidated": "Standalone",
-   "creation_Date": "23-Oct-2026 22:27:09",
-   "diff": "00:00:01",
-   "ixbrl": "https://nsearchives.nseindia.com/corporate/ixbrl/INTEGRATED_FILING_INDAS_203802_23102026222708_iXBRL_WEB.html",
-   "ixbrlFileSize": "106.74 KB",
-   "pdf_attach": null,
-   "qe_Date": "30-SEP-2026",
-   "revised_Date": null,
-   "revision_Remark": null,
-   "seq_Id": "203802",
-   "smName": "Panache Digilife Limited",
-   "symbol": "PANACHE",
-   "type": "Integrated Filing- Financials",
-   "type_Sub": "Original",
-   "xbrl": "https://nsearchives.nseindia.com/corporate/xbrl/INTEGRATED_FILING_INDAS_1745152_23102026102708_WEB.xml",
-   "xbrlFileSize": "128.36 KB"
-  }
- ],
- "xbrl_docs": {
-  "UNIECOM|https://nsearchives.nseindia.com/corporate/xbrl/INTEGRATED_FILING_INDAS_1745177_23102026115926_WEB.xml": {
-   "contexts": {
-    "OneD": [
-     "2026-07-01",
-     "2026-09-30",
-     null,
-     []
-    ],
-    "OneI": [
-     null,
-     null,
-     "2026-09-30",
-     []
-    ],
-    "PY_I": [
-     null,
-     null,
-     "2026-03-31",
-     []
-    ],
-    "FourD": [
-     "2026-04-01",
-     "2026-09-30",
-     null,
-     []
-    ],
-    "OneExpenses1D": [
-     "2026-07-01",
-     "2026-09-30",
-     null,
-     [
-      [
-       "in-capmkt:DetailsOfOtherExpensesAxis",
-       "in-capmkt:OtherExpenses1Member"
-      ]
-     ]
-    ],
-    "OneExpenses2D": [
-     "2026-07-01",
-     "2026-09-30",
-     null,
-     [
-      [
-       "in-capmkt:DetailsOfOtherExpensesAxis",
-       "in-capmkt:OtherExpenses2Member"
-      ]
-     ]
-    ],
-    "FourExpenses1D": [
-     "2026-04-01",
-     "2026-09-30",
-     null,
-     [
-      [
-       "in-capmkt:DetailsOfOtherExpensesAxis",
-       "in-capmkt:OtherExpenses1Member"
-      ]
-     ]
-    ],
-    "FourExpenses2D": [
-     "2026-04-01",
-     "2026-09-30",
-     null,
-     [
-      [
-       "in-capmkt:DetailsOfOtherExpensesAxis",
-       "in-capmkt:OtherExpenses2Member"
-      ]
-     ]
-    ],
-    "I_OtherNoncurrentFinancialAssets1": [
-     null,
-     null,
-     "2026-09-30",
-     []
-    ],
-    "I_OtherNoncurrentAssets1": [
-     null,
-     null,
-     "2026-09-30",
-     []
-    ],
-    "I_OtherCurrentFinancialAssets1": [
-     null,
-     null,
-     "2026-09-30",
-     []
-    ],
-    "I_OtherCurrentAssets1": [
-     null,
-     null,
-     "2026-09-30",
-     []
-    ],
-    "I_OtherNoncurrentFinancialLiabilities1": [
-     null,
-     null,
-     "2026-09-30",
-     []
-    ],
-    "I_OtherCurrentFinancialLiabilities1": [
-     null,
-     null,
-     "2026-09-30",
-     []
-    ],
-    "I_OtherCurrentFinancialLiabilities2": [
-     null,
-     null,
-     "2026-09-30",
-     []
-    ],
-    "I_OtherCurrentLiabilities1": [
-     null,
-     null,
-     "2026-09-30",
-     []
-    ],
-    "D_ItemsThatWillNotBeReclassifiedToProfitAndLoss11": [
-     "2026-07-01",
-     "2026-09-30",
-     null,
-     []
-    ],
-    "D_ItemsThatWillNotBeReclassifiedToProfitAndLoss12": [
-     "2026-07-01",
-     "2026-09-30",
-     null,
-     []
-    ],
-    "D_ItemsThatWillNotBeReclassifiedToProfitAndLoss41": [
-     "2026-04-01",
-     "2026-09-30",
-     null,
-     []
-    ],
-    "D_ItemsThatWillNotBeReclassifiedToProfitAndLoss42": [
-     "2026-04-01",
-     "2026-09-30",
-     null,
-     []
-    ],
-    "D_Auditor1": [
-     "2026-07-01",
-     "2026-09-30",
-     null,
-     []
-    ]
-   },
-   "facts": [
-    [
-     "in-capmkt:TypeOfCompany",
-     "OneD",
-     "Main Board"
-    ],
-    [
-     "in-capmkt:DateOfStartOfFinancialYear",
-     "OneD",
-     "2026-04-01"
-    ],
-    [
-     "in-capmkt:DateOfEndOfFinancialYear",
-     "OneD",
-     "2027-03-31"
-    ],
-    [
-     "in-capmkt:DateOfBoardMeetingWhenFinancialResultsWereApproved",
-     "OneD",
-     "2026-10-23"
-    ],
-    [
-     "in-capmkt:DateOnWhichPriorIntimationOfTheMeetingForConsideringFinancialResultsWasInformedToTheExchange",
-     "OneD",
-     "2026-10-19"
-    ],
-    [
-     "in-capmkt:LevelOfRounding",
-     "OneD",
-     "Millions"
-    ],
-    [
-     "in-capmkt:TypeOfReportingPeriod",
-     "OneD",
-     "Quarterly"
-    ],
-    [
-     "in-capmkt:IsCompanyReportingMultisegmentOrSingleSegment",
-     "OneD",
-     "Single segment"
-    ],
-    [
-     "in-capmkt:DescriptionOfSingleSegment",
-     "OneD",
-     "providing solutions related to supply chain management"
-    ],
-    [
-     "in-capmkt:DateOfStartOfBoardMeeting",
-     "OneD",
-     "2026-10-23"
-    ],
-    [
-     "in-capmkt:DateOfEndOfBoardMeeting",
-     "OneD",
-     "2026-10-23"
-    ],
-    [
-     "in-capmkt:WhetherCashFlowStatementIsApplicableOnCompany",
-     "OneD",
-     "true"
-    ],
-    [
-     "in-capmkt:TypeOfCashFlowStatement",
-     "OneD",
-     "Cash Flow Indirect"
-    ],
-    [
-     "in-capmkt:DateOfStartOfReportingPeriod",
-     "OneD",
-     "2026-07-01"
-    ],
-    [
-     "in-capmkt:DateOfEndOfReportingPeriod",
-     "OneD",
-     "2026-09-30"
-    ],
-    [
-     "in-capmkt:WhetherResultsAreAuditedOrUnaudited",
-     "OneD",
-     "Audited"
-    ],
-    [
-     "in-capmkt:NatureOfReportStandaloneConsolidated",
-     "OneD",
-     "Consolidated"
-    ],
-    [
-     "in-capmkt:RevenueFromOperations",
-     "OneD",
-     "590780000"
-    ],
-    [
-     "in-capmkt:OtherIncome",
-     "OneD",
-     "15870000"
-    ],
-    [
-     "in-capmkt:Income",
-     "OneD",
-     "606650000"
-    ],
-    [
-     "in-capmkt:EmployeeBenefitExpense",
-     "OneD",
-     "209040000"
-    ],
-    [
-     "in-capmkt:DepreciationDepletionAndAmortisationExpense",
-     "OneD",
-     "21470000"
-    ],
-    [
-     "in-capmkt:OtherExpenses",
-     "OneD",
-     "295840000"
-    ],
-    [
-     "in-capmkt:Expenses",
-     "OneD",
-     "528270000"
-    ],
-    [
-     "in-capmkt:ProfitBeforeExceptionalItemsAndTax",
-     "OneD",
-     "78380000"
-    ],
-    [
-     "in-capmkt:ExceptionalItemsBeforeTax",
-     "OneD",
-     "0"
-    ],
-    [
-     "in-capmkt:ProfitBeforeTax",
-     "OneD",
-     "78380000"
-    ],
-    [
-     "in-capmkt:CurrentTax",
-     "OneD",
-     "27990000"
-    ],
-    [
-     "in-capmkt:DeferredTax",
-     "OneD",
-     "-13520000"
-    ],
-    [
-     "in-capmkt:TaxExpense",
-     "OneD",
-     "14470000"
-    ],
-    [
-     "in-capmkt:NetMovementInRegulatoryDeferralAccountBalancesRelatedToProfitOrLossAndTheRelatedDeferredTaxMovement",
-     "OneD",
-     "0"
-    ],
-    [
-     "in-capmkt:ProfitLossForPeriodFromContinuingOperations",
-     "OneD",
-     "63910000"
-    ],
-    [
-     "in-capmkt:ProfitLossFromDiscontinuedOperationsBeforeTax",
-     "OneD",
-     "0"
-    ],
-    [
-     "in-capmkt:TaxExpenseOfDiscontinuedOperations",
-     "OneD",
-     "0"
-    ],
-    [
-     "in-capmkt:ProfitLossFromDiscontinuedOperationsAfterTax",
-     "OneD",
-     "0"
-    ],
-    [
-     "in-capmkt:ShareOfProfitLossOfAssociatesAndJointVenturesAccountedForUsingEquityMethod",
-     "OneD",
-     "0"
-    ],
-    [
-     "in-capmkt:ProfitLossForPeriod",
-     "OneD",
-     "63910000"
-    ],
-    [
-     "in-capmkt:OtherComprehensiveIncomeNetOfTaxes",
-     "OneD",
-     "270000"
-    ],
-    [
-     "in-capmkt:ComprehensiveIncomeForThePeriod",
-     "OneD",
-     "64180000"
-    ],
-    [
-     "in-capmkt:ProfitOrLossAttributableToOwnersOfParent",
-     "OneD",
-     "63910000"
-    ],
-    [
-     "in-capmkt:ProfitOrLossAttributableToNonControllingInterests",
-     "OneD",
-     "0"
-    ],
-    [
-     "in-capmkt:ComprehensiveIncomeForThePeriodAttributableToOwnersOfParent",
-     "OneD",
-     "64180000"
-    ],
-    [
-     "in-capmkt:ComprehensiveIncomeForThePeriodAttributableToOwnersOfParentNonControllingInterests",
-     "OneD",
-     "0"
-    ],
-    [
-     "in-capmkt:BasicEarningsLossPerShareFromContinuingOperations",
-     "OneD",
-     "0.54"
-    ],
-    [
-     "in-capmkt:DilutedEarningsLossPerShareFromContinuingOperations",
-     "OneD",
-     "0.54"
-    ],
-    [
-     "in-capmkt:BasicEarningsLossPerShareFromDiscontinuedOperations",
-     "OneD",
-     "0"
-    ],
-    [
-     "in-capmkt:DilutedEarningsLossPerShareFromDiscontinuedOperations",
-     "OneD",
-     "0"
-    ],
-    [
-     "in-capmkt:BasicEarningsLossPerShareFromContinuingAndDiscontinuedOperations",
-     "OneD",
-     "0.54"
-    ],
-    [
-     "in-capmkt:DilutedEarningsLossPerShareFromContinuingAndDiscontinuedOperations",
-     "OneD",
-     "0.54"
-    ],
-    [
-     "in-capmkt:DateOfStartOfReportingPeriod",
-     "FourD",
-     "2026-04-01"
-    ],
-    [
-     "in-capmkt:DateOfEndOfReportingPeriod",
-     "FourD",
-     "2026-09-30"
-    ],
-    [
-     "in-capmkt:WhetherResultsAreAuditedOrUnaudited",
-     "FourD",
-     "Audited"
-    ],
-    [
-     "in-capmkt:NatureOfReportStandaloneConsolidated",
-     "FourD",
-     "Consolidated"
-    ],
-    [
-     "in-capmkt:RevenueFromOperations",
-     "FourD",
-     "1104480000"
-    ],
-    [
-     "in-capmkt:OtherIncome",
-     "FourD",
-     "30020000"
-    ],
-    [
-     "in-capmkt:Income",
-     "FourD",
-     "1134500000"
-    ],
-    [
-     "in-capmkt:EmployeeBenefitExpense",
-     "FourD",
-     "415160000"
-    ],
-    [
-     "in-capmkt:DepreciationDepletionAndAmortisationExpense",
-     "FourD",
-     "42560000"
-    ],
-    [
-     "in-capmkt:OtherExpenses",
-     "FourD",
-     "548720000"
-    ],
-    [
-     "in-capmkt:Expenses",
-     "FourD",
-     "1010480000"
-    ],
-    [
-     "in-capmkt:ProfitBeforeExceptionalItemsAndTax",
-     "FourD",
-     "124020000"
-    ],
-    [
-     "in-capmkt:ExceptionalItemsBeforeTax",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:ProfitBeforeTax",
-     "FourD",
-     "124020000"
-    ],
-    [
-     "in-capmkt:CurrentTax",
-     "FourD",
-     "52120000"
-    ],
-    [
-     "in-capmkt:DeferredTax",
-     "FourD",
-     "-38760000"
-    ],
-    [
-     "in-capmkt:TaxExpense",
-     "FourD",
-     "13360000"
-    ],
-    [
-     "in-capmkt:NetMovementInRegulatoryDeferralAccountBalancesRelatedToProfitOrLossAndTheRelatedDeferredTaxMovement",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:ProfitLossForPeriodFromContinuingOperations",
-     "FourD",
-     "110660000"
-    ],
-    [
-     "in-capmkt:ProfitLossFromDiscontinuedOperationsBeforeTax",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:TaxExpenseOfDiscontinuedOperations",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:ProfitLossFromDiscontinuedOperationsAfterTax",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:ShareOfProfitLossOfAssociatesAndJointVenturesAccountedForUsingEquityMethod",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:ProfitLossForPeriod",
-     "FourD",
-     "110660000"
-    ],
-    [
-     "in-capmkt:OtherComprehensiveIncomeNetOfTaxes",
-     "FourD",
-     "-2300000"
-    ],
-    [
-     "in-capmkt:ComprehensiveIncomeForThePeriod",
-     "FourD",
-     "108360000"
-    ],
-    [
-     "in-capmkt:ProfitOrLossAttributableToOwnersOfParent",
-     "FourD",
-     "110660000"
-    ],
-    [
-     "in-capmkt:ProfitOrLossAttributableToNonControllingInterests",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:ComprehensiveIncomeForThePeriodAttributableToOwnersOfParent",
-     "FourD",
-     "108360000"
-    ],
-    [
-     "in-capmkt:ComprehensiveIncomeForThePeriodAttributableToOwnersOfParentNonControllingInterests",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:BasicEarningsLossPerShareFromContinuingOperations",
-     "FourD",
-     "0.93"
-    ],
-    [
-     "in-capmkt:DilutedEarningsLossPerShareFromContinuingOperations",
-     "FourD",
-     "0.93"
-    ],
-    [
-     "in-capmkt:BasicEarningsLossPerShareFromDiscontinuedOperations",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:DilutedEarningsLossPerShareFromDiscontinuedOperations",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:BasicEarningsLossPerShareFromContinuingAndDiscontinuedOperations",
-     "FourD",
-     "0.93"
-    ],
-    [
-     "in-capmkt:DilutedEarningsLossPerShareFromContinuingAndDiscontinuedOperations",
-     "FourD",
-     "0.93"
-    ],
-    [
-     "in-capmkt:DescriptionOfOtherExpenses",
-     "OneExpenses1D",
-     "Server Hosting Expense"
-    ],
-    [
-     "in-capmkt:OtherExpenses",
-     "OneExpenses1D",
-     "19100000"
-    ],
-    [
-     "in-capmkt:DescriptionOfOtherExpenses",
-     "OneExpenses2D",
-     "Other Expenses"
-    ],
-    [
-     "in-capmkt:OtherExpenses",
-     "OneExpenses2D",
-     "276740000"
-    ],
-    [
-     "in-capmkt:DescriptionOfOtherExpenses",
-     "FourExpenses1D",
-     "Server Hosting Expense"
-    ],
-    [
-     "in-capmkt:OtherExpenses",
-     "FourExpenses1D",
-     "36880000"
-    ],
-    [
-     "in-capmkt:DescriptionOfOtherExpenses",
-     "FourExpenses2D",
-     "Other Expenses"
-    ],
-    [
-     "in-capmkt:OtherExpenses",
-     "FourExpenses2D",
-     "511840000"
-    ],
-    [
-     "in-capmkt:DeferredTaxAssetsNet",
-     "OneI",
-     "19780000"
-    ],
-    [
-     "in-capmkt:RegulatoryDeferralAccountDebitBalancesAndRelatedDeferredTaxAssets",
-     "OneI",
-     "0"
-    ],
-    [
-     "in-capmkt:DeferredTaxLiabilitiesNet",
-     "OneI",
-     "33730000"
-    ],
-    [
-     "in-capmkt:CurrentTaxLiabilities",
-     "OneI",
-     "54190000"
-    ],
-    [
-     "in-capmkt:RegulatoryDeferralAccountCreditBalancesAndRelatedDeferredTaxLiability",
-     "OneI",
-     "0"
-    ],
-    [
-     "in-capmkt:AdjustmentsForDepreciationAndAmortisationExpense",
-     "FourD",
-     "42560000"
-    ],
-    [
-     "in-capmkt:AdjustmentsForImpairmentLossReversalOfImpairmentLossRecognisedInProfitOrLoss",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:AdjustmentsForDividendIncome",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:AdjustmentsForInterestIncome",
-     "FourD",
-     "18920000"
-    ],
-    [
-     "in-capmkt:AdjustmentsForUndistributedProfitsOfAssociates",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:OtherAdjustmentsToReconcileProfitLoss",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:ShareOfProfitAndLossFromPartnershipFirmOrAssociationOfPersonsOrLimitedLiabilityPartnerships",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:AdjustmentsForReconcileProfitLoss",
-     "FourD",
-     "144530000"
-    ],
-    [
-     "in-capmkt:IncomeTaxesPaidRefundClassifiedAsOperatingActivities",
-     "FourD",
-     "29760000"
-    ],
-    [
-     "in-capmkt:CashReceiptsFromShareOfProfitsOfPartnershipFirmOrAssociationOfPersonsOrLimitedLiabilityPartnerships",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:IncomeTaxesPaidRefundClassifiedAsInvestingActivities",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:IncomeTaxesPaidRefundClassifiedAsFinancingActivities",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:DescriptionOfItemThatWillNotBeReclassifiedToProfitAndLoss",
-     "D_ItemsThatWillNotBeReclassifiedToProfitAndLoss11",
-     "Re-measurement gain on defined benefit plans"
-    ],
-    [
-     "in-capmkt:AmountOfItemThatWillNotBeReclassifiedToProfitAndLoss",
-     "D_ItemsThatWillNotBeReclassifiedToProfitAndLoss11",
-     "310000"
-    ],
-    [
-     "in-capmkt:DescriptionOfItemThatWillNotBeReclassifiedToProfitAndLoss",
-     "D_ItemsThatWillNotBeReclassifiedToProfitAndLoss12",
-     "Income tax effect"
-    ],
-    [
-     "in-capmkt:AmountOfItemThatWillNotBeReclassifiedToProfitAndLoss",
-     "D_ItemsThatWillNotBeReclassifiedToProfitAndLoss12",
-     "-40000"
-    ],
-    [
-     "in-capmkt:AmountOfItemThatWillNotBeReclassifiedToProfitAndLoss",
-     "OneD",
-     "270000"
-    ],
-    [
-     "in-capmkt:DescriptionOfItemThatWillNotBeReclassifiedToProfitAndLoss",
-     "D_ItemsThatWillNotBeReclassifiedToProfitAndLoss41",
-     "Re-measurement gain on defined benefit plans"
-    ],
-    [
-     "in-capmkt:AmountOfItemThatWillNotBeReclassifiedToProfitAndLoss",
-     "D_ItemsThatWillNotBeReclassifiedToProfitAndLoss41",
-     "-2960000"
-    ],
-    [
-     "in-capmkt:DescriptionOfItemThatWillNotBeReclassifiedToProfitAndLoss",
-     "D_ItemsThatWillNotBeReclassifiedToProfitAndLoss42",
-     "Income tax effect"
-    ],
-    [
-     "in-capmkt:AmountOfItemThatWillNotBeReclassifiedToProfitAndLoss",
-     "D_ItemsThatWillNotBeReclassifiedToProfitAndLoss42",
-     "660000"
-    ],
-    [
-     "in-capmkt:AmountOfItemThatWillNotBeReclassifiedToProfitAndLoss",
-     "FourD",
-     "-2300000"
-    ],
-    [
-     "in-capmkt:IncomeTaxRelatingToItemsThatWillNotBeReclassifiedToProfitOrLoss",
-     "OneD",
-     "0"
-    ],
-    [
-     "in-capmkt:IncomeTaxRelatingToItemsThatWillNotBeReclassifiedToProfitOrLoss",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:OtherComprehensiveIncome",
-     "OneD",
-     "270000"
-    ],
-    [
-     "in-capmkt:OtherComprehensiveIncome",
-     "FourD",
-     "-2300000"
-    ],
-    [
-     "in-capmkt:WhetherResultsAreAuditedOrUnauditedForImpactOfAuditQualification",
-     "OneD",
-     "Audited"
-    ],
-    [
-     "in-capmkt:WhetherTheFirmHoldsAValidPeerReviewCertificateIssuedByPeerReviewBoardOfICAI",
-     "D_Auditor1",
-     "true"
-    ],
-    [
-     "in-capmkt:ValidityDateOfCertificate",
-     "D_Auditor1",
-     "2026-11-30"
-    ]
+ "{\"index\": \"equities\", \"symbol\": \"TCS\", \"type\": \"Integrated Filing- Financials\", \"from_date\": \"01-01-2025\", \"to_date\": \"24-10-2026\", \"size\": 100}": {
+  "total": 14,
+  "rows": [
+   [
+    "TCS",
+    "30-SEP-2026",
+    "Consolidated",
+    "Original",
+    "08-Oct-2026 22:08:10",
+    "/xbrl/INTEGRATED_FILING_INDAS_1734607_08102026100810_WEB.xml"
    ],
-   "len": 58348
-  },
-  "CSBBANK|https://nsearchives.nseindia.com/corporate/xbrl/INTEGRATED_FILING_BANKING_1745095_23102026083629_WEB.xml": {
-   "contexts": {
-    "OneD": [
-     "2026-07-01",
-     "2026-09-30",
-     null,
-     []
-    ],
-    "OneI": [
-     null,
-     null,
-     "2026-09-30",
-     []
-    ],
-    "PY_I": [
-     null,
-     null,
-     "2026-03-31",
-     []
-    ],
-    "FourD": [
-     "2026-04-01",
-     "2026-09-30",
-     null,
-     []
-    ],
-    "OneExpenses1D": [
-     "2026-07-01",
-     "2026-09-30",
-     null,
-     [
-      [
-       "in-capmkt:DetailsOfOtherOperatingExpensesAxis",
-       "in-capmkt:OtherOperatingExpenses1Member"
-      ]
-     ]
-    ],
-    "FourExpenses1D": [
-     "2026-04-01",
-     "2026-09-30",
-     null,
-     [
-      [
-       "in-capmkt:DetailsOfOtherOperatingExpensesAxis",
-       "in-capmkt:OtherOperatingExpenses1Member"
-      ]
-     ]
-    ],
-    "I_OtherLiabilitiesAndProvisions1": [
-     null,
-     null,
-     "2026-09-30",
-     []
-    ],
-    "I_OtherAssets1": [
-     null,
-     null,
-     "2026-09-30",
-     []
-    ],
-    "OneReportable11D": [
-     "2026-07-01",
-     "2026-09-30",
-     null,
-     [
-      [
-       "in-capmkt:ReportableSegmentsAxis",
-       "in-capmkt:ReportableSegments1Member"
-      ]
-     ]
-    ],
-    "OneReportable12D": [
-     "2026-07-01",
-     "2026-09-30",
-     null,
-     [
-      [
-       "in-capmkt:ReportableSegmentsAxis",
-       "in-capmkt:ReportableSegments2Member"
-      ]
-     ]
-    ],
-    "OneReportable13D": [
-     "2026-07-01",
-     "2026-09-30",
-     null,
-     [
-      [
-       "in-capmkt:ReportableSegmentsAxis",
-       "in-capmkt:ReportableSegments3Member"
-      ]
-     ]
-    ],
-    "OneReportable14D": [
-     "2026-07-01",
-     "2026-09-30",
-     null,
-     [
-      [
-       "in-capmkt:ReportableSegmentsAxis",
-       "in-capmkt:ReportableSegments4Member"
-      ]
-     ]
-    ],
-    "FourReportable11D": [
-     "2026-04-01",
-     "2026-09-30",
-     null,
-     [
-      [
-       "in-capmkt:ReportableSegmentsAxis",
-       "in-capmkt:ReportableSegments1Member"
-      ]
-     ]
-    ],
-    "FourReportable12D": [
-     "2026-04-01",
-     "2026-09-30",
-     null,
-     [
-      [
-       "in-capmkt:ReportableSegmentsAxis",
-       "in-capmkt:ReportableSegments2Member"
-      ]
-     ]
-    ],
-    "FourReportable13D": [
-     "2026-04-01",
-     "2026-09-30",
-     null,
-     [
-      [
-       "in-capmkt:ReportableSegmentsAxis",
-       "in-capmkt:ReportableSegments3Member"
-      ]
-     ]
-    ],
-    "FourReportable14D": [
-     "2026-04-01",
-     "2026-09-30",
-     null,
-     [
-      [
-       "in-capmkt:ReportableSegmentsAxis",
-       "in-capmkt:ReportableSegments4Member"
-      ]
-     ]
-    ],
-    "OneReportable21D": [
-     "2026-07-01",
-     "2026-09-30",
-     null,
-     [
-      [
-       "in-capmkt:ReportableSegmentsFinanceCostsAxis",
-       "in-capmkt:ReportableSegments1Member"
-      ]
-     ]
-    ],
-    "OneReportable22D": [
-     "2026-07-01",
-     "2026-09-30",
-     null,
-     [
-      [
-       "in-capmkt:ReportableSegmentsFinanceCostsAxis",
-       "in-capmkt:ReportableSegments2Member"
-      ]
-     ]
-    ],
-    "OneReportable23D": [
-     "2026-07-01",
-     "2026-09-30",
-     null,
-     [
-      [
-       "in-capmkt:ReportableSegmentsFinanceCostsAxis",
-       "in-capmkt:ReportableSegments3Member"
-      ]
-     ]
-    ],
-    "OneReportable24D": [
-     "2026-07-01",
-     "2026-09-30",
-     null,
-     [
-      [
-       "in-capmkt:ReportableSegmentsFinanceCostsAxis",
-       "in-capmkt:ReportableSegments4Member"
-      ]
-     ]
-    ],
-    "FourReportable21D": [
-     "2026-04-01",
-     "2026-09-30",
-     null,
-     [
-      [
-       "in-capmkt:ReportableSegmentsFinanceCostsAxis",
-       "in-capmkt:ReportableSegments1Member"
-      ]
-     ]
-    ],
-    "FourReportable22D": [
-     "2026-04-01",
-     "2026-09-30",
-     null,
-     [
-      [
-       "in-capmkt:ReportableSegmentsFinanceCostsAxis",
-       "in-capmkt:ReportableSegments2Member"
-      ]
-     ]
-    ],
-    "FourReportable23D": [
-     "2026-04-01",
-     "2026-09-30",
-     null,
-     [
-      [
-       "in-capmkt:ReportableSegmentsFinanceCostsAxis",
-       "in-capmkt:ReportableSegments3Member"
-      ]
-     ]
-    ],
-    "FourReportable24D": [
-     "2026-04-01",
-     "2026-09-30",
-     null,
-     [
-      [
-       "in-capmkt:ReportableSegmentsFinanceCostsAxis",
-       "in-capmkt:ReportableSegments4Member"
-      ]
-     ]
-    ],
-    "OneReportable31D": [
-     "2026-07-01",
-     "2026-09-30",
-     null,
-     [
-      [
-       "in-capmkt:ReportableSegmentAssetsAxis",
-       "in-capmkt:ReportableSegments1Member"
-      ]
-     ]
-    ],
-    "OneReportable31I": [
-     null,
-     null,
-     "2026-09-30",
-     [
-      [
-       "in-capmkt:ReportableSegmentAssetsAxis",
-       "in-capmkt:ReportableSegments1Member"
-      ]
-     ]
-    ],
-    "OneReportable32D": [
-     "2026-07-01",
-     "2026-09-30",
-     null,
-     [
-      [
-       "in-capmkt:ReportableSegmentAssetsAxis",
-       "in-capmkt:ReportableSegments2Member"
-      ]
-     ]
-    ],
-    "OneReportable32I": [
-     null,
-     null,
-     "2026-09-30",
-     [
-      [
-       "in-capmkt:ReportableSegmentAssetsAxis",
-       "in-capmkt:ReportableSegments2Member"
-      ]
-     ]
-    ],
-    "OneReportable33D": [
-     "2026-07-01",
-     "2026-09-30",
-     null,
-     [
-      [
-       "in-capmkt:ReportableSegmentAssetsAxis",
-       "in-capmkt:ReportableSegments3Member"
-      ]
-     ]
-    ],
-    "OneReportable33I": [
-     null,
-     null,
-     "2026-09-30",
-     [
-      [
-       "in-capmkt:ReportableSegmentAssetsAxis",
-       "in-capmkt:ReportableSegments3Member"
-      ]
-     ]
-    ],
-    "OneReportable34D": [
-     "2026-07-01",
-     "2026-09-30",
-     null,
-     [
-      [
-       "in-capmkt:ReportableSegmentAssetsAxis",
-       "in-capmkt:ReportableSegments4Member"
-      ]
-     ]
-    ],
-    "OneReportable34I": [
-     null,
-     null,
-     "2026-09-30",
-     [
-      [
-       "in-capmkt:ReportableSegmentAssetsAxis",
-       "in-capmkt:ReportableSegments4Member"
-      ]
-     ]
-    ],
-    "OneReportable41D": [
-     "2026-07-01",
-     "2026-09-30",
-     null,
-     [
-      [
-       "in-capmkt:ReportableSegmentLiabilitiesAxis",
-       "in-capmkt:ReportableSegments1Member"
-      ]
-     ]
-    ],
-    "OneReportable41I": [
-     null,
-     null,
-     "2026-09-30",
-     [
-      [
-       "in-capmkt:ReportableSegmentLiabilitiesAxis",
-       "in-capmkt:ReportableSegments1Member"
-      ]
-     ]
-    ],
-    "OneReportable42D": [
-     "2026-07-01",
-     "2026-09-30",
-     null,
-     [
-      [
-       "in-capmkt:ReportableSegmentLiabilitiesAxis",
-       "in-capmkt:ReportableSegments2Member"
-      ]
-     ]
-    ],
-    "OneReportable42I": [
-     null,
-     null,
-     "2026-09-30",
-     [
-      [
-       "in-capmkt:ReportableSegmentLiabilitiesAxis",
-       "in-capmkt:ReportableSegments2Member"
-      ]
-     ]
-    ],
-    "OneReportable43D": [
-     "2026-07-01",
-     "2026-09-30",
-     null,
-     [
-      [
-       "in-capmkt:ReportableSegmentLiabilitiesAxis",
-       "in-capmkt:ReportableSegments3Member"
-      ]
-     ]
-    ],
-    "OneReportable43I": [
-     null,
-     null,
-     "2026-09-30",
-     [
-      [
-       "in-capmkt:ReportableSegmentLiabilitiesAxis",
-       "in-capmkt:ReportableSegments3Member"
-      ]
-     ]
-    ],
-    "OneReportable44D": [
-     "2026-07-01",
-     "2026-09-30",
-     null,
-     [
-      [
-       "in-capmkt:ReportableSegmentLiabilitiesAxis",
-       "in-capmkt:ReportableSegments4Member"
-      ]
-     ]
-    ],
-    "OneReportable44I": [
-     null,
-     null,
-     "2026-09-30",
-     [
-      [
-       "in-capmkt:ReportableSegmentLiabilitiesAxis",
-       "in-capmkt:ReportableSegments4Member"
-      ]
-     ]
-    ],
-    "D_RelatedPartyTransaction1": [
-     "2026-07-01",
-     "2026-09-30",
-     null,
-     []
-    ],
-    "I_RelatedPartyTransaction_PY1": [
-     null,
-     null,
-     "2026-06-30",
-     []
-    ],
-    "I_RelatedPartyTransaction1": [
-     null,
-     null,
-     "2026-09-30",
-     []
-    ],
-    "D_RelatedPartyTransaction2": [
-     "2026-07-01",
-     "2026-09-30",
-     null,
-     []
-    ],
-    "I_RelatedPartyTransaction_PY2": [
-     null,
-     null,
-     "2026-06-30",
-     []
-    ],
-    "I_RelatedPartyTransaction2": [
-     null,
-     null,
-     "2026-09-30",
-     []
-    ],
-    "D_RelatedPartyTransaction3": [
-     "2026-07-01",
-     "2026-09-30",
-     null,
-     []
-    ],
-    "I_RelatedPartyTransaction_PY3": [
-     null,
-     null,
-     "2026-06-30",
-     []
-    ],
-    "I_RelatedPartyTransaction3": [
-     null,
-     null,
-     "2026-09-30",
-     []
-    ],
-    "D_RelatedPartyTransaction4": [
-     "2026-07-01",
-     "2026-09-30",
-     null,
-     []
-    ],
-    "I_RelatedPartyTransaction_PY4": [
-     null,
-     null,
-     "2026-06-30",
-     []
-    ],
-    "I_RelatedPartyTransaction4": [
-     null,
-     null,
-     "2026-09-30",
-     []
-    ],
-    "D_RelatedPartyTransaction5": [
-     "2026-07-01",
-     "2026-09-30",
-     null,
-     []
-    ],
-    "I_RelatedPartyTransaction_PY5": [
-     null,
-     null,
-     "2026-06-30",
-     []
-    ],
-    "I_RelatedPartyTransaction5": [
-     null,
-     null,
-     "2026-09-30",
-     []
-    ],
-    "D_Auditor1": [
-     "2026-07-01",
-     "2026-09-30",
-     null,
-     []
-    ],
-    "D_Auditor2": [
-     "2026-07-01",
-     "2026-09-30",
-     null,
-     []
-    ]
-   },
-   "facts": [
-    [
-     "in-capmkt:DateOfStartOfFinancialYear",
-     "OneD",
-     "2026-04-01"
-    ],
-    [
-     "in-capmkt:DateOfEndOfFinancialYear",
-     "OneD",
-     "2027-03-31"
-    ],
-    [
-     "in-capmkt:DateOfBoardMeetingWhenFinancialResultsWereApproved",
-     "OneD",
-     "2026-10-23"
-    ],
-    [
-     "in-capmkt:DateOnWhichPriorIntimationOfTheMeetingForConsideringFinancialResultsWasInformedToTheExchange",
-     "OneD",
-     "2026-10-05"
-    ],
-    [
-     "in-capmkt:LevelOfRounding",
-     "OneD",
-     "Lakhs"
-    ],
-    [
-     "in-capmkt:TypeOfReportingPeriod",
-     "OneD",
-     "Quarterly"
-    ],
-    [
-     "in-capmkt:IsCompanyReportingMultisegmentOrSingleSegment",
-     "OneD",
-     "Multi segment"
-    ],
-    [
-     "in-capmkt:DateOfStartOfBoardMeeting",
-     "OneD",
-     "2026-10-23"
-    ],
-    [
-     "in-capmkt:DateOfEndOfBoardMeeting",
-     "OneD",
-     "2026-10-23"
-    ],
-    [
-     "in-capmkt:WhetherCashFlowStatementIsApplicableOnCompany",
-     "OneD",
-     "true"
-    ],
-    [
-     "in-capmkt:TypeOfCashFlowStatement",
-     "OneD",
-     "Cash Flow Indirect"
-    ],
-    [
-     "in-capmkt:WhetherTheCompanyHasAnyRelatedParty",
-     "OneD",
-     "true"
-    ],
-    [
-     "in-capmkt:WhetherTheCompanyHasEnteredIntoAnyRelatedPartyTransactionDuringThePeriod",
-     "OneD",
-     "true"
-    ],
-    [
-     "in-capmkt:WeDeclareThatTheScheduledCommercialBankAsPerRBICircularRBIDBR20151619Dated03March2016HasAllowedAdditionalInterestOfOnePerCentPerAnnumOverAndAboveTheRateOfInterestMentionedInTheScheduleOfInterestRatesOnSavings",
-     "OneD",
-     "Yes"
-    ],
-    [
-     "in-capmkt:WhetherTheCompanyIsAHighValueDebtListedEntityAccordingTo1AOfRegulation15",
-     "OneI",
-     "false"
-    ],
-    [
-     "in-capmkt:WhetherTheUpdatedRelatedPartyTransactionsPolicyHasBeenUploadedOnTheWebsiteOfTheCompanyInComplianceWithRegulation23",
-     "OneD",
-     "true"
-    ],
-    [
-     "in-capmkt:LatestDateOnWhichRelatedPartyTransactionsPolicyIsUpdated",
-     "OneD",
-     "2025-09-26"
-    ],
-    [
-     "in-capmkt:WhetherStatementOnDeviationOrVariationForProceedsOfPublicIssueOrRightIssueOrPreferentialIssueOrQIPEtcIsApplicableToTheCompanyForTheCurrentQuarter",
-     "OneD",
-     "false"
-    ],
-    [
-     "in-capmkt:WhetherTheDisclosureForTheDefaultOnLoansAndDebtSecuritiesIsApplicableToTheEntity",
-     "OneD",
-     "false"
-    ],
-    [
-     "in-capmkt:DateOfStartOfReportingPeriod",
-     "OneD",
-     "2026-07-01"
-    ],
-    [
-     "in-capmkt:DateOfEndOfReportingPeriod",
-     "OneD",
-     "2026-09-30"
-    ],
-    [
-     "in-capmkt:WhetherResultsAreAuditedOrUnaudited",
-     "OneD",
-     "Unaudited"
-    ],
-    [
-     "in-capmkt:NatureOfReportStandaloneConsolidated",
-     "OneD",
-     "Standalone"
-    ],
-    [
-     "in-capmkt:RevenueOnInvestments",
-     "OneD",
-     "2108700000"
-    ],
-    [
-     "in-capmkt:OtherIncome",
-     "OneD",
-     "2735100000"
-    ],
-    [
-     "in-capmkt:Income",
-     "OneD",
-     "16124800000"
-    ],
-    [
-     "in-capmkt:OtherOperatingExpenses",
-     "OneD",
-     "2414300000"
-    ],
-    [
-     "in-capmkt:OperatingExpenses",
-     "OneD",
-     "5076800000"
-    ],
-    [
-     "in-capmkt:OperatingProfitBeforeProvisionAndContingencies",
-     "OneD",
-     "2757600000"
-    ],
-    [
-     "in-capmkt:ProvisionsOtherThanTaxAndContingencies",
-     "OneD",
-     "300900000"
-    ],
-    [
-     "in-capmkt:ProfitLossFromOrdinaryActivitiesBeforeTax",
-     "OneD",
-     "2456700000"
-    ],
-    [
-     "in-capmkt:TaxExpense",
-     "OneD",
-     "629500000"
-    ],
-    [
-     "in-capmkt:ProfitLossFromOrdinaryActivitiesAfterTax",
-     "OneD",
-     "1827200000"
-    ],
-    [
-     "in-capmkt:ProfitLossForThePeriod",
-     "OneD",
-     "1827200000"
-    ],
-    [
-     "in-capmkt:ProfitLossAfterTaxesMinorityInterestAndShareOfProfitLossOfAssociates",
-     "OneD",
-     "1827200000"
-    ],
-    [
-     "in-capmkt:BasicEarningsPerShareBeforeExtraordinaryItems",
-     "OneD",
-     "10.53"
-    ],
-    [
-     "in-capmkt:DilutedEarningsPerShareBeforeExtraordinaryItems",
-     "OneD",
-     "10.53"
-    ],
-    [
-     "in-capmkt:BasicEarningsPerShareAfterExtraordinaryItems",
-     "OneD",
-     "10.53"
-    ],
-    [
-     "in-capmkt:DilutedEarningsPerShareAfterExtraordinaryItems",
-     "OneD",
-     "10.53"
-    ],
-    [
-     "in-capmkt:DateOfStartOfReportingPeriod",
-     "FourD",
-     "2026-04-01"
-    ],
-    [
-     "in-capmkt:DateOfEndOfReportingPeriod",
-     "FourD",
-     "2026-09-30"
-    ],
-    [
-     "in-capmkt:WhetherResultsAreAuditedOrUnaudited",
-     "FourD",
-     "Unaudited"
-    ],
-    [
-     "in-capmkt:NatureOfReportStandaloneConsolidated",
-     "FourD",
-     "Standalone"
-    ],
-    [
-     "in-capmkt:RevenueOnInvestments",
-     "FourD",
-     "4152100000"
-    ],
-    [
-     "in-capmkt:OtherIncome",
-     "FourD",
-     "5022600000"
-    ],
-    [
-     "in-capmkt:Income",
-     "FourD",
-     "31285500000"
-    ],
-    [
-     "in-capmkt:OtherOperatingExpenses",
-     "FourD",
-     "4455100000"
-    ],
-    [
-     "in-capmkt:OperatingExpenses",
-     "FourD",
-     "9643200000"
-    ],
-    [
-     "in-capmkt:OperatingProfitBeforeProvisionAndContingencies",
-     "FourD",
-     "5265300000"
-    ],
-    [
-     "in-capmkt:ProvisionsOtherThanTaxAndContingencies",
-     "FourD",
-     "791200000"
-    ],
-    [
-     "in-capmkt:ProfitLossFromOrdinaryActivitiesBeforeTax",
-     "FourD",
-     "4474100000"
-    ],
-    [
-     "in-capmkt:TaxExpense",
-     "FourD",
-     "1146500000"
-    ],
-    [
-     "in-capmkt:ProfitLossFromOrdinaryActivitiesAfterTax",
-     "FourD",
-     "3327600000"
-    ],
-    [
-     "in-capmkt:ProfitLossForThePeriod",
-     "FourD",
-     "3327600000"
-    ],
-    [
-     "in-capmkt:ProfitLossAfterTaxesMinorityInterestAndShareOfProfitLossOfAssociates",
-     "FourD",
-     "3327600000"
-    ],
-    [
-     "in-capmkt:BasicEarningsPerShareBeforeExtraordinaryItems",
-     "FourD",
-     "19.18"
-    ],
-    [
-     "in-capmkt:DilutedEarningsPerShareBeforeExtraordinaryItems",
-     "FourD",
-     "19.18"
-    ],
-    [
-     "in-capmkt:BasicEarningsPerShareAfterExtraordinaryItems",
-     "FourD",
-     "19.18"
-    ],
-    [
-     "in-capmkt:DilutedEarningsPerShareAfterExtraordinaryItems",
-     "FourD",
-     "19.18"
-    ],
-    [
-     "in-capmkt:DescriptionOfOperatingExpenses",
-     "OneExpenses1D",
-     "Other operating expense"
-    ],
-    [
-     "in-capmkt:OtherOperatingExpenses",
-     "OneExpenses1D",
-     "2414300000"
-    ],
-    [
-     "in-capmkt:DescriptionOfOperatingExpenses",
-     "FourExpenses1D",
-     "Other operating expense"
-    ],
-    [
-     "in-capmkt:OtherOperatingExpenses",
-     "FourExpenses1D",
-     "4455100000"
-    ],
-    [
-     "in-capmkt:DescriptionOfReportableSegment",
-     "OneReportable11D",
-     "Treasury"
-    ],
-    [
-     "in-capmkt:SegmentRevenue",
-     "OneReportable11D",
-     "2326700000"
-    ],
-    [
-     "in-capmkt:DescriptionOfReportableSegment",
-     "OneReportable12D",
-     "Corporate/Wholesale Banking"
-    ],
-    [
-     "in-capmkt:SegmentRevenue",
-     "OneReportable12D",
-     "4260500000"
-    ],
-    [
-     "in-capmkt:DescriptionOfReportableSegment",
-     "OneReportable13D",
-     "Retail Banking"
-    ],
-    [
-     "in-capmkt:SegmentRevenue",
-     "OneReportable13D",
-     "8980800000"
-    ],
-    [
-     "in-capmkt:DescriptionOfReportableSegment",
-     "OneReportable14D",
-     "Other Banking Operations"
-    ],
-    [
-     "in-capmkt:SegmentRevenue",
-     "OneReportable14D",
-     "556800000"
-    ],
-    [
-     "in-capmkt:DescriptionOfReportableSegment",
-     "FourReportable11D",
-     "Treasury"
-    ],
-    [
-     "in-capmkt:SegmentRevenue",
-     "FourReportable11D",
-     "4683100000"
-    ],
-    [
-     "in-capmkt:DescriptionOfReportableSegment",
-     "FourReportable12D",
-     "Corporate/Wholesale Banking"
-    ],
-    [
-     "in-capmkt:SegmentRevenue",
-     "FourReportable12D",
-     "8082500000"
-    ],
-    [
-     "in-capmkt:DescriptionOfReportableSegment",
-     "FourReportable13D",
-     "Retail Banking"
-    ],
-    [
-     "in-capmkt:SegmentRevenue",
-     "FourReportable13D",
-     "17602400000"
-    ],
-    [
-     "in-capmkt:DescriptionOfReportableSegment",
-     "FourReportable14D",
-     "Other Banking Operations"
-    ],
-    [
-     "in-capmkt:SegmentRevenue",
-     "FourReportable14D",
-     "917500000"
-    ],
-    [
-     "in-capmkt:SegmentRevenue",
-     "OneD",
-     "16124800000"
-    ],
-    [
-     "in-capmkt:SegmentRevenue",
-     "FourD",
-     "31285500000"
-    ],
-    [
-     "in-capmkt:InterSegmentRevenue",
-     "OneD",
-     "0"
-    ],
-    [
-     "in-capmkt:InterSegmentRevenue",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:SegmentRevenueFromOperations",
-     "OneD",
-     "16124800000"
-    ],
-    [
-     "in-capmkt:SegmentRevenueFromOperations",
-     "FourD",
-     "31285500000"
-    ],
-    [
-     "in-capmkt:DescriptionOfReportableSegment",
-     "OneReportable21D",
-     "Treasury"
-    ],
-    [
-     "in-capmkt:SegmentProfitLossBeforeTaxAndFinanceCosts",
-     "OneReportable21D",
-     "31200000"
-    ],
-    [
-     "in-capmkt:DescriptionOfReportableSegment",
-     "OneReportable22D",
-     "Corporate/Wholesale Banking"
-    ],
-    [
-     "in-capmkt:SegmentProfitLossBeforeTaxAndFinanceCosts",
-     "OneReportable22D",
-     "359000000"
-    ],
-    [
-     "in-capmkt:DescriptionOfReportableSegment",
-     "OneReportable23D",
-     "Retail Banking"
-    ],
-    [
-     "in-capmkt:SegmentProfitLossBeforeTaxAndFinanceCosts",
-     "OneReportable23D",
-     "1877100000"
-    ],
-    [
-     "in-capmkt:DescriptionOfReportableSegment",
-     "OneReportable24D",
-     "Other Banking Operations"
-    ],
-    [
-     "in-capmkt:SegmentProfitLossBeforeTaxAndFinanceCosts",
-     "OneReportable24D",
-     "196200000"
-    ],
-    [
-     "in-capmkt:DescriptionOfReportableSegment",
-     "FourReportable21D",
-     "Treasury"
-    ],
-    [
-     "in-capmkt:SegmentProfitLossBeforeTaxAndFinanceCosts",
-     "FourReportable21D",
-     "178200000"
-    ],
-    [
-     "in-capmkt:DescriptionOfReportableSegment",
-     "FourReportable22D",
-     "Corporate/Wholesale Banking"
-    ],
-    [
-     "in-capmkt:SegmentProfitLossBeforeTaxAndFinanceCosts",
-     "FourReportable22D",
-     "642900000"
-    ],
-    [
-     "in-capmkt:DescriptionOfReportableSegment",
-     "FourReportable23D",
-     "Retail Banking"
-    ],
-    [
-     "in-capmkt:SegmentProfitLossBeforeTaxAndFinanceCosts",
-     "FourReportable23D",
-     "3337000000"
-    ],
-    [
-     "in-capmkt:DescriptionOfReportableSegment",
-     "FourReportable24D",
-     "Other Banking Operations"
-    ],
-    [
-     "in-capmkt:SegmentProfitLossBeforeTaxAndFinanceCosts",
-     "FourReportable24D",
-     "324100000"
-    ],
-    [
-     "in-capmkt:SegmentProfitLossBeforeTaxAndFinanceCosts",
-     "OneD",
-     "2463500000"
-    ],
-    [
-     "in-capmkt:SegmentProfitLossBeforeTaxAndFinanceCosts",
-     "FourD",
-     "4482200000"
-    ],
-    [
-     "in-capmkt:OtherUnallocableExpenditureNetOffUnAllocableIncome",
-     "OneD",
-     "6800000"
-    ],
-    [
-     "in-capmkt:OtherUnallocableExpenditureNetOffUnAllocableIncome",
-     "FourD",
-     "8100000"
-    ],
-    [
-     "in-capmkt:SegmentProfitBeforeTax",
-     "OneD",
-     "2456700000"
-    ],
-    [
-     "in-capmkt:SegmentProfitBeforeTax",
-     "FourD",
-     "4474100000"
-    ],
-    [
-     "in-capmkt:DescriptionOfReportableSegment",
-     "OneReportable31D",
-     "Treasury"
-    ],
-    [
-     "in-capmkt:SegmentAssets",
-     "OneReportable31I",
-     "161902500000"
-    ],
-    [
-     "in-capmkt:DescriptionOfReportableSegment",
-     "OneReportable32D",
-     "Corporate/Wholesale Banking"
-    ],
-    [
-     "in-capmkt:SegmentAssets",
-     "OneReportable32I",
-     "157226900000"
-    ],
-    [
-     "in-capmkt:DescriptionOfReportableSegment",
-     "OneReportable33D",
-     "Retail Banking"
-    ],
-    [
-     "in-capmkt:SegmentAssets",
-     "OneReportable33I",
-     "285191300000"
-    ],
-    [
-     "in-capmkt:DescriptionOfReportableSegment",
-     "OneReportable34D",
-     "Other Banking Operations"
-    ],
-    [
-     "in-capmkt:SegmentAssets",
-     "OneReportable34I",
-     "504600000"
-    ],
-    [
-     "in-capmkt:SegmentAssets",
-     "OneI",
-     "604825300000"
-    ],
-    [
-     "in-capmkt:NetSegmentAssets",
-     "OneI",
-     "605611200000"
-    ],
-    [
-     "in-capmkt:DescriptionOfReportableSegment",
-     "OneReportable41D",
-     "Treasury"
-    ],
-    [
-     "in-capmkt:SegmentLiabilities",
-     "OneReportable41I",
-     "42606500000"
-    ],
-    [
-     "in-capmkt:DescriptionOfReportableSegment",
-     "OneReportable42D",
-     "Corporate/Wholesale Banking"
-    ],
-    [
-     "in-capmkt:SegmentLiabilities",
-     "OneReportable42I",
-     "279009700000"
-    ],
-    [
-     "in-capmkt:DescriptionOfReportableSegment",
-     "OneReportable43D",
-     "Retail Banking"
-    ],
-    [
-     "in-capmkt:SegmentLiabilities",
-     "OneReportable43I",
-     "231930300000"
-    ],
-    [
-     "in-capmkt:DescriptionOfReportableSegment",
-     "OneReportable44D",
-     "Other Banking Operations"
-    ],
-    [
-     "in-capmkt:SegmentLiabilities",
-     "OneReportable44I",
-     "0"
-    ],
-    [
-     "in-capmkt:SegmentLiabilities",
-     "OneI",
-     "553546500000"
-    ],
-    [
-     "in-capmkt:NetSegmentLiabilities",
-     "OneI",
-     "553546500000"
-    ],
-    [
-     "in-capmkt:ProfitBeforeExtraordinaryItemsAndTax",
-     "FourD",
-     "4474100000"
-    ],
-    [
-     "in-capmkt:AdjustmentsForDepreciationAndAmortisationExpense",
-     "FourD",
-     "662500000"
-    ],
-    [
-     "in-capmkt:AdjustmentsForImpairmentLossReversalOfImpairmentLossRecognisedInProfitOrLoss",
-     "FourD",
-     "954000000"
-    ],
-    [
-     "in-capmkt:AdjustmentsForDividendIncome",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:OtherAdjustmentsToReconcileProfitLoss",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:ShareOfProfitAndLossFromPartnershipFirmOrAssociationOfPersonsOrLimitedLiabilityPartnerships",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:AdjustmentsToProfitLoss",
-     "FourD",
-     "1640300000"
-    ],
-    [
-     "in-capmkt:AdjustmentsForReconcileProfitLoss",
-     "FourD",
-     "15410600000"
-    ],
-    [
-     "in-capmkt:IncomeTaxesPaidRefundClassifiedAsOperatingActivities",
-     "FourD",
-     "1117800000"
-    ],
-    [
-     "in-capmkt:CashReceiptsFromShareOfProfitsOfPartnershipFirmOrAssociationOfPersonsOrLimitedLiabilityPartnerships",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:IncomeTaxesPaidRefundClassifiedAsInvestingActivities",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:IncomeTaxesPaidRefundClassifiedAsFinancingActivities",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:TypeOfRelatedPartyTransaction",
-     "D_RelatedPartyTransaction1",
-     "Any other transaction"
-    ],
-    [
-     "in-capmkt:TypeOfRelatedPartyTransaction",
-     "D_RelatedPartyTransaction2",
-     "Interest paid"
-    ],
-    [
-     "in-capmkt:TypeOfRelatedPartyTransaction",
-     "D_RelatedPartyTransaction3",
-     "Any other transaction"
-    ],
-    [
-     "in-capmkt:TypeOfRelatedPartyTransaction",
-     "D_RelatedPartyTransaction4",
-     "Interest paid"
-    ],
-    [
-     "in-capmkt:TypeOfRelatedPartyTransaction",
-     "D_RelatedPartyTransaction5",
-     "Any other transaction"
-    ],
-    [
-     "in-capmkt:WhetherResultsAreAuditedOrUnauditedForImpactOfAuditQualification",
-     "OneD",
-     "Unaudited"
-    ],
-    [
-     "in-capmkt:WhetherTheFirmHoldsAValidPeerReviewCertificateIssuedByPeerReviewBoardOfICAI",
-     "D_Auditor1",
-     "true"
-    ],
-    [
-     "in-capmkt:ValidityDateOfCertificate",
-     "D_Auditor1",
-     "2027-09-30"
-    ],
-    [
-     "in-capmkt:WhetherTheFirmHoldsAValidPeerReviewCertificateIssuedByPeerReviewBoardOfICAI",
-     "D_Auditor2",
-     "true"
-    ],
-    [
-     "in-capmkt:ValidityDateOfCertificate",
-     "D_Auditor2",
-     "2028-07-31"
-    ]
+   [
+    "TCS",
+    "30-SEP-2026",
+    "Standalone",
+    "Original",
+    "08-Oct-2026 22:07:52",
+    "/xbrl/INTEGRATED_FILING_INDAS_1734606_08102026100748_WEB.xml"
    ],
-   "len": 95145
-  },
-  "UTIAMC|https://nsearchives.nseindia.com/corporate/xbrl/INTEGRATED_FILING_NBFC_INDAS_1745097_23102026083651_WEB.xml": {
-   "contexts": {
-    "OneD": [
-     "2026-07-01",
-     "2026-09-30",
-     null,
-     []
-    ],
-    "OneI": [
-     null,
-     null,
-     "2026-09-30",
-     []
-    ],
-    "PY_I": [
-     null,
-     null,
-     "2026-03-31",
-     []
-    ],
-    "FourD": [
-     "2026-04-01",
-     "2026-09-30",
-     null,
-     []
-    ],
-    "OneExpenses1D": [
-     "2026-07-01",
-     "2026-09-30",
-     null,
-     [
-      [
-       "in-capmkt:DetailsOfOtherExpensesAxis",
-       "in-capmkt:OtherExpenses1Member"
-      ]
-     ]
-    ],
-    "FourExpenses1D": [
-     "2026-04-01",
-     "2026-09-30",
-     null,
-     [
-      [
-       "in-capmkt:DetailsOfOtherExpensesAxis",
-       "in-capmkt:OtherExpenses1Member"
-      ]
-     ]
-    ],
-    "I_OtherFinancialAssets1": [
-     null,
-     null,
-     "2026-09-30",
-     []
-    ],
-    "I_OtherNonFinancialAssets1": [
-     null,
-     null,
-     "2026-09-30",
-     []
-    ],
-    "I_OtherFinancialLiabilities1": [
-     null,
-     null,
-     "2026-09-30",
-     []
-    ],
-    "I_OtherNonFinancialLiabilities1": [
-     null,
-     null,
-     "2026-09-30",
-     []
-    ],
-    "OneReportable1D": [
-     "2026-07-01",
-     "2026-09-30",
-     null,
-     [
-      [
-       "in-capmkt:ReportableSegmentsAxis",
-       "in-capmkt:ReportableSegments1Member"
-      ]
-     ]
-    ],
-    "OneReportable2D": [
-     "2026-07-01",
-     "2026-09-30",
-     null,
-     [
-      [
-       "in-capmkt:ReportableSegmentsAxis",
-       "in-capmkt:ReportableSegments2Member"
-      ]
-     ]
-    ],
-    "FourReportable1D": [
-     "2026-04-01",
-     "2026-09-30",
-     null,
-     [
-      [
-       "in-capmkt:ReportableSegmentsAxis",
-       "in-capmkt:ReportableSegments1Member"
-      ]
-     ]
-    ],
-    "FourReportable2D": [
-     "2026-04-01",
-     "2026-09-30",
-     null,
-     [
-      [
-       "in-capmkt:ReportableSegmentsAxis",
-       "in-capmkt:ReportableSegments2Member"
-      ]
-     ]
-    ],
-    "OneReportableFinance1D": [
-     "2026-07-01",
-     "2026-09-30",
-     null,
-     [
-      [
-       "in-capmkt:ReportableSegmentsFinanceCostsAxis",
-       "in-capmkt:ReportableSegments1Member"
-      ]
-     ]
-    ],
-    "OneReportableFinance2D": [
-     "2026-07-01",
-     "2026-09-30",
-     null,
-     [
-      [
-       "in-capmkt:ReportableSegmentsFinanceCostsAxis",
-       "in-capmkt:ReportableSegments2Member"
-      ]
-     ]
-    ],
-    "FourReportableFinance1D": [
-     "2026-04-01",
-     "2026-09-30",
-     null,
-     [
-      [
-       "in-capmkt:ReportableSegmentsFinanceCostsAxis",
-       "in-capmkt:ReportableSegments1Member"
-      ]
-     ]
-    ],
-    "FourReportableFinance2D": [
-     "2026-04-01",
-     "2026-09-30",
-     null,
-     [
-      [
-       "in-capmkt:ReportableSegmentsFinanceCostsAxis",
-       "in-capmkt:ReportableSegments2Member"
-      ]
-     ]
-    ],
-    "OneReportable31D": [
-     "2026-07-01",
-     "2026-09-30",
-     null,
-     [
-      [
-       "in-capmkt:ReportableSegmentAssetsAxis",
-       "in-capmkt:ReportableSegments1Member"
-      ]
-     ]
-    ],
-    "OneReportable31I": [
-     null,
-     null,
-     "2026-09-30",
-     [
-      [
-       "in-capmkt:ReportableSegmentAssetsAxis",
-       "in-capmkt:ReportableSegments1Member"
-      ]
-     ]
-    ],
-    "OneReportable32D": [
-     "2026-07-01",
-     "2026-09-30",
-     null,
-     [
-      [
-       "in-capmkt:ReportableSegmentAssetsAxis",
-       "in-capmkt:ReportableSegments2Member"
-      ]
-     ]
-    ],
-    "OneReportable32I": [
-     null,
-     null,
-     "2026-09-30",
-     [
-      [
-       "in-capmkt:ReportableSegmentAssetsAxis",
-       "in-capmkt:ReportableSegments2Member"
-      ]
-     ]
-    ],
-    "OneReportable41D": [
-     "2026-07-01",
-     "2026-09-30",
-     null,
-     [
-      [
-       "in-capmkt:ReportableSegmentLiabilitiesAxis",
-       "in-capmkt:ReportableSegments1Member"
-      ]
-     ]
-    ],
-    "OneReportable41I": [
-     null,
-     null,
-     "2026-09-30",
-     [
-      [
-       "in-capmkt:ReportableSegmentLiabilitiesAxis",
-       "in-capmkt:ReportableSegments1Member"
-      ]
-     ]
-    ],
-    "OneReportable42D": [
-     "2026-07-01",
-     "2026-09-30",
-     null,
-     [
-      [
-       "in-capmkt:ReportableSegmentLiabilitiesAxis",
-       "in-capmkt:ReportableSegments2Member"
-      ]
-     ]
-    ],
-    "OneReportable42I": [
-     null,
-     null,
-     "2026-09-30",
-     [
-      [
-       "in-capmkt:ReportableSegmentLiabilitiesAxis",
-       "in-capmkt:ReportableSegments2Member"
-      ]
-     ]
-    ],
-    "D_ItemsThatWillNotBeReclassifiedToProfitAndLoss11": [
-     "2026-07-01",
-     "2026-09-30",
-     null,
-     []
-    ],
-    "D_ItemsThatWillNotBeReclassifiedToProfitAndLoss41": [
-     "2026-04-01",
-     "2026-09-30",
-     null,
-     []
-    ],
-    "D_ItemsThatWillBeReclassifiedToProfitAndLoss11": [
-     "2026-07-01",
-     "2026-09-30",
-     null,
-     []
-    ],
-    "D_ItemsThatWillBeReclassifiedToProfitAndLoss41": [
-     "2026-04-01",
-     "2026-09-30",
-     null,
-     []
-    ]
-   },
-   "facts": [
-    [
-     "in-capmkt:TypeOfCompany",
-     "OneD",
-     "Main Board"
-    ],
-    [
-     "in-capmkt:DateOfStartOfFinancialYear",
-     "OneD",
-     "2026-04-01"
-    ],
-    [
-     "in-capmkt:DateOfEndOfFinancialYear",
-     "OneD",
-     "2027-03-31"
-    ],
-    [
-     "in-capmkt:DateOfBoardMeetingWhenFinancialResultsWereApproved",
-     "OneD",
-     "2026-10-23"
-    ],
-    [
-     "in-capmkt:DateOnWhichPriorIntimationOfTheMeetingForConsideringFinancialResultsWasInformedToTheExchange",
-     "OneD",
-     "2026-09-22"
-    ],
-    [
-     "in-capmkt:LevelOfRounding",
-     "OneD",
-     "Crores"
-    ],
-    [
-     "in-capmkt:TypeOfReportingPeriod",
-     "OneD",
-     "Quarterly"
-    ],
-    [
-     "in-capmkt:IsCompanyReportingMultisegmentOrSingleSegment",
-     "OneD",
-     "Geographical"
-    ],
-    [
-     "in-capmkt:DateOfStartOfBoardMeeting",
-     "OneD",
-     "2026-10-23"
-    ],
-    [
-     "in-capmkt:DateOfEndOfBoardMeeting",
-     "OneD",
-     "2026-10-23"
-    ],
-    [
-     "in-capmkt:WhetherCashFlowStatementIsApplicableOnCompany",
-     "OneD",
-     "true"
-    ],
-    [
-     "in-capmkt:TypeOfCashFlowStatement",
-     "OneD",
-     "Cash Flow Indirect"
-    ],
-    [
-     "in-capmkt:DateOfStartOfReportingPeriod",
-     "OneD",
-     "2026-07-01"
-    ],
-    [
-     "in-capmkt:DateOfEndOfReportingPeriod",
-     "OneD",
-     "2026-09-30"
-    ],
-    [
-     "in-capmkt:WhetherResultsAreAuditedOrUnaudited",
-     "OneD",
-     "Unaudited"
-    ],
-    [
-     "in-capmkt:NatureOfReportStandaloneConsolidated",
-     "OneD",
-     "Consolidated"
-    ],
-    [
-     "in-capmkt:DividendIncome",
-     "OneD",
-     "0"
-    ],
-    [
-     "in-capmkt:RentalIncome",
-     "OneD",
-     "40200000"
-    ],
-    [
-     "in-capmkt:FeesAndCommissionIncome",
-     "OneD",
-     "0"
-    ],
-    [
-     "in-capmkt:RevenueFromSaleOfProduct",
-     "OneD",
-     "0"
-    ],
-    [
-     "in-capmkt:RevenueFromSaleOfServices",
-     "OneD",
-     "3984000000"
-    ],
-    [
-     "in-capmkt:RevenueFromOperations",
-     "OneD",
-     "4145900000"
-    ],
-    [
-     "in-capmkt:OtherIncome",
-     "OneD",
-     "1700000"
-    ],
-    [
-     "in-capmkt:Income",
-     "OneD",
-     "4147600000"
-    ],
-    [
-     "in-capmkt:EmployeeBenefitExpense",
-     "OneD",
-     "1282000000"
-    ],
-    [
-     "in-capmkt:DepreciationDepletionAndAmortisationExpense",
-     "OneD",
-     "131100000"
-    ],
-    [
-     "in-capmkt:FeesAndCommissionExpense",
-     "OneD",
-     "14500000"
-    ],
-    [
-     "in-capmkt:OtherExpenses",
-     "OneD",
-     "787900000"
-    ],
-    [
-     "in-capmkt:Expenses",
-     "OneD",
-     "2395600000"
-    ],
-    [
-     "in-capmkt:ProfitBeforeExceptionalItemsAndTax",
-     "OneD",
-     "1752000000"
-    ],
-    [
-     "in-capmkt:ExceptionalItemsBeforeTax",
-     "OneD",
-     "0"
-    ],
-    [
-     "in-capmkt:ProfitBeforeTax",
-     "OneD",
-     "1752000000"
-    ],
-    [
-     "in-capmkt:CurrentTax",
-     "OneD",
-     "528200000"
-    ],
-    [
-     "in-capmkt:DeferredTax",
-     "OneD",
-     "-99300000"
-    ],
-    [
-     "in-capmkt:TaxExpense",
-     "OneD",
-     "428900000"
-    ],
-    [
-     "in-capmkt:ProfitLossForPeriodFromContinuingOperations",
-     "OneD",
-     "1323100000"
-    ],
-    [
-     "in-capmkt:ProfitLossFromDiscontinuedOperationsBeforeTax",
-     "OneD",
-     "0"
-    ],
-    [
-     "in-capmkt:TaxExpenseOfDiscontinuedOperations",
-     "OneD",
-     "0"
-    ],
-    [
-     "in-capmkt:ProfitLossFromDiscontinuedOperationsAfterTax",
-     "OneD",
-     "0"
-    ],
-    [
-     "in-capmkt:ShareOfProfitLossOfAssociatesAndJointVenturesAccountedForUsingEquityMethod",
-     "OneD",
-     "0"
-    ],
-    [
-     "in-capmkt:ProfitLossForPeriod",
-     "OneD",
-     "1323100000"
-    ],
-    [
-     "in-capmkt:OtherComprehensiveIncomeNetOfTaxes",
-     "OneD",
-     "88200000"
-    ],
-    [
-     "in-capmkt:ComprehensiveIncomeForThePeriod",
-     "OneD",
-     "1411300000"
-    ],
-    [
-     "in-capmkt:ProfitOrLossAttributableToOwnersOfParent",
-     "OneD",
-     "1323100000"
-    ],
-    [
-     "in-capmkt:ProfitOrLossAttributableToNonControllingInterests",
-     "OneD",
-     "0"
-    ],
-    [
-     "in-capmkt:ComprehensiveIncomeForThePeriodAttributableToOwnersOfParent",
-     "OneD",
-     "1411300000"
-    ],
-    [
-     "in-capmkt:ComprehensiveIncomeForThePeriodAttributableToOwnersOfParentNonControllingInterests",
-     "OneD",
-     "0"
-    ],
-    [
-     "in-capmkt:BasicEarningsLossPerShareFromContinuingOperations",
-     "OneD",
-     "10.29"
-    ],
-    [
-     "in-capmkt:DilutedEarningsLossPerShareFromContinuingOperations",
-     "OneD",
-     "10.29"
-    ],
-    [
-     "in-capmkt:BasicEarningsLossPerShareFromDiscontinuedOperations",
-     "OneD",
-     "0"
-    ],
-    [
-     "in-capmkt:DilutedEarningsLossPerShareFromDiscontinuedOperations",
-     "OneD",
-     "0"
-    ],
-    [
-     "in-capmkt:BasicEarningsLossPerShareFromContinuingAndDiscontinuedOperations",
-     "OneD",
-     "10.29"
-    ],
-    [
-     "in-capmkt:DilutedEarningsLossPerShareFromContinuingAndDiscontinuedOperations",
-     "OneD",
-     "10.29"
-    ],
-    [
-     "in-capmkt:DateOfStartOfReportingPeriod",
-     "FourD",
-     "2026-04-01"
-    ],
-    [
-     "in-capmkt:DateOfEndOfReportingPeriod",
-     "FourD",
-     "2026-09-30"
-    ],
-    [
-     "in-capmkt:WhetherResultsAreAuditedOrUnaudited",
-     "FourD",
-     "Unaudited"
-    ],
-    [
-     "in-capmkt:NatureOfReportStandaloneConsolidated",
-     "FourD",
-     "Consolidated"
-    ],
-    [
-     "in-capmkt:DividendIncome",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:RentalIncome",
-     "FourD",
-     "80400000"
-    ],
-    [
-     "in-capmkt:FeesAndCommissionIncome",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:RevenueFromSaleOfProduct",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:RevenueFromSaleOfServices",
-     "FourD",
-     "7771400000"
-    ],
-    [
-     "in-capmkt:RevenueFromOperations",
-     "FourD",
-     "9833600000"
-    ],
-    [
-     "in-capmkt:OtherIncome",
-     "FourD",
-     "18900000"
-    ],
-    [
-     "in-capmkt:Income",
-     "FourD",
-     "9852500000"
-    ],
-    [
-     "in-capmkt:EmployeeBenefitExpense",
-     "FourD",
-     "2498300000"
-    ],
-    [
-     "in-capmkt:DepreciationDepletionAndAmortisationExpense",
-     "FourD",
-     "261800000"
-    ],
-    [
-     "in-capmkt:FeesAndCommissionExpense",
-     "FourD",
-     "25800000"
-    ],
-    [
-     "in-capmkt:OtherExpenses",
-     "FourD",
-     "1569700000"
-    ],
-    [
-     "in-capmkt:Expenses",
-     "FourD",
-     "4421100000"
-    ],
-    [
-     "in-capmkt:ProfitBeforeExceptionalItemsAndTax",
-     "FourD",
-     "5431400000"
-    ],
-    [
-     "in-capmkt:ExceptionalItemsBeforeTax",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:ProfitBeforeTax",
-     "FourD",
-     "5431400000"
-    ],
-    [
-     "in-capmkt:CurrentTax",
-     "FourD",
-     "1143000000"
-    ],
-    [
-     "in-capmkt:DeferredTax",
-     "FourD",
-     "26700000"
-    ],
-    [
-     "in-capmkt:TaxExpense",
-     "FourD",
-     "1169700000"
-    ],
-    [
-     "in-capmkt:ProfitLossForPeriodFromContinuingOperations",
-     "FourD",
-     "4261700000"
-    ],
-    [
-     "in-capmkt:ProfitLossFromDiscontinuedOperationsBeforeTax",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:TaxExpenseOfDiscontinuedOperations",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:ProfitLossFromDiscontinuedOperationsAfterTax",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:ShareOfProfitLossOfAssociatesAndJointVenturesAccountedForUsingEquityMethod",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:ProfitLossForPeriod",
-     "FourD",
-     "4261700000"
-    ],
-    [
-     "in-capmkt:OtherComprehensiveIncomeNetOfTaxes",
-     "FourD",
-     "-80700000"
-    ],
-    [
-     "in-capmkt:ComprehensiveIncomeForThePeriod",
-     "FourD",
-     "4181000000"
-    ],
-    [
-     "in-capmkt:ProfitOrLossAttributableToOwnersOfParent",
-     "FourD",
-     "4261700000"
-    ],
-    [
-     "in-capmkt:ProfitOrLossAttributableToNonControllingInterests",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:ComprehensiveIncomeForThePeriodAttributableToOwnersOfParent",
-     "FourD",
-     "4181000000"
-    ],
-    [
-     "in-capmkt:ComprehensiveIncomeForThePeriodAttributableToOwnersOfParentNonControllingInterests",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:BasicEarningsLossPerShareFromContinuingOperations",
-     "FourD",
-     "33.16"
-    ],
-    [
-     "in-capmkt:DilutedEarningsLossPerShareFromContinuingOperations",
-     "FourD",
-     "33.13"
-    ],
-    [
-     "in-capmkt:BasicEarningsLossPerShareFromDiscontinuedOperations",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:DilutedEarningsLossPerShareFromDiscontinuedOperations",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:BasicEarningsLossPerShareFromContinuingAndDiscontinuedOperations",
-     "FourD",
-     "33.16"
-    ],
-    [
-     "in-capmkt:DilutedEarningsLossPerShareFromContinuingAndDiscontinuedOperations",
-     "FourD",
-     "33.13"
-    ],
-    [
-     "in-capmkt:DescriptionOfOtherExpenses",
-     "OneExpenses1D",
-     "Other expenses"
-    ],
-    [
-     "in-capmkt:OtherExpenses",
-     "OneExpenses1D",
-     "787900000"
-    ],
-    [
-     "in-capmkt:DescriptionOfOtherExpenses",
-     "FourExpenses1D",
-     "Other expenses"
-    ],
-    [
-     "in-capmkt:OtherExpenses",
-     "FourExpenses1D",
-     "1569700000"
-    ],
-    [
-     "in-capmkt:CurrentTaxAssetsNet",
-     "OneI",
-     "598100000"
-    ],
-    [
-     "in-capmkt:DeferredTaxAssetsNet",
-     "OneI",
-     "0"
-    ],
-    [
-     "in-capmkt:CurrentTaxLiabilities",
-     "OneI",
-     "253300000"
-    ],
-    [
-     "in-capmkt:DeferredTaxLiabilitiesNet",
-     "OneI",
-     "490500000"
-    ],
-    [
-     "in-capmkt:DescriptionOfReportableSegment",
-     "OneReportable1D",
-     "Domestic Segment (India)"
-    ],
-    [
-     "in-capmkt:SegmentRevenue",
-     "OneReportable1D",
-     "3898300000"
-    ],
-    [
-     "in-capmkt:DescriptionOfReportableSegment",
-     "OneReportable2D",
-     "International Segment"
-    ],
-    [
-     "in-capmkt:SegmentRevenue",
-     "OneReportable2D",
-     "100200000"
-    ],
-    [
-     "in-capmkt:DescriptionOfReportableSegment",
-     "FourReportable1D",
-     "Domestic Segment (India)"
-    ],
-    [
-     "in-capmkt:SegmentRevenue",
-     "FourReportable1D",
-     "8813100000"
-    ],
-    [
-     "in-capmkt:DescriptionOfReportableSegment",
-     "FourReportable2D",
-     "International Segment"
-    ],
-    [
-     "in-capmkt:SegmentRevenue",
-     "FourReportable2D",
-     "1020500000"
-    ],
-    [
-     "in-capmkt:SegmentRevenue",
-     "OneD",
-     "3998500000"
-    ],
-    [
-     "in-capmkt:SegmentRevenue",
-     "FourD",
-     "9833600000"
-    ],
-    [
-     "in-capmkt:SegmentRevenueFromOperations",
-     "OneD",
-     "3998500000"
-    ],
-    [
-     "in-capmkt:SegmentRevenueFromOperations",
-     "FourD",
-     "9833600000"
-    ],
-    [
-     "in-capmkt:DescriptionOfReportableSegment",
-     "OneReportableFinance1D",
-     "Domestic Segment (India)"
-    ],
-    [
-     "in-capmkt:SegmentProfitLossBeforeTaxAndFinanceCosts",
-     "OneReportableFinance1D",
-     "2027100000"
-    ],
-    [
-     "in-capmkt:DescriptionOfReportableSegment",
-     "OneReportableFinance2D",
-     "International Segment"
-    ],
-    [
-     "in-capmkt:SegmentProfitLossBeforeTaxAndFinanceCosts",
-     "OneReportableFinance2D",
-     "-242400000"
-    ],
-    [
-     "in-capmkt:DescriptionOfReportableSegment",
-     "FourReportableFinance1D",
-     "Domestic Segment (India)"
-    ],
-    [
-     "in-capmkt:SegmentProfitLossBeforeTaxAndFinanceCosts",
-     "FourReportableFinance1D",
-     "5133000000"
-    ],
-    [
-     "in-capmkt:DescriptionOfReportableSegment",
-     "FourReportableFinance2D",
-     "International Segment"
-    ],
-    [
-     "in-capmkt:SegmentProfitLossBeforeTaxAndFinanceCosts",
-     "FourReportableFinance2D",
-     "363900000"
-    ],
-    [
-     "in-capmkt:SegmentProfitLossBeforeTaxAndFinanceCosts",
-     "OneD",
-     "1784700000"
-    ],
-    [
-     "in-capmkt:SegmentProfitLossBeforeTaxAndFinanceCosts",
-     "FourD",
-     "5496900000"
-    ],
-    [
-     "in-capmkt:SegmentFinanceCosts",
-     "OneD",
-     "32700000"
-    ],
-    [
-     "in-capmkt:SegmentFinanceCosts",
-     "FourD",
-     "65500000"
-    ],
-    [
-     "in-capmkt:SegmentProfitBeforeTax",
-     "OneD",
-     "1752000000"
-    ],
-    [
-     "in-capmkt:SegmentProfitBeforeTax",
-     "FourD",
-     "5431400000"
-    ],
-    [
-     "in-capmkt:DescriptionOfReportableSegment",
-     "OneReportable31D",
-     "Domestic Segment (India)"
-    ],
-    [
-     "in-capmkt:SegmentAssets",
-     "OneReportable31I",
-     "41636200000"
-    ],
-    [
-     "in-capmkt:DescriptionOfReportableSegment",
-     "OneReportable32D",
-     "International Segment"
-    ],
-    [
-     "in-capmkt:SegmentAssets",
-     "OneReportable32I",
-     "7926100000"
-    ],
-    [
-     "in-capmkt:SegmentAssets",
-     "OneI",
-     "49562300000"
-    ],
-    [
-     "in-capmkt:NetSegmentAssets",
-     "OneI",
-     "49562300000"
-    ],
-    [
-     "in-capmkt:DescriptionOfReportableSegment",
-     "OneReportable41D",
-     "Domestic Segment (India)"
-    ],
-    [
-     "in-capmkt:SegmentLiabilities",
-     "OneReportable41I",
-     "4753000000"
-    ],
-    [
-     "in-capmkt:DescriptionOfReportableSegment",
-     "OneReportable42D",
-     "International Segment"
-    ],
-    [
-     "in-capmkt:SegmentLiabilities",
-     "OneReportable42I",
-     "674000000"
-    ],
-    [
-     "in-capmkt:SegmentLiabilities",
-     "OneI",
-     "5427000000"
-    ],
-    [
-     "in-capmkt:NetSegmentLiabilities",
-     "OneI",
-     "5427000000"
-    ],
-    [
-     "in-capmkt:DescriptionOfItemThatWillNotBeReclassifiedToProfitAndLoss",
-     "D_ItemsThatWillNotBeReclassifiedToProfitAndLoss11",
-     "Remeasurement of defined benefit liability / (assets)"
-    ],
-    [
-     "in-capmkt:AmountOfItemThatWillNotBeReclassifiedToProfitAndLoss",
-     "D_ItemsThatWillNotBeReclassifiedToProfitAndLoss11",
-     "-35000000"
-    ],
-    [
-     "in-capmkt:AmountOfItemThatWillNotBeReclassifiedToProfitAndLoss",
-     "OneD",
-     "-35000000"
-    ],
-    [
-     "in-capmkt:DescriptionOfItemThatWillNotBeReclassifiedToProfitAndLoss",
-     "D_ItemsThatWillNotBeReclassifiedToProfitAndLoss41",
-     "Remeasurement of defined benefit liability / (assets)"
-    ],
-    [
-     "in-capmkt:AmountOfItemThatWillNotBeReclassifiedToProfitAndLoss",
-     "D_ItemsThatWillNotBeReclassifiedToProfitAndLoss41",
-     "-197700000"
-    ],
-    [
-     "in-capmkt:AmountOfItemThatWillNotBeReclassifiedToProfitAndLoss",
-     "FourD",
-     "-197700000"
-    ],
-    [
-     "in-capmkt:IncomeTaxRelatingToItemsThatWillNotBeReclassifiedToProfitOrLoss",
-     "OneD",
-     "-7200000"
-    ],
-    [
-     "in-capmkt:IncomeTaxRelatingToItemsThatWillNotBeReclassifiedToProfitOrLoss",
-     "FourD",
-     "-38200000"
-    ],
-    [
-     "in-capmkt:AmountOfItemThatWillBeReclassifiedToProfitAndLoss",
-     "D_ItemsThatWillBeReclassifiedToProfitAndLoss11",
-     "116000000"
-    ],
-    [
-     "in-capmkt:AmountOfItemThatWillBeReclassifiedToProfitAndLoss",
-     "OneD",
-     "116000000"
-    ],
-    [
-     "in-capmkt:AmountOfItemThatWillBeReclassifiedToProfitAndLoss",
-     "D_ItemsThatWillBeReclassifiedToProfitAndLoss41",
-     "78800000"
-    ],
-    [
-     "in-capmkt:AmountOfItemThatWillBeReclassifiedToProfitAndLoss",
-     "FourD",
-     "78800000"
-    ],
-    [
-     "in-capmkt:IncomeTaxRelatingToItemsThatWillBeReclassifiedToProfitOrLoss",
-     "OneD",
-     "0"
-    ],
-    [
-     "in-capmkt:IncomeTaxRelatingToItemsThatWillBeReclassifiedToProfitOrLoss",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:OtherComprehensiveIncome",
-     "OneD",
-     "88200000"
-    ],
-    [
-     "in-capmkt:OtherComprehensiveIncome",
-     "FourD",
-     "-80700000"
-    ],
-    [
-     "in-capmkt:AdjustmentsForDepreciationAndAmortisationExpense",
-     "FourD",
-     "261800000"
-    ],
-    [
-     "in-capmkt:AdjustmentsForImpairmentLossReversalOfImpairmentLossRecognisedInProfitOrLoss",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:AdjustmentsForDividendIncome",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:AdjustmentsForInterestIncome",
-     "FourD",
-     "257900000"
-    ],
-    [
-     "in-capmkt:AdjustmentsForUndistributedProfitsOfAssociates",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:OtherAdjustmentsToReconcileProfitLoss",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:ShareOfProfitAndLossFromPartnershipFirmOrAssociationOfPersonsOrLimitedLiabilityPartnerships",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:AdjustmentsForReconcileProfitLoss",
-     "FourD",
-     "-1735200000"
-    ],
-    [
-     "in-capmkt:IncomeTaxesPaidRefundClassifiedAsOperatingActivities",
-     "FourD",
-     "1124300000"
-    ],
-    [
-     "in-capmkt:CashReceiptsFromShareOfProfitsOfPartnershipFirmOrAssociationOfPersonsOrLimitedLiabilityPartnerships",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:IncomeTaxesPaidRefundClassifiedAsInvestingActivities",
-     "FourD",
-     "0"
-    ],
-    [
-     "in-capmkt:IncomeTaxesPaidRefundClassifiedAsFinancingActivities",
-     "FourD",
-     "0"
-    ]
+   [
+    "TCS",
+    "30-JUN-2026",
+    "Consolidated",
+    "Original",
+    "09-Jul-2026 18:36:20",
+    "/xbrl/INTEGRATED_FILING_INDAS_1690004_09072026063620_WEB.xml"
    ],
-   "len": 70106
-  }
- },
- "shp_LT": {
-  "len": 22,
-  "first": [
-   {
-    "broadcastDate": "17-OCT-2026 10:11:10",
-    "cgTimeStamp": null,
-    "countString": null,
-    "date": "30-SEP-2026",
-    "desc": "NEW_1",
-    "employeeTrusts": "0",
-    "format": null,
-    "index": "-",
-    "industry": "-",
-    "isin": "INE018A01030",
-    "name": "Larsen & Toubro Limited",
-    "newColumn": true,
-    "pr_and_prgrp": "0",
-    "promoterDematNotes": "",
-    "publicShareholdingNotes": "",
-    "public_val": "100",
-    "recordId": "215152",
-    "remarksWeb": "N",
-    "revisedData": "N",
-    "revisedDate": null,
-    "revisedRemark": null,
-    "revisedStatus": "-",
-    "revisionDate": null,
-    "revisionRemark": null,
-    "shareholdingPatternNotes": "",
-    "submissionDate": "17-OCT-2026",
-    "symbol": "LT",
-    "systemDate": "17-OCT-2026 10:11:14",
-    "timeDifference": "00:00:04",
-    "typeOfSubmission": null,
-    "underlyingDrs": null,
-    "xbrl": "https://nsearchives.nseindia.com/corporate/xbrl/SHP_1740540_17102026101104_WEB.xml",
-    "xbrlFileSize": "172.54 KB"
-   },
-   {
-    "broadcastDate": "16-JUL-2026 16:11:17",
-    "cgTimeStamp": null,
-    "countString": null,
-    "date": "30-JUN-2026",
-    "desc": "NEW_1",
-    "employeeTrusts": "0",
-    "format": null,
-    "index": "-",
-    "industry": "-",
-    "isin": "INE018A01030",
-    "name": "Larsen & Toubro Limited",
-    "newColumn": true,
-    "pr_and_prgrp": "0",
-    "promoterDematNotes": "",
-    "publicShareholdingNotes": "",
-    "public_val": "100",
-    "recordId": "211487",
-    "remarksWeb": "N",
-    "revisedData": "N",
-    "revisedDate": null,
-    "revisedRemark": null,
-    "revisedStatus": "-",
-    "revisionDate": null,
-    "revisionRemark": null,
-    "shareholdingPatternNotes": "",
-    "submissionDate": "16-JUL-2026",
-    "symbol": "LT",
-    "systemDate": "16-JUL-2026 16:11:21",
-    "timeDifference": "00:00:04",
-    "typeOfSubmission": null,
-    "underlyingDrs": null,
-    "xbrl": "https://nsearchives.nseindia.com/corporate/xbrl/SHP_1694210_16072026041111_WEB.xml",
-    "xbrlFileSize": "180.84 KB"
-   }
+   [
+    "TCS",
+    "30-JUN-2026",
+    "Standalone",
+    "Original",
+    "09-Jul-2026 18:36:13",
+    "/xbrl/INTEGRATED_FILING_INDAS_1690003_09072026063612_WEB.xml"
+   ],
+   [
+    "TCS",
+    "31-MAR-2026",
+    "Consolidated",
+    "Original",
+    "09-Apr-2026 23:42:18",
+    "/xbrl/INTEGRATED_FILING_INDAS_1648408_09042026114218_WEB.xml"
+   ],
+   [
+    "TCS",
+    "31-MAR-2026",
+    "Standalone",
+    "Original",
+    "09-Apr-2026 23:41:35",
+    "/xbrl/INTEGRATED_FILING_INDAS_1648407_09042026114131_WEB.xml"
+   ],
+   [
+    "TCS",
+    "31-DEC-2025",
+    "Consolidated",
+    "Original",
+    "12-Jan-2026 18:43:16",
+    "/xbrl/INTEGRATED_FILING_INDAS_1599094_12012026064316_WEB.xml"
+   ],
+   [
+    "TCS",
+    "31-DEC-2025",
+    "Standalone",
+    "Original",
+    "12-Jan-2026 18:43:09",
+    "/xbrl/INTEGRATED_FILING_INDAS_1599093_12012026064308_WEB.xml"
+   ],
+   [
+    "TCS",
+    "30-SEP-2025",
+    "Consolidated",
+    "Original",
+    "09-Oct-2025 23:56:25",
+    "/xbrl/INTEGRATED_FILING_INDAS_1543879_09102025115624_WEB.xml"
+   ],
+   [
+    "TCS",
+    "30-SEP-2025",
+    "Standalone",
+    "Original",
+    "09-Oct-2025 23:52:59",
+    "/xbrl/INTEGRATED_FILING_INDAS_1543878_09102025115254_WEB.xml"
+   ],
+   [
+    "TCS",
+    "30-JUN-2025",
+    "Consolidated",
+    "Original",
+    "10-Jul-2025 18:40:12",
+    "/xbrl/INTEGRATED_FILING_INDAS_1480382_10072025064011_WEB.xml"
+   ],
+   [
+    "TCS",
+    "30-JUN-2025",
+    "Standalone",
+    "Original",
+    "10-Jul-2025 18:37:35",
+    "/xbrl/INTEGRATED_FILING_INDAS_1480379_10072025063733_WEB.xml"
+   ],
+   [
+    "TCS",
+    "31-MAR-2025",
+    "Consolidated",
+    "Original",
+    "11-Apr-2025 07:41:38",
+    "/xbrl/INTEGRATED_FILING_INDAS_1412101_11042025074137_WEB.xml"
+   ],
+   [
+    "TCS",
+    "31-MAR-2025",
+    "Standalone",
+    "Original",
+    "11-Apr-2025 00:10:08",
+    "/xbrl/INTEGRATED_FILING_INDAS_1412100_11042025121002_WEB.xml"
+   ]
+  ],
+  "types": [
+   [
+    "Integrated Filing- Financials",
+    14
+   ]
   ]
  },
- "bhav": "SYMBOL, SERIES, DATE1, PREV_CLOSE, OPEN_PRICE, HIGH_PRICE, LOW_PRICE, LAST_PRICE, CLOSE_PRICE, AVG_PRICE, TTL_TRD_QNTY, TURNOVER_LACS, NO_OF_TRADES, DELIV_QTY, DELIV_PER\n20MICRONS, EQ, 23-Oct-2026, 178.03, 178.25, 179.20, 170.05, 175.00, 174.94, 173.66, 184221, 319.91, 4966, 75379, 40.92\n21STCENMGM, EQ, 23-Oct-2026, 50.57, 48.24, 51.99, 48.05, 48.05, 48.05, 48.54, 11774, 5.72, 138, 10518, 89.33\n360ONE, EQ, 23-Oct-2026, 1047.00, 1040.00, 1045.50, 980.00, 997.10, 997.10, 1005.40, 2010539, 20213.88"
+ "{\"index\": \"equities\", \"symbol\": \"HDFCBANK\", \"type\": \"Integrated Filing- Financials\", \"size\": 100}": {
+  "total": 14,
+  "rows": [
+   [
+    "HDFCBANK",
+    "30-SEP-2026",
+    "Consolidated",
+    "Original",
+    "17-Oct-2026 17:48:12",
+    "brl/INTEGRATED_FILING_BANKING_1740913_17102026054812_WEB.xml"
+   ],
+   [
+    "HDFCBANK",
+    "30-SEP-2026",
+    "Standalone",
+    "Original",
+    "17-Oct-2026 17:48:07",
+    "brl/INTEGRATED_FILING_BANKING_1740912_17102026054806_WEB.xml"
+   ],
+   [
+    "HDFCBANK",
+    "30-JUN-2026",
+    "Consolidated",
+    "Original",
+    "18-Jul-2026 16:01:26",
+    "brl/INTEGRATED_FILING_BANKING_1696123_18072026040126_WEB.xml"
+   ],
+   [
+    "HDFCBANK",
+    "30-JUN-2026",
+    "Standalone",
+    "Original",
+    "18-Jul-2026 16:01:37",
+    "brl/INTEGRATED_FILING_BANKING_1696125_18072026040136_WEB.xml"
+   ],
+   [
+    "HDFCBANK",
+    "31-MAR-2026",
+    "Consolidated",
+    "Original",
+    "18-Apr-2026 19:30:49",
+    "brl/INTEGRATED_FILING_BANKING_1654391_18042026073048_WEB.xml"
+   ],
+   [
+    "HDFCBANK",
+    "31-MAR-2026",
+    "Standalone",
+    "Original",
+    "18-Apr-2026 19:28:37",
+    "brl/INTEGRATED_FILING_BANKING_1654389_18042026072836_WEB.xml"
+   ],
+   [
+    "HDFCBANK",
+    "31-DEC-2025",
+    "Consolidated",
+    "Original",
+    "17-Jan-2026 21:26:24",
+    "brl/INTEGRATED_FILING_BANKING_1603568_17012026092624_WEB.xml"
+   ],
+   [
+    "HDFCBANK",
+    "31-DEC-2025",
+    "Standalone",
+    "Original",
+    "17-Jan-2026 21:26:16",
+    "brl/INTEGRATED_FILING_BANKING_1603567_17012026092616_WEB.xml"
+   ],
+   [
+    "HDFCBANK",
+    "30-SEP-2025",
+    "Consolidated",
+    "Original",
+    "18-Oct-2025 20:23:22",
+    "brl/INTEGRATED_FILING_BANKING_1553886_18102025082322_WEB.xml"
+   ],
+   [
+    "HDFCBANK",
+    "30-SEP-2025",
+    "Standalone",
+    "Original",
+    "18-Oct-2025 20:22:40",
+    "brl/INTEGRATED_FILING_BANKING_1553885_18102025082238_WEB.xml"
+   ],
+   [
+    "HDFCBANK",
+    "30-JUN-2025",
+    "Consolidated",
+    "Original",
+    "19-Jul-2025 18:51:51",
+    "brl/INTEGRATED_FILING_BANKING_1487995_19072025065149_WEB.xml"
+   ],
+   [
+    "HDFCBANK",
+    "30-JUN-2025",
+    "Standalone",
+    "Original",
+    "19-Jul-2025 18:46:46",
+    "brl/INTEGRATED_FILING_BANKING_1487993_19072025064645_WEB.xml"
+   ],
+   [
+    "HDFCBANK",
+    "31-MAR-2025",
+    "Standalone",
+    "Original",
+    "21-Apr-2025 17:08:39",
+    "brl/INTEGRATED_FILING_BANKING_1421434_21042025050837_WEB.xml"
+   ],
+   [
+    "HDFCBANK",
+    "31-MAR-2025",
+    "Consolidated",
+    "Original",
+    "19-Apr-2025 22:42:16",
+    "brl/INTEGRATED_FILING_BANKING_1420333_19042025104215_WEB.xml"
+   ]
+  ],
+  "types": [
+   [
+    "Integrated Filing- Financials",
+    14
+   ]
+  ]
+ }
 }
