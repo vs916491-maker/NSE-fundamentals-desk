@@ -150,3 +150,47 @@ PROP_DESK = re.compile(r"(securities research|hrti|qe securities|alphagrep|micro
 
 def is_institution(name: str) -> bool:
     return bool(INSTITUTION.search(name or "")) and not PROP_DESK.search(name or "")
+
+
+_KEYWORDS = {
+    "Order": r"(order|contract|award|LoA|LOI|letter of|value|worth|aggregat|consideration|project|tender)",
+    "Buyback": r"(buy[\s-]?back|aggregate|size|amount|not exceeding|up to|upto)",
+    "Penalty": r"(penalt|fine|demand|levied|interest|tax|amount|order)",
+}
+
+
+_NOT_IT = re.compile(r"(turnover|revenue|net ?worth|market cap|paid[\s-]?up|share capital|authori[sz]ed capital|"
+                     r"face value|consolidated|net profit|PAT\b|EBITDA)", re.I)
+
+
+def amount_near(text: str, tag: str, before: int = 120):
+    """INR amount that follows a keyword for this tag most closely (for long PDF text)."""
+    if not text:
+        return None, None
+    text = re.sub(r"\s+", " ", text)
+    kw = re.compile(_KEYWORDS.get(tag, _KEYWORDS["Order"]), re.I)
+    best = None  # (distance, -crore, crore, raw)
+    raw_fx = None
+    for m in _AMT.finditer(text):
+        pre = text[max(0, m.start() - before): m.start()]
+        hits = list(kw.finditer(pre))
+        if not hits:
+            continue
+        near_pre = pre[-60:]
+        if _NOT_IT.search(near_pre) and not kw.search(near_pre):
+            continue
+        dist = len(pre) - hits[-1].end()
+        cur = m.group("cur").lower().rstrip(".")
+        cr = _to_crore(float(m.group("num").replace(",", "")), cur, m.group("unit"))
+        if cr is None:
+            if raw_fx is None and m.group("unit"):
+                raw_fx = m.group(0).strip()
+            continue
+        if cr < 0.001 or cr > 500000:
+            continue
+        cand = (dist, -cr, cr, m.group(0).strip())
+        if best is None or cand < best:
+            best = cand
+    if best:
+        return round(best[2], 2), best[3]
+    return None, raw_fx

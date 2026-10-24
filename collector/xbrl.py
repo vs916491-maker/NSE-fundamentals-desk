@@ -2,6 +2,8 @@
 import re
 from datetime import date
 
+VERSION = 2  # bump to invalidate cached parses
+
 _CTX = re.compile(r'<xbrli:context id="([^"]+)">(.*?)</xbrli:context>', re.S)
 _FACT = re.compile(r'<([\w-]+):(\w+)\b([^>]*?)contextRef="([^"]+)"[^>]*>([^<]*)<', re.S)
 
@@ -67,14 +69,20 @@ def parse_results(doc: str, qe: date):
         return None
 
     def pick(names, scale=1e7):
+        # first non-zero candidate: some filers put 0 in e.g. "attributable to owners"
+        zero = None
         for n in names:
             v = _num(facts.get(n, {}).get(qctx))
-            if v is not None:
+            if v is None:
+                continue
+            if v != 0:
                 return round(v / scale, 2)
-        return None
+            zero = 0.0
+        return zero
 
     nature = (facts.get("NatureOfReportStandaloneConsolidated", {}).get(qctx) or "").strip()
     return {
+        "_v": VERSION,
         "rev": pick(REVENUE),
         "pat": pick(PAT),
         "pbt": pick(PBT),
@@ -87,7 +95,6 @@ SHP_GROUPS = {
     "promoter": "ShareholdingOfPromoterAndPromoterGroup_ContextI",
     "fii": "InstitutionsForeign_ContextI",
     "dii": "InstitutionsDomestic_ContextI",
-    "mf": "MutualFunds_ContextI",
     "public": "PublicShareholding_ContextI",
 }
 
@@ -100,9 +107,12 @@ def parse_shp(doc: str):
     for k, ctx in SHP_GROUPS.items():
         v = _num(pct.get(ctx))
         out[k] = round(v * 100, 2) if v is not None else None
-    if out["mf"] is None and out["dii"] is not None:
-        out["mf"] = 0.0 if "MutualFunds_ContextI" not in doc else None
+    mf_keys = [k for k in pct if re.match(r"MutualFund\w*_ContextI$", k)]
+    vals = [_num(pct[k]) for k in mf_keys]
+    vals = [v for v in vals if v is not None]
+    out["mf"] = round(max(vals) * 100, 2) if vals else None
     tot = _num(facts.get("NumberOfShares", {}).get("ShareholdingPattern_ContextI")) \
         or _num(facts.get("NumberOfFullyPaidUpEquityShares", {}).get("ShareholdingPattern_ContextI"))
     out["shares"] = tot
+    out["_v"] = VERSION
     return out

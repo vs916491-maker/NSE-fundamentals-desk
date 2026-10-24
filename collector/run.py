@@ -68,13 +68,17 @@ def growth(cur, prev):
 
 
 def prev_qe(qe: date) -> date:
-    m = qe.month - 3
-    y = qe.year
-    if m <= 0:
-        m += 12
-        y -= 1
-    last = {3: 31, 6: 30, 9: 30, 12: 31}[m]
-    return date(y, m, last)
+    """Latest quarter-end strictly before qe (works for non-quarter-end dates too)."""
+    y, m = qe.year, qe.month
+    for _ in range(5):
+        m -= 1
+        if m == 0:
+            m, y = 12, y - 1
+        if m in (3, 6, 9, 12):
+            last = {3: 31, 6: 30, 9: 30, 12: 31}[m]
+            if date(y, m, last) < qe:
+                return date(y, m, last)
+    return date(qe.year - 1, 12, 31)
 
 
 def year_ago(qe: date) -> date:
@@ -130,7 +134,7 @@ class Collector:
     def shp_for(self, sym, qe: date = None, listing=None):
         cache, path = self.shp_history(sym)
         key = qe.isoformat() if qe else None
-        if key and key in cache:
+        if key and (cache.get(key) or {}).get("_v") == xbrl.VERSION:
             return cache[key]
         if not self.budget.ok():
             return None
@@ -195,6 +199,20 @@ class Collector:
             if t == "Rating":
                 item["dir"] = tagger.rating_direction(text)
             out.append(item)
+        # value is often only inside the PDF: read the first pages of those
+        pdfs = 0
+        for it in out:
+            if (it["tag"] in ("Order", "Buyback", "Penalty") and not it.get("value_cr") and pdfs < 60
+                    and str(it.get("pdf") or "").lower().endswith(".pdf") and self.budget.ok()):
+                pdfs += 1
+                txt = pdf_text(self.n, it["pdf"])
+                if txt:
+                    v, rawv = tagger.amount_near(txt, it["tag"])
+                    if v:
+                        it["value_cr"], it["value_raw"], it["value_src"] = v, rawv, "pdf"
+                    elif rawv and not it.get("value_raw"):
+                        it["value_raw"] = rawv
+        log.info("read %d PDFs", pdfs)
         # market cap for orders & buybacks
         for it in out:
             if it["tag"] in ("Order", "Buyback") and self.budget.ok():
@@ -218,7 +236,7 @@ class Collector:
 
     def fin_metrics(self, sym, nature, qe: date, url, cache):
         key = f"{nature}|{qe.isoformat()}"
-        if key in cache:
+        if key in cache and (cache[key] or {}).get("_v") == xbrl.VERSION:
             return cache[key]
         try:
             doc = self.n.get(url, raw=True).decode(errors="ignore")
@@ -292,6 +310,11 @@ class Collector:
                             if pm:
                                 row[f"rev_{label}"] = pm.get("rev")
                                 row[f"pat_{label}"] = pm.get("pat")
+                for lab in ("py", "pq"):  # a >20x revenue jump is almost always a unit error in one filing
+                    a, b = row.get("rev"), row.get(f"rev_{lab}")
+                    if a and b and (a / b > 20 or a / b < 0.05):
+                        row[f"rev_{lab}"] = row[f"pat_{lab}"] = None
+                        row["check"] = True
                 row["rev_yoy"] = growth(row["rev"], row.get("rev_py"))
                 row["pat_yoy"] = growth(row["pat"], row.get("pat_py"))
                 row["rev_qoq"] = growth(row["rev"], row.get("rev_pq"))
@@ -320,6 +343,8 @@ class Collector:
                 continue
             cache, path = self.shp_history(sym)
             cur = cache.get(qe.isoformat())
+            if cur and cur.get("_v") != xbrl.VERSION:
+                cur = None
             if cur is None and not self.budget.ok():
                 # out of time: keep the headline numbers NSE gives in the list itself
                 def f(x):
@@ -332,13 +357,22 @@ class Collector:
                 continue
             if cur is None:
                 try:
-                    cur = xbrl.parse_shp(self.n.get(r["xbrl"], raw=True).decode(errors="ignore"))
+                    doc = self.n.get(r["xbrl"], raw=True).decode(errors="ignore")
+                    cur = xbrl.parse_shp(doc)
+                    if cur.get("mf") is None and not os.path.exists(os.path.join(CACHE, "debug_shp.json")):
+                        import re as _re
+                        jsave(os.path.join(CACHE, "debug_shp.json"),
+                              {"sym": sym, "contexts": sorted(set(_re.findall(r'contextRef="([^"]+_ContextI)"', doc)))})
                     cache[qe.isoformat()] = cur
                     jsave(path, cache)
                 except Exception as e:
                     log.warning("shp %s: %s", sym, e)
                     continue
-            prev = self.shp_for(sym, prev_qe(qe))
+            try:
+                prev = self.shp_for(sym, prev_qe(qe))
+            except Exception as e:
+                log.warning("shp prev %s: %s", sym, e)
+                prev = None
             row = {"sym": sym, "name": r.get("name"), "qe": qe.isoformat(), "filed": r.get("broadcastDate"),
                    "xbrl": r.get("xbrl")}
             for k in ("promoter", "fii", "dii", "mf", "public"):
@@ -377,6 +411,19 @@ class Collector:
         return out
 
 
+def pdf_text(n, url, pages=3):
+    try:
+        raw = n.get(url, raw=True, tries=2)
+        if not raw or len(raw) > 12_000_000:
+            return ""
+        from pypdf import PdfReader
+        rd = PdfReader(io.BytesIO(raw))
+        return " ".join((p.extract_text() or "") for p in rd.pages[:pages])
+    except Exception as e:
+        log.warning("pdf %s: %s", url, e)
+        return ""
+
+
 def verdict(r):
     py, ry = r.get("pat_yoy"), r.get("rev_yoy")
     pat, pat_py = r.get("pat"), r.get("pat_py")
@@ -403,6 +450,8 @@ def merge_season(kind, rows, key="sym"):
     for r in rows:
         by_qe.setdefault(r["qe"], []).append(r)
     for qe, rs in by_qe.items():
+        if qe[5:] not in ("03-31", "06-30", "09-30", "12-31"):
+            continue  # event-based filings (e.g. after an allotment) stay in the day file only
         path = os.path.join(DATA, kind, f"{qe}.json")
         cur = jload(path, {"qe": qe, "rows": {}})
         for r in rs:
