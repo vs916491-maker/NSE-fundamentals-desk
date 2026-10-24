@@ -339,8 +339,8 @@ class Collector:
         for r in raw:
             sym = r.get("symbol")
             qe = parse_nse_date(r.get("date", ""))
-            if not sym or not qe or not r.get("xbrl"):
-                continue
+            if not sym or not qe or not r.get("xbrl") or (d - qe).days > 120:
+                continue  # skip late/revised filings for old quarters
             cache, path = self.shp_history(sym)
             cur = cache.get(qe.isoformat())
             if cur and cur.get("_v") != xbrl.VERSION:

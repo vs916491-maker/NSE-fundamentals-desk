@@ -1,1 +1,1 @@
-{"args": "--backfill 2026-10-01 2026-10-24 --budget 150", "note": "Edit and push this file to start a manual run. Example args: --date 2026-10-23 --force-email"}
+{"args": "--date 2026-10-23 --force-email --budget 20", "note": "Edit and push this file to start a manual run. Example args: --date 2026-10-23 --force-email"}
