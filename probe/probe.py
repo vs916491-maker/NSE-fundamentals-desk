@@ -1,5 +1,5 @@
-"""One-off probe: fetch each NSE source and save trimmed samples so field names can be checked."""
-import json, sys, os, traceback
+"""Probe round 2: integrated-filing results endpoints, full SHP XBRL, quote API, announcement subjects."""
+import json, sys, os, re, traceback, collections
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "collector"))
 from nse import NSE
 
@@ -7,48 +7,62 @@ F, T = "20-10-2026", "24-10-2026"
 out = {}
 n = NSE()
 
-def trim(x, k=3):
-    if isinstance(x, list):
-        return {"len": len(x), "sample": x[:k]}
+def summ(x):
     if isinstance(x, dict):
-        return {kk: trim(v, k) for kk, v in list(x.items())[:40]}
-    if isinstance(x, str) and len(x) > 1500:
-        return x[:1500] + "...<cut>"
-    return x
+        return {"type": "dict", "keys": list(x.keys())[:30],
+                **{k: summ(v) for k, v in x.items() if isinstance(v, (list, dict))}}
+    if isinstance(x, list):
+        return {"type": "list", "len": len(x), "first": x[0] if x else None}
+    return str(x)[:300]
 
-def probe(name, fn):
+def probe(name, path, params=None):
     try:
-        out[name] = {"ok": True, "data": trim(fn())}
+        out[name] = {"ok": True, "url": path, "params": params, "data": summ(n.get(path, params))}
     except Exception as e:
-        out[name] = {"ok": False, "err": repr(e), "tb": traceback.format_exc()[-800:]}
+        out[name] = {"ok": False, "url": path, "params": params, "err": repr(e)[:300]}
     print(name, out[name]["ok"])
 
-probe("announcements", lambda: n.get("/api/corporate-announcements", {"index": "equities", "from_date": F, "to_date": T}))
-probe("results", lambda: n.get("/api/corporates-financial-results", {"index": "equities", "period": "Quarterly", "from_date": F, "to_date": T}))
-probe("shareholding", lambda: n.get("/api/corporate-share-holdings-master", {"index": "equities", "from_date": "01-10-2026", "to_date": T}))
-probe("pit", lambda: n.get("/api/corporates-pit", {"index": "equities", "from_date": F, "to_date": T}))
-probe("bulk_api", lambda: n.get("/api/historical/bulk-deals", {"from": F, "to": T}))
-probe("block_api", lambda: n.get("/api/historical/block-deals", {"from": F, "to": T}))
-probe("bulk_csv", lambda: n.get("https://nsearchives.nseindia.com/content/equities/bulk.csv", raw=True).decode()[:1500])
-probe("block_csv", lambda: n.get("https://nsearchives.nseindia.com/content/equities/block.csv", raw=True).decode()[:1500])
-probe("results_cmp_TCS", lambda: n.get("/api/results-comparision", {"symbol": "TCS"}))
-probe("results_cmp_HDFCBANK", lambda: n.get("/api/results-comparision", {"symbol": "HDFCBANK"}))
-probe("quote_LT", lambda: n.get("/api/quote-equity", {"symbol": "LT"}))
-probe("equity_list", lambda: n.get("https://nsearchives.nseindia.com/content/equities/EQUITY_L.csv", raw=True).decode()[:600])
+IF = "Integrated Filing- Financials"
+probe("cfr_nodate", "/api/corporates-financial-results", {"index": "equities", "period": "Quarterly"})
+probe("if_1", "/api/integrated-filing-results", {"index": "equities", "type": IF, "period": "Quarterly", "from_date": F, "to_date": T})
+probe("if_2", "/api/integrated-filing-results", {"index": "equities", "type": IF})
+probe("if_3", "/api/integrated-filing-results", {"index": "equities", "from_date": F, "to_date": T})
+probe("if_4", "/api/integrated-filing-results", {"index": "equities", "period_ended": "all", "type": IF})
+probe("if_5", "/api/integrated-filing-results", {"index": "equities", "type": "Integrated Filing- Financial", "from_date": F, "to_date": T})
+probe("if_6", "/api/corporates-integrated-filing", {"index": "equities", "from_date": F, "to_date": T})
+probe("cfr_dates_noperiod", "/api/corporates-financial-results", {"index": "equities", "from_date": F, "to_date": T})
+probe("pit2", "/api/corporates-pit", {"index": "equities", "from_date": "01-10-2026", "to_date": T})
+probe("sast", "/api/corporate-sast-reg29", {"index": "equities", "from_date": F, "to_date": T})
 
-# sample XBRL docs
+# quote API with the quote page as referer
 try:
-    r = out["results"]["data"]["sample"][0] if out["results"]["ok"] else None
-    if r and r.get("xbrl"):
-        out["results_xbrl"] = n.get(r["xbrl"], raw=True).decode(errors="ignore")[:12000]
+    n.s.get("https://www.nseindia.com/get-quotes/equity?symbol=LT", timeout=20)
+    n.s.headers["Referer"] = "https://www.nseindia.com/get-quotes/equity?symbol=LT"
+    q = n.get("/api/quote-equity", {"symbol": "LT"})
+    out["quote_LT"] = {"ok": True, "secinfo": q.get("securityInfo"), "price": q.get("priceInfo", {}).get("lastPrice"),
+                       "keys": list(q.keys())}
 except Exception as e:
-    out["results_xbrl"] = repr(e)
-try:
-    s = out["shareholding"]["data"]["sample"][0] if out["shareholding"]["ok"] else None
-    if s and s.get("xbrl"):
-        out["sh_xbrl"] = n.get(s["xbrl"], raw=True).decode(errors="ignore")[:15000]
-except Exception as e:
-    out["sh_xbrl"] = repr(e)
+    out["quote_LT"] = {"ok": False, "err": repr(e)[:300]}
+n.s.headers["Referer"] = "https://www.nseindia.com/companies-listing/corporate-filings-announcements"
 
-os.makedirs("probe", exist_ok=True)
+# announcement subjects
+try:
+    a = n.get("/api/corporate-announcements", {"index": "equities", "from_date": F, "to_date": T})
+    out["ann_desc_counts"] = collections.Counter(x.get("desc") for x in a).most_common(120)
+    out["ann_orders"] = [x for x in a if re.search(r"order|contract", x.get("desc", ""), re.I)][:8]
+    out["ann_penalty"] = [x for x in a if re.search(r"action|penalt|order passed", (x.get("desc", "") + x.get("attchmntText", "")), re.I)][:8]
+    out["ann_results"] = [x for x in a if re.search(r"financial result|integrated", (x.get("desc", "") + x.get("attchmntText", "")), re.I)][:6]
+except Exception as e:
+    out["ann_err"] = repr(e)
+
+# full SHP XBRL facts
+try:
+    sh = n.get("/api/corporate-share-holdings-master", {"index": "equities", "from_date": F, "to_date": T})
+    out["sh_first"] = sh[0]
+    x = n.get(sh[0]["xbrl"], raw=True).decode(errors="ignore")
+    facts = re.findall(r'<(in-bse-shp:\w+)[^>]*contextRef="([^"]+)"[^>]*>([^<]{0,40})<', x)
+    out["sh_facts"] = [f for f in facts if re.search(r"Percent|Total|Number", f[0])][:400]
+except Exception as e:
+    out["sh_err"] = repr(e)
+
 json.dump(out, open("probe/out.json", "w"), indent=1, default=str)
