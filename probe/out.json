@@ -1,3174 +1,3439 @@
 {
- "cfr_nodate": {
-  "ok": true,
-  "url": "/api/corporates-financial-results",
-  "params": {
-   "index": "equities",
-   "period": "Quarterly"
+ "page1": {
+  "len": 20,
+  "meta": {
+   "size": 20,
+   "page": -1,
+   "totalCount": 259
   },
-  "data": {
-   "type": "list",
-   "len": 3816,
-   "first": {
-    "audited": "Un-Audited",
-    "bank": "N",
-    "broadCastDate": "30-Jul-2026 17:17:53",
-    "companyName": "V.S.T Tillers Tractors Limited",
-    "consolidated": "Consolidated",
-    "cumulative": "Non-cumulative",
-    "difference": "00:00:49",
-    "exchdisstime": "30-Jul-2026 17:18:42",
-    "filingDate": "30-Jul-2026 17:17",
-    "financialYear": "01-Apr-2024 To 31-Mar-2025",
-    "format": "New",
-    "fromDate": "01-Oct-2024",
-    "indAs": "Ind-AS New",
-    "industry": "-",
-    "isin": "INE764D01017",
-    "oldNewFlag": "N",
-    "params": "01-Oct-202431-Dec-2024Q3UNNCNEVSTTILLERS",
-    "period": "Quarterly",
-    "reInd": "N",
-    "relatingTo": "Third Quarter",
-    "resultDescription": null,
-    "resultDetailedDataLink": null,
-    "seqNumber": "1197616",
-    "symbol": "VSTTILLERS",
-    "toDate": "31-Dec-2024",
-    "xbrl": "https://nsearchives.nseindia.com/corporate/xbrl/INDAS_121277_1705282_30072026051753.xml"
-   }
-  }
+  "first_sym": "RHETAN",
+  "last_sym": "OFSS",
+  "qe": [
+   [
+    "30-SEP-2026",
+    15
+   ],
+   [
+    "30-JUN-2026",
+    3
+   ],
+   [
+    "31-MAR-2026",
+    2
+   ]
+  ]
  },
- "if_1": {
-  "ok": true,
-  "url": "/api/integrated-filing-results",
-  "params": {
-   "index": "equities",
+ "page2": {
+  "len": 20,
+  "meta": {
+   "size": 20,
+   "page": 1,
+   "totalCount": 259
+  },
+  "first_sym": "OFSS",
+  "last_sym": "RUNWALENTR",
+  "qe": [
+   [
+    "30-SEP-2026",
+    19
+   ],
+   [
+    "30-JUN-2026",
+    1
+   ]
+  ]
+ },
+ "size100": {
+  "len": 100,
+  "meta": {
+   "size": 100,
+   "page": -1,
+   "totalCount": 259
+  },
+  "first_sym": "RHETAN",
+  "last_sym": "JINDALSTEL",
+  "qe": [
+   [
+    "30-SEP-2026",
+    92
+   ],
+   [
+    "30-JUN-2026",
+    6
+   ],
+   [
+    "31-MAR-2026",
+    2
+   ]
+  ]
+ },
+ "size100_p2": {
+  "len": 100,
+  "meta": {
+   "size": 100,
+   "page": 1,
+   "totalCount": 259
+  },
+  "first_sym": "JLHL",
+  "last_sym": "MARATHON",
+  "qe": [
+   [
+    "30-SEP-2026",
+    96
+   ],
+   [
+    "30-JUN-2026",
+    2
+   ],
+   [
+    "31-MAR-2025",
+    1
+   ],
+   [
+    "30-SEP-2025",
+    1
+   ]
+  ]
+ },
+ "pageNo2": {
+  "len": 20,
+  "meta": {
+   "size": 20,
+   "page": -1,
+   "totalCount": 259
+  },
+  "first_sym": "RHETAN",
+  "last_sym": "OFSS",
+  "qe": [
+   [
+    "30-SEP-2026",
+    15
+   ],
+   [
+    "30-JUN-2026",
+    3
+   ],
+   [
+    "31-MAR-2026",
+    2
+   ]
+  ]
+ },
+ "collected": 259,
+ "q2_count": 239,
+ "q2_samples": [
+  {
+   "attFileSize": "0 Bytes",
+   "audited": "Audited",
+   "broadcast_Date": "23-Oct-2026 23:59:11",
+   "cmName": "Unicommerce Esolutions Limited",
+   "consolidated": "Consolidated",
+   "creation_Date": "23-Oct-2026 23:59:27",
+   "diff": "00:00:16",
+   "ixbrl": "https://nsearchives.nseindia.com/corporate/ixbrl/INTEGRATED_FILING_INDAS_203818_23102026235926_iXBRL_WEB.html",
+   "ixbrlFileSize": "77.28 KB",
+   "pdf_attach": "https://nsearchives.nseindia.com/corporate/null",
+   "qe_Date": "30-SEP-2026",
+   "revised_Date": null,
+   "revision_Remark": null,
+   "seq_Id": "203818",
+   "smName": "Unicommerce Esolutions Limited",
+   "symbol": "UNIECOM",
    "type": "Integrated Filing- Financials",
-   "period": "Quarterly",
-   "from_date": "20-10-2026",
-   "to_date": "24-10-2026"
+   "type_Sub": "Original",
+   "xbrl": "https://nsearchives.nseindia.com/corporate/xbrl/INTEGRATED_FILING_INDAS_1745177_23102026115926_WEB.xml",
+   "xbrlFileSize": "56.98 KB"
   },
-  "data": {
-   "type": "dict",
-   "keys": [
-    "data",
-    "size",
-    "page",
-    "totalCount"
-   ],
-   "data": {
-    "type": "list",
-    "len": 20,
-    "first": {
-     "attFileSize": "0 Bytes",
-     "audited": "Un-Audited",
-     "broadcast_Date": null,
-     "cmName": "Rhetan TMT Limited",
-     "consolidated": "Standalone",
-     "creation_Date": "24-Oct-2026 12:55:29",
-     "diff": "00:00:14",
-     "ixbrl": "https://nsearchives.nseindia.com/corporate/ixbrl/INTEGRATED_FILING_INDAS_203850_24102026125529_iXBRL_WEB.html",
-     "ixbrlFileSize": "35.62 KB",
-     "pdf_attach": "https://nsearchives.nseindia.com/corporate/null",
-     "qe_Date": "30-JUN-2026",
-     "revised_Date": "24-OCT-2026 12:55:15",
-     "revision_Remark": "Resubmission of XBRL for the quarter ended 30th June 2026 to correct the Earnings Per Share (EPS) figures for discontinued operations, as per the discrepancy observed by the Exchange.",
-     "seq_Id": "203850",
-     "smName": "Rhetan TMT Limited",
-     "symbol": "RHETAN",
-     "type": "Integrated Filing- Financials",
-     "type_Sub": "Revision",
-     "xbrl": "https://nsearchives.nseindia.com/corporate/xbrl/INTEGRATED_FILING_INDAS_1745232_24102026125529_WEB.xml",
-     "xbrlFileSize": "11.07 KB"
-    }
-   }
+  {
+   "attFileSize": "0 Bytes",
+   "audited": "Un-Audited",
+   "broadcast_Date": "23-Oct-2026 22:29:57",
+   "cmName": "Panache Digilife Limited",
+   "consolidated": "Consolidated",
+   "creation_Date": "23-Oct-2026 22:29:57",
+   "diff": "00:00:00",
+   "ixbrl": "https://nsearchives.nseindia.com/corporate/ixbrl/INTEGRATED_FILING_INDAS_203803_23102026222957_iXBRL_WEB.html",
+   "ixbrlFileSize": "79.28 KB",
+   "pdf_attach": null,
+   "qe_Date": "30-SEP-2026",
+   "revised_Date": null,
+   "revision_Remark": null,
+   "seq_Id": "203803",
+   "smName": "Panache Digilife Limited",
+   "symbol": "PANACHE",
+   "type": "Integrated Filing- Financials",
+   "type_Sub": "Original",
+   "xbrl": "https://nsearchives.nseindia.com/corporate/xbrl/INTEGRATED_FILING_INDAS_1745153_23102026102957_WEB.xml",
+   "xbrlFileSize": "53.01 KB"
+  },
+  {
+   "attFileSize": "0 Bytes",
+   "audited": "Un-Audited",
+   "broadcast_Date": "23-Oct-2026 22:27:08",
+   "cmName": "Panache Digilife Limited",
+   "consolidated": "Standalone",
+   "creation_Date": "23-Oct-2026 22:27:09",
+   "diff": "00:00:01",
+   "ixbrl": "https://nsearchives.nseindia.com/corporate/ixbrl/INTEGRATED_FILING_INDAS_203802_23102026222708_iXBRL_WEB.html",
+   "ixbrlFileSize": "106.74 KB",
+   "pdf_attach": null,
+   "qe_Date": "30-SEP-2026",
+   "revised_Date": null,
+   "revision_Remark": null,
+   "seq_Id": "203802",
+   "smName": "Panache Digilife Limited",
+   "symbol": "PANACHE",
+   "type": "Integrated Filing- Financials",
+   "type_Sub": "Original",
+   "xbrl": "https://nsearchives.nseindia.com/corporate/xbrl/INTEGRATED_FILING_INDAS_1745152_23102026102708_WEB.xml",
+   "xbrlFileSize": "128.36 KB"
   }
- },
- "if_2": {
-  "ok": true,
-  "url": "/api/integrated-filing-results",
-  "params": {
-   "index": "equities",
-   "type": "Integrated Filing- Financials"
-  },
-  "data": {
-   "type": "dict",
-   "keys": [
-    "data",
-    "size",
-    "page",
-    "totalCount"
-   ],
-   "data": {
-    "type": "list",
-    "len": 20,
-    "first": {
-     "attFileSize": "0 Bytes",
-     "audited": "Un-Audited",
-     "broadcast_Date": null,
-     "cmName": "Rhetan TMT Limited",
-     "consolidated": "Standalone",
-     "creation_Date": "24-Oct-2026 12:55:29",
-     "diff": "00:00:14",
-     "ixbrl": "https://nsearchives.nseindia.com/corporate/ixbrl/INTEGRATED_FILING_INDAS_203850_24102026125529_iXBRL_WEB.html",
-     "ixbrlFileSize": "35.62 KB",
-     "pdf_attach": "https://nsearchives.nseindia.com/corporate/null",
-     "qe_Date": "30-JUN-2026",
-     "revised_Date": "24-OCT-2026 12:55:15",
-     "revision_Remark": "Resubmission of XBRL for the quarter ended 30th June 2026 to correct the Earnings Per Share (EPS) figures for discontinued operations, as per the discrepancy observed by the Exchange.",
-     "seq_Id": "203850",
-     "smName": "Rhetan TMT Limited",
-     "symbol": "RHETAN",
-     "type": "Integrated Filing- Financials",
-     "type_Sub": "Revision",
-     "xbrl": "https://nsearchives.nseindia.com/corporate/xbrl/INTEGRATED_FILING_INDAS_1745232_24102026125529_WEB.xml",
-     "xbrlFileSize": "11.07 KB"
-    }
-   }
-  }
- },
- "if_3": {
-  "ok": true,
-  "url": "/api/integrated-filing-results",
-  "params": {
-   "index": "equities",
-   "from_date": "20-10-2026",
-   "to_date": "24-10-2026"
-  },
-  "data": {
-   "type": "dict",
-   "keys": [
-    "data",
-    "size",
-    "page",
-    "totalCount"
-   ],
-   "data": {
-    "type": "list",
-    "len": 20,
-    "first": {
-     "attFileSize": "0 Bytes",
-     "audited": null,
-     "broadcast_Date": "24-Oct-2026 12:59:08",
-     "cmName": "Nahar Poly Films Limited",
-     "consolidated": null,
-     "creation_Date": "24-Oct-2026 12:59:25",
-     "diff": "00:00:17",
-     "ixbrl": "https://nsearchives.nseindia.com/corporate/ixbrl/INTEGRATED_FILING_GOVERNANCE_203852_24102026125924_iXBRL_WEB.html",
-     "ixbrlFileSize": "65.91 KB",
-     "pdf_attach": "https://nsearchives.nseindia.com/corporate/null",
-     "qe_Date": "30-SEP-2026",
-     "revised_Date": null,
-     "revision_Remark": null,
-     "seq_Id": "203852",
-     "smName": "Nahar Poly Films Limited",
-     "symbol": "NAHARPOLY",
-     "type": "Integrated Filing- Governance",
-     "type_Sub": "New",
-     "xbrl": "https://nsearchives.nseindia.com/corporate/xbrl/INTEGRATED_FILING_GOVERNANCE_1745234_24102026125924_WEB.xml",
-     "xbrlFileSize": "109.20 KB"
-    }
-   }
-  }
- },
- "if_4": {
-  "ok": true,
-  "url": "/api/integrated-filing-results",
-  "params": {
-   "index": "equities",
-   "period_ended": "all",
-   "type": "Integrated Filing- Financials"
-  },
-  "data": {
-   "type": "dict",
-   "keys": [
-    "data",
-    "size",
-    "page",
-    "totalCount"
-   ],
-   "data": {
-    "type": "list",
-    "len": 20,
-    "first": {
-     "attFileSize": "0 Bytes",
-     "audited": "Un-Audited",
-     "broadcast_Date": null,
-     "cmName": "Rhetan TMT Limited",
-     "consolidated": "Standalone",
-     "creation_Date": "24-Oct-2026 12:55:29",
-     "diff": "00:00:14",
-     "ixbrl": "https://nsearchives.nseindia.com/corporate/ixbrl/INTEGRATED_FILING_INDAS_203850_24102026125529_iXBRL_WEB.html",
-     "ixbrlFileSize": "35.62 KB",
-     "pdf_attach": "https://nsearchives.nseindia.com/corporate/null",
-     "qe_Date": "30-JUN-2026",
-     "revised_Date": "24-OCT-2026 12:55:15",
-     "revision_Remark": "Resubmission of XBRL for the quarter ended 30th June 2026 to correct the Earnings Per Share (EPS) figures for discontinued operations, as per the discrepancy observed by the Exchange.",
-     "seq_Id": "203850",
-     "smName": "Rhetan TMT Limited",
-     "symbol": "RHETAN",
-     "type": "Integrated Filing- Financials",
-     "type_Sub": "Revision",
-     "xbrl": "https://nsearchives.nseindia.com/corporate/xbrl/INTEGRATED_FILING_INDAS_1745232_24102026125529_WEB.xml",
-     "xbrlFileSize": "11.07 KB"
-    }
-   }
-  }
- },
- "if_5": {
-  "ok": true,
-  "url": "/api/integrated-filing-results",
-  "params": {
-   "index": "equities",
-   "type": "Integrated Filing- Financial",
-   "from_date": "20-10-2026",
-   "to_date": "24-10-2026"
-  },
-  "data": {
-   "type": "dict",
-   "keys": [
-    "data",
-    "size",
-    "page",
-    "totalCount"
-   ],
-   "data": {
-    "type": "list",
-    "len": 0,
-    "first": null
-   }
-  }
- },
- "if_6": {
-  "ok": false,
-  "url": "/api/corporates-integrated-filing",
-  "params": {
-   "index": "equities",
-   "from_date": "20-10-2026",
-   "to_date": "24-10-2026"
-  },
-  "err": "RuntimeError('https://www.nseindia.com/api/corporates-integrated-filing failed: HTTP 404')"
- },
- "cfr_dates_noperiod": {
-  "ok": true,
-  "url": "/api/corporates-financial-results",
-  "params": {
-   "index": "equities",
-   "from_date": "20-10-2026",
-   "to_date": "24-10-2026"
-  },
-  "data": {
-   "type": "list",
-   "len": 0,
-   "first": null
-  }
- },
- "pit2": {
-  "ok": true,
-  "url": "/api/corporates-pit",
-  "params": {
-   "index": "equities",
-   "from_date": "01-10-2026",
-   "to_date": "24-10-2026"
-  },
-  "data": {
-   "type": "dict",
-   "keys": [
-    "acqNameList",
-    "data"
-   ],
-   "acqNameList": {
-    "type": "list",
-    "len": 0,
-    "first": null
+ ],
+ "xbrl_docs": {
+  "UNIECOM|https://nsearchives.nseindia.com/corporate/xbrl/INTEGRATED_FILING_INDAS_1745177_23102026115926_WEB.xml": {
+   "contexts": {
+    "OneD": [
+     "2026-07-01",
+     "2026-09-30",
+     null,
+     []
+    ],
+    "OneI": [
+     null,
+     null,
+     "2026-09-30",
+     []
+    ],
+    "PY_I": [
+     null,
+     null,
+     "2026-03-31",
+     []
+    ],
+    "FourD": [
+     "2026-04-01",
+     "2026-09-30",
+     null,
+     []
+    ],
+    "OneExpenses1D": [
+     "2026-07-01",
+     "2026-09-30",
+     null,
+     [
+      [
+       "in-capmkt:DetailsOfOtherExpensesAxis",
+       "in-capmkt:OtherExpenses1Member"
+      ]
+     ]
+    ],
+    "OneExpenses2D": [
+     "2026-07-01",
+     "2026-09-30",
+     null,
+     [
+      [
+       "in-capmkt:DetailsOfOtherExpensesAxis",
+       "in-capmkt:OtherExpenses2Member"
+      ]
+     ]
+    ],
+    "FourExpenses1D": [
+     "2026-04-01",
+     "2026-09-30",
+     null,
+     [
+      [
+       "in-capmkt:DetailsOfOtherExpensesAxis",
+       "in-capmkt:OtherExpenses1Member"
+      ]
+     ]
+    ],
+    "FourExpenses2D": [
+     "2026-04-01",
+     "2026-09-30",
+     null,
+     [
+      [
+       "in-capmkt:DetailsOfOtherExpensesAxis",
+       "in-capmkt:OtherExpenses2Member"
+      ]
+     ]
+    ],
+    "I_OtherNoncurrentFinancialAssets1": [
+     null,
+     null,
+     "2026-09-30",
+     []
+    ],
+    "I_OtherNoncurrentAssets1": [
+     null,
+     null,
+     "2026-09-30",
+     []
+    ],
+    "I_OtherCurrentFinancialAssets1": [
+     null,
+     null,
+     "2026-09-30",
+     []
+    ],
+    "I_OtherCurrentAssets1": [
+     null,
+     null,
+     "2026-09-30",
+     []
+    ],
+    "I_OtherNoncurrentFinancialLiabilities1": [
+     null,
+     null,
+     "2026-09-30",
+     []
+    ],
+    "I_OtherCurrentFinancialLiabilities1": [
+     null,
+     null,
+     "2026-09-30",
+     []
+    ],
+    "I_OtherCurrentFinancialLiabilities2": [
+     null,
+     null,
+     "2026-09-30",
+     []
+    ],
+    "I_OtherCurrentLiabilities1": [
+     null,
+     null,
+     "2026-09-30",
+     []
+    ],
+    "D_ItemsThatWillNotBeReclassifiedToProfitAndLoss11": [
+     "2026-07-01",
+     "2026-09-30",
+     null,
+     []
+    ],
+    "D_ItemsThatWillNotBeReclassifiedToProfitAndLoss12": [
+     "2026-07-01",
+     "2026-09-30",
+     null,
+     []
+    ],
+    "D_ItemsThatWillNotBeReclassifiedToProfitAndLoss41": [
+     "2026-04-01",
+     "2026-09-30",
+     null,
+     []
+    ],
+    "D_ItemsThatWillNotBeReclassifiedToProfitAndLoss42": [
+     "2026-04-01",
+     "2026-09-30",
+     null,
+     []
+    ],
+    "D_Auditor1": [
+     "2026-07-01",
+     "2026-09-30",
+     null,
+     []
+    ]
    },
-   "data": {
-    "type": "list",
-    "len": 0,
-    "first": null
-   }
-  }
- },
- "sast": {
-  "ok": true,
-  "url": "/api/corporate-sast-reg29",
-  "params": {
-   "index": "equities",
-   "from_date": "20-10-2026",
-   "to_date": "24-10-2026"
-  },
-  "data": {
-   "type": "dict",
-   "keys": [
-    "acqNameList",
-    "data"
+   "facts": [
+    [
+     "in-capmkt:TypeOfCompany",
+     "OneD",
+     "Main Board"
+    ],
+    [
+     "in-capmkt:DateOfStartOfFinancialYear",
+     "OneD",
+     "2026-04-01"
+    ],
+    [
+     "in-capmkt:DateOfEndOfFinancialYear",
+     "OneD",
+     "2027-03-31"
+    ],
+    [
+     "in-capmkt:DateOfBoardMeetingWhenFinancialResultsWereApproved",
+     "OneD",
+     "2026-10-23"
+    ],
+    [
+     "in-capmkt:DateOnWhichPriorIntimationOfTheMeetingForConsideringFinancialResultsWasInformedToTheExchange",
+     "OneD",
+     "2026-10-19"
+    ],
+    [
+     "in-capmkt:LevelOfRounding",
+     "OneD",
+     "Millions"
+    ],
+    [
+     "in-capmkt:TypeOfReportingPeriod",
+     "OneD",
+     "Quarterly"
+    ],
+    [
+     "in-capmkt:IsCompanyReportingMultisegmentOrSingleSegment",
+     "OneD",
+     "Single segment"
+    ],
+    [
+     "in-capmkt:DescriptionOfSingleSegment",
+     "OneD",
+     "providing solutions related to supply chain management"
+    ],
+    [
+     "in-capmkt:DateOfStartOfBoardMeeting",
+     "OneD",
+     "2026-10-23"
+    ],
+    [
+     "in-capmkt:DateOfEndOfBoardMeeting",
+     "OneD",
+     "2026-10-23"
+    ],
+    [
+     "in-capmkt:WhetherCashFlowStatementIsApplicableOnCompany",
+     "OneD",
+     "true"
+    ],
+    [
+     "in-capmkt:TypeOfCashFlowStatement",
+     "OneD",
+     "Cash Flow Indirect"
+    ],
+    [
+     "in-capmkt:DateOfStartOfReportingPeriod",
+     "OneD",
+     "2026-07-01"
+    ],
+    [
+     "in-capmkt:DateOfEndOfReportingPeriod",
+     "OneD",
+     "2026-09-30"
+    ],
+    [
+     "in-capmkt:WhetherResultsAreAuditedOrUnaudited",
+     "OneD",
+     "Audited"
+    ],
+    [
+     "in-capmkt:NatureOfReportStandaloneConsolidated",
+     "OneD",
+     "Consolidated"
+    ],
+    [
+     "in-capmkt:RevenueFromOperations",
+     "OneD",
+     "590780000"
+    ],
+    [
+     "in-capmkt:OtherIncome",
+     "OneD",
+     "15870000"
+    ],
+    [
+     "in-capmkt:Income",
+     "OneD",
+     "606650000"
+    ],
+    [
+     "in-capmkt:EmployeeBenefitExpense",
+     "OneD",
+     "209040000"
+    ],
+    [
+     "in-capmkt:DepreciationDepletionAndAmortisationExpense",
+     "OneD",
+     "21470000"
+    ],
+    [
+     "in-capmkt:OtherExpenses",
+     "OneD",
+     "295840000"
+    ],
+    [
+     "in-capmkt:Expenses",
+     "OneD",
+     "528270000"
+    ],
+    [
+     "in-capmkt:ProfitBeforeExceptionalItemsAndTax",
+     "OneD",
+     "78380000"
+    ],
+    [
+     "in-capmkt:ExceptionalItemsBeforeTax",
+     "OneD",
+     "0"
+    ],
+    [
+     "in-capmkt:ProfitBeforeTax",
+     "OneD",
+     "78380000"
+    ],
+    [
+     "in-capmkt:CurrentTax",
+     "OneD",
+     "27990000"
+    ],
+    [
+     "in-capmkt:DeferredTax",
+     "OneD",
+     "-13520000"
+    ],
+    [
+     "in-capmkt:TaxExpense",
+     "OneD",
+     "14470000"
+    ],
+    [
+     "in-capmkt:NetMovementInRegulatoryDeferralAccountBalancesRelatedToProfitOrLossAndTheRelatedDeferredTaxMovement",
+     "OneD",
+     "0"
+    ],
+    [
+     "in-capmkt:ProfitLossForPeriodFromContinuingOperations",
+     "OneD",
+     "63910000"
+    ],
+    [
+     "in-capmkt:ProfitLossFromDiscontinuedOperationsBeforeTax",
+     "OneD",
+     "0"
+    ],
+    [
+     "in-capmkt:TaxExpenseOfDiscontinuedOperations",
+     "OneD",
+     "0"
+    ],
+    [
+     "in-capmkt:ProfitLossFromDiscontinuedOperationsAfterTax",
+     "OneD",
+     "0"
+    ],
+    [
+     "in-capmkt:ShareOfProfitLossOfAssociatesAndJointVenturesAccountedForUsingEquityMethod",
+     "OneD",
+     "0"
+    ],
+    [
+     "in-capmkt:ProfitLossForPeriod",
+     "OneD",
+     "63910000"
+    ],
+    [
+     "in-capmkt:OtherComprehensiveIncomeNetOfTaxes",
+     "OneD",
+     "270000"
+    ],
+    [
+     "in-capmkt:ComprehensiveIncomeForThePeriod",
+     "OneD",
+     "64180000"
+    ],
+    [
+     "in-capmkt:ProfitOrLossAttributableToOwnersOfParent",
+     "OneD",
+     "63910000"
+    ],
+    [
+     "in-capmkt:ProfitOrLossAttributableToNonControllingInterests",
+     "OneD",
+     "0"
+    ],
+    [
+     "in-capmkt:ComprehensiveIncomeForThePeriodAttributableToOwnersOfParent",
+     "OneD",
+     "64180000"
+    ],
+    [
+     "in-capmkt:ComprehensiveIncomeForThePeriodAttributableToOwnersOfParentNonControllingInterests",
+     "OneD",
+     "0"
+    ],
+    [
+     "in-capmkt:BasicEarningsLossPerShareFromContinuingOperations",
+     "OneD",
+     "0.54"
+    ],
+    [
+     "in-capmkt:DilutedEarningsLossPerShareFromContinuingOperations",
+     "OneD",
+     "0.54"
+    ],
+    [
+     "in-capmkt:BasicEarningsLossPerShareFromDiscontinuedOperations",
+     "OneD",
+     "0"
+    ],
+    [
+     "in-capmkt:DilutedEarningsLossPerShareFromDiscontinuedOperations",
+     "OneD",
+     "0"
+    ],
+    [
+     "in-capmkt:BasicEarningsLossPerShareFromContinuingAndDiscontinuedOperations",
+     "OneD",
+     "0.54"
+    ],
+    [
+     "in-capmkt:DilutedEarningsLossPerShareFromContinuingAndDiscontinuedOperations",
+     "OneD",
+     "0.54"
+    ],
+    [
+     "in-capmkt:DateOfStartOfReportingPeriod",
+     "FourD",
+     "2026-04-01"
+    ],
+    [
+     "in-capmkt:DateOfEndOfReportingPeriod",
+     "FourD",
+     "2026-09-30"
+    ],
+    [
+     "in-capmkt:WhetherResultsAreAuditedOrUnaudited",
+     "FourD",
+     "Audited"
+    ],
+    [
+     "in-capmkt:NatureOfReportStandaloneConsolidated",
+     "FourD",
+     "Consolidated"
+    ],
+    [
+     "in-capmkt:RevenueFromOperations",
+     "FourD",
+     "1104480000"
+    ],
+    [
+     "in-capmkt:OtherIncome",
+     "FourD",
+     "30020000"
+    ],
+    [
+     "in-capmkt:Income",
+     "FourD",
+     "1134500000"
+    ],
+    [
+     "in-capmkt:EmployeeBenefitExpense",
+     "FourD",
+     "415160000"
+    ],
+    [
+     "in-capmkt:DepreciationDepletionAndAmortisationExpense",
+     "FourD",
+     "42560000"
+    ],
+    [
+     "in-capmkt:OtherExpenses",
+     "FourD",
+     "548720000"
+    ],
+    [
+     "in-capmkt:Expenses",
+     "FourD",
+     "1010480000"
+    ],
+    [
+     "in-capmkt:ProfitBeforeExceptionalItemsAndTax",
+     "FourD",
+     "124020000"
+    ],
+    [
+     "in-capmkt:ExceptionalItemsBeforeTax",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:ProfitBeforeTax",
+     "FourD",
+     "124020000"
+    ],
+    [
+     "in-capmkt:CurrentTax",
+     "FourD",
+     "52120000"
+    ],
+    [
+     "in-capmkt:DeferredTax",
+     "FourD",
+     "-38760000"
+    ],
+    [
+     "in-capmkt:TaxExpense",
+     "FourD",
+     "13360000"
+    ],
+    [
+     "in-capmkt:NetMovementInRegulatoryDeferralAccountBalancesRelatedToProfitOrLossAndTheRelatedDeferredTaxMovement",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:ProfitLossForPeriodFromContinuingOperations",
+     "FourD",
+     "110660000"
+    ],
+    [
+     "in-capmkt:ProfitLossFromDiscontinuedOperationsBeforeTax",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:TaxExpenseOfDiscontinuedOperations",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:ProfitLossFromDiscontinuedOperationsAfterTax",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:ShareOfProfitLossOfAssociatesAndJointVenturesAccountedForUsingEquityMethod",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:ProfitLossForPeriod",
+     "FourD",
+     "110660000"
+    ],
+    [
+     "in-capmkt:OtherComprehensiveIncomeNetOfTaxes",
+     "FourD",
+     "-2300000"
+    ],
+    [
+     "in-capmkt:ComprehensiveIncomeForThePeriod",
+     "FourD",
+     "108360000"
+    ],
+    [
+     "in-capmkt:ProfitOrLossAttributableToOwnersOfParent",
+     "FourD",
+     "110660000"
+    ],
+    [
+     "in-capmkt:ProfitOrLossAttributableToNonControllingInterests",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:ComprehensiveIncomeForThePeriodAttributableToOwnersOfParent",
+     "FourD",
+     "108360000"
+    ],
+    [
+     "in-capmkt:ComprehensiveIncomeForThePeriodAttributableToOwnersOfParentNonControllingInterests",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:BasicEarningsLossPerShareFromContinuingOperations",
+     "FourD",
+     "0.93"
+    ],
+    [
+     "in-capmkt:DilutedEarningsLossPerShareFromContinuingOperations",
+     "FourD",
+     "0.93"
+    ],
+    [
+     "in-capmkt:BasicEarningsLossPerShareFromDiscontinuedOperations",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:DilutedEarningsLossPerShareFromDiscontinuedOperations",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:BasicEarningsLossPerShareFromContinuingAndDiscontinuedOperations",
+     "FourD",
+     "0.93"
+    ],
+    [
+     "in-capmkt:DilutedEarningsLossPerShareFromContinuingAndDiscontinuedOperations",
+     "FourD",
+     "0.93"
+    ],
+    [
+     "in-capmkt:DescriptionOfOtherExpenses",
+     "OneExpenses1D",
+     "Server Hosting Expense"
+    ],
+    [
+     "in-capmkt:OtherExpenses",
+     "OneExpenses1D",
+     "19100000"
+    ],
+    [
+     "in-capmkt:DescriptionOfOtherExpenses",
+     "OneExpenses2D",
+     "Other Expenses"
+    ],
+    [
+     "in-capmkt:OtherExpenses",
+     "OneExpenses2D",
+     "276740000"
+    ],
+    [
+     "in-capmkt:DescriptionOfOtherExpenses",
+     "FourExpenses1D",
+     "Server Hosting Expense"
+    ],
+    [
+     "in-capmkt:OtherExpenses",
+     "FourExpenses1D",
+     "36880000"
+    ],
+    [
+     "in-capmkt:DescriptionOfOtherExpenses",
+     "FourExpenses2D",
+     "Other Expenses"
+    ],
+    [
+     "in-capmkt:OtherExpenses",
+     "FourExpenses2D",
+     "511840000"
+    ],
+    [
+     "in-capmkt:DeferredTaxAssetsNet",
+     "OneI",
+     "19780000"
+    ],
+    [
+     "in-capmkt:RegulatoryDeferralAccountDebitBalancesAndRelatedDeferredTaxAssets",
+     "OneI",
+     "0"
+    ],
+    [
+     "in-capmkt:DeferredTaxLiabilitiesNet",
+     "OneI",
+     "33730000"
+    ],
+    [
+     "in-capmkt:CurrentTaxLiabilities",
+     "OneI",
+     "54190000"
+    ],
+    [
+     "in-capmkt:RegulatoryDeferralAccountCreditBalancesAndRelatedDeferredTaxLiability",
+     "OneI",
+     "0"
+    ],
+    [
+     "in-capmkt:AdjustmentsForDepreciationAndAmortisationExpense",
+     "FourD",
+     "42560000"
+    ],
+    [
+     "in-capmkt:AdjustmentsForImpairmentLossReversalOfImpairmentLossRecognisedInProfitOrLoss",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:AdjustmentsForDividendIncome",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:AdjustmentsForInterestIncome",
+     "FourD",
+     "18920000"
+    ],
+    [
+     "in-capmkt:AdjustmentsForUndistributedProfitsOfAssociates",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:OtherAdjustmentsToReconcileProfitLoss",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:ShareOfProfitAndLossFromPartnershipFirmOrAssociationOfPersonsOrLimitedLiabilityPartnerships",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:AdjustmentsForReconcileProfitLoss",
+     "FourD",
+     "144530000"
+    ],
+    [
+     "in-capmkt:IncomeTaxesPaidRefundClassifiedAsOperatingActivities",
+     "FourD",
+     "29760000"
+    ],
+    [
+     "in-capmkt:CashReceiptsFromShareOfProfitsOfPartnershipFirmOrAssociationOfPersonsOrLimitedLiabilityPartnerships",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:IncomeTaxesPaidRefundClassifiedAsInvestingActivities",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:IncomeTaxesPaidRefundClassifiedAsFinancingActivities",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:DescriptionOfItemThatWillNotBeReclassifiedToProfitAndLoss",
+     "D_ItemsThatWillNotBeReclassifiedToProfitAndLoss11",
+     "Re-measurement gain on defined benefit plans"
+    ],
+    [
+     "in-capmkt:AmountOfItemThatWillNotBeReclassifiedToProfitAndLoss",
+     "D_ItemsThatWillNotBeReclassifiedToProfitAndLoss11",
+     "310000"
+    ],
+    [
+     "in-capmkt:DescriptionOfItemThatWillNotBeReclassifiedToProfitAndLoss",
+     "D_ItemsThatWillNotBeReclassifiedToProfitAndLoss12",
+     "Income tax effect"
+    ],
+    [
+     "in-capmkt:AmountOfItemThatWillNotBeReclassifiedToProfitAndLoss",
+     "D_ItemsThatWillNotBeReclassifiedToProfitAndLoss12",
+     "-40000"
+    ],
+    [
+     "in-capmkt:AmountOfItemThatWillNotBeReclassifiedToProfitAndLoss",
+     "OneD",
+     "270000"
+    ],
+    [
+     "in-capmkt:DescriptionOfItemThatWillNotBeReclassifiedToProfitAndLoss",
+     "D_ItemsThatWillNotBeReclassifiedToProfitAndLoss41",
+     "Re-measurement gain on defined benefit plans"
+    ],
+    [
+     "in-capmkt:AmountOfItemThatWillNotBeReclassifiedToProfitAndLoss",
+     "D_ItemsThatWillNotBeReclassifiedToProfitAndLoss41",
+     "-2960000"
+    ],
+    [
+     "in-capmkt:DescriptionOfItemThatWillNotBeReclassifiedToProfitAndLoss",
+     "D_ItemsThatWillNotBeReclassifiedToProfitAndLoss42",
+     "Income tax effect"
+    ],
+    [
+     "in-capmkt:AmountOfItemThatWillNotBeReclassifiedToProfitAndLoss",
+     "D_ItemsThatWillNotBeReclassifiedToProfitAndLoss42",
+     "660000"
+    ],
+    [
+     "in-capmkt:AmountOfItemThatWillNotBeReclassifiedToProfitAndLoss",
+     "FourD",
+     "-2300000"
+    ],
+    [
+     "in-capmkt:IncomeTaxRelatingToItemsThatWillNotBeReclassifiedToProfitOrLoss",
+     "OneD",
+     "0"
+    ],
+    [
+     "in-capmkt:IncomeTaxRelatingToItemsThatWillNotBeReclassifiedToProfitOrLoss",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:OtherComprehensiveIncome",
+     "OneD",
+     "270000"
+    ],
+    [
+     "in-capmkt:OtherComprehensiveIncome",
+     "FourD",
+     "-2300000"
+    ],
+    [
+     "in-capmkt:WhetherResultsAreAuditedOrUnauditedForImpactOfAuditQualification",
+     "OneD",
+     "Audited"
+    ],
+    [
+     "in-capmkt:WhetherTheFirmHoldsAValidPeerReviewCertificateIssuedByPeerReviewBoardOfICAI",
+     "D_Auditor1",
+     "true"
+    ],
+    [
+     "in-capmkt:ValidityDateOfCertificate",
+     "D_Auditor1",
+     "2026-11-30"
+    ]
    ],
-   "acqNameList": {
-    "type": "list",
-    "len": 32,
-    "first": "Gaurav Goyal"
+   "len": 58348
+  },
+  "CSBBANK|https://nsearchives.nseindia.com/corporate/xbrl/INTEGRATED_FILING_BANKING_1745095_23102026083629_WEB.xml": {
+   "contexts": {
+    "OneD": [
+     "2026-07-01",
+     "2026-09-30",
+     null,
+     []
+    ],
+    "OneI": [
+     null,
+     null,
+     "2026-09-30",
+     []
+    ],
+    "PY_I": [
+     null,
+     null,
+     "2026-03-31",
+     []
+    ],
+    "FourD": [
+     "2026-04-01",
+     "2026-09-30",
+     null,
+     []
+    ],
+    "OneExpenses1D": [
+     "2026-07-01",
+     "2026-09-30",
+     null,
+     [
+      [
+       "in-capmkt:DetailsOfOtherOperatingExpensesAxis",
+       "in-capmkt:OtherOperatingExpenses1Member"
+      ]
+     ]
+    ],
+    "FourExpenses1D": [
+     "2026-04-01",
+     "2026-09-30",
+     null,
+     [
+      [
+       "in-capmkt:DetailsOfOtherOperatingExpensesAxis",
+       "in-capmkt:OtherOperatingExpenses1Member"
+      ]
+     ]
+    ],
+    "I_OtherLiabilitiesAndProvisions1": [
+     null,
+     null,
+     "2026-09-30",
+     []
+    ],
+    "I_OtherAssets1": [
+     null,
+     null,
+     "2026-09-30",
+     []
+    ],
+    "OneReportable11D": [
+     "2026-07-01",
+     "2026-09-30",
+     null,
+     [
+      [
+       "in-capmkt:ReportableSegmentsAxis",
+       "in-capmkt:ReportableSegments1Member"
+      ]
+     ]
+    ],
+    "OneReportable12D": [
+     "2026-07-01",
+     "2026-09-30",
+     null,
+     [
+      [
+       "in-capmkt:ReportableSegmentsAxis",
+       "in-capmkt:ReportableSegments2Member"
+      ]
+     ]
+    ],
+    "OneReportable13D": [
+     "2026-07-01",
+     "2026-09-30",
+     null,
+     [
+      [
+       "in-capmkt:ReportableSegmentsAxis",
+       "in-capmkt:ReportableSegments3Member"
+      ]
+     ]
+    ],
+    "OneReportable14D": [
+     "2026-07-01",
+     "2026-09-30",
+     null,
+     [
+      [
+       "in-capmkt:ReportableSegmentsAxis",
+       "in-capmkt:ReportableSegments4Member"
+      ]
+     ]
+    ],
+    "FourReportable11D": [
+     "2026-04-01",
+     "2026-09-30",
+     null,
+     [
+      [
+       "in-capmkt:ReportableSegmentsAxis",
+       "in-capmkt:ReportableSegments1Member"
+      ]
+     ]
+    ],
+    "FourReportable12D": [
+     "2026-04-01",
+     "2026-09-30",
+     null,
+     [
+      [
+       "in-capmkt:ReportableSegmentsAxis",
+       "in-capmkt:ReportableSegments2Member"
+      ]
+     ]
+    ],
+    "FourReportable13D": [
+     "2026-04-01",
+     "2026-09-30",
+     null,
+     [
+      [
+       "in-capmkt:ReportableSegmentsAxis",
+       "in-capmkt:ReportableSegments3Member"
+      ]
+     ]
+    ],
+    "FourReportable14D": [
+     "2026-04-01",
+     "2026-09-30",
+     null,
+     [
+      [
+       "in-capmkt:ReportableSegmentsAxis",
+       "in-capmkt:ReportableSegments4Member"
+      ]
+     ]
+    ],
+    "OneReportable21D": [
+     "2026-07-01",
+     "2026-09-30",
+     null,
+     [
+      [
+       "in-capmkt:ReportableSegmentsFinanceCostsAxis",
+       "in-capmkt:ReportableSegments1Member"
+      ]
+     ]
+    ],
+    "OneReportable22D": [
+     "2026-07-01",
+     "2026-09-30",
+     null,
+     [
+      [
+       "in-capmkt:ReportableSegmentsFinanceCostsAxis",
+       "in-capmkt:ReportableSegments2Member"
+      ]
+     ]
+    ],
+    "OneReportable23D": [
+     "2026-07-01",
+     "2026-09-30",
+     null,
+     [
+      [
+       "in-capmkt:ReportableSegmentsFinanceCostsAxis",
+       "in-capmkt:ReportableSegments3Member"
+      ]
+     ]
+    ],
+    "OneReportable24D": [
+     "2026-07-01",
+     "2026-09-30",
+     null,
+     [
+      [
+       "in-capmkt:ReportableSegmentsFinanceCostsAxis",
+       "in-capmkt:ReportableSegments4Member"
+      ]
+     ]
+    ],
+    "FourReportable21D": [
+     "2026-04-01",
+     "2026-09-30",
+     null,
+     [
+      [
+       "in-capmkt:ReportableSegmentsFinanceCostsAxis",
+       "in-capmkt:ReportableSegments1Member"
+      ]
+     ]
+    ],
+    "FourReportable22D": [
+     "2026-04-01",
+     "2026-09-30",
+     null,
+     [
+      [
+       "in-capmkt:ReportableSegmentsFinanceCostsAxis",
+       "in-capmkt:ReportableSegments2Member"
+      ]
+     ]
+    ],
+    "FourReportable23D": [
+     "2026-04-01",
+     "2026-09-30",
+     null,
+     [
+      [
+       "in-capmkt:ReportableSegmentsFinanceCostsAxis",
+       "in-capmkt:ReportableSegments3Member"
+      ]
+     ]
+    ],
+    "FourReportable24D": [
+     "2026-04-01",
+     "2026-09-30",
+     null,
+     [
+      [
+       "in-capmkt:ReportableSegmentsFinanceCostsAxis",
+       "in-capmkt:ReportableSegments4Member"
+      ]
+     ]
+    ],
+    "OneReportable31D": [
+     "2026-07-01",
+     "2026-09-30",
+     null,
+     [
+      [
+       "in-capmkt:ReportableSegmentAssetsAxis",
+       "in-capmkt:ReportableSegments1Member"
+      ]
+     ]
+    ],
+    "OneReportable31I": [
+     null,
+     null,
+     "2026-09-30",
+     [
+      [
+       "in-capmkt:ReportableSegmentAssetsAxis",
+       "in-capmkt:ReportableSegments1Member"
+      ]
+     ]
+    ],
+    "OneReportable32D": [
+     "2026-07-01",
+     "2026-09-30",
+     null,
+     [
+      [
+       "in-capmkt:ReportableSegmentAssetsAxis",
+       "in-capmkt:ReportableSegments2Member"
+      ]
+     ]
+    ],
+    "OneReportable32I": [
+     null,
+     null,
+     "2026-09-30",
+     [
+      [
+       "in-capmkt:ReportableSegmentAssetsAxis",
+       "in-capmkt:ReportableSegments2Member"
+      ]
+     ]
+    ],
+    "OneReportable33D": [
+     "2026-07-01",
+     "2026-09-30",
+     null,
+     [
+      [
+       "in-capmkt:ReportableSegmentAssetsAxis",
+       "in-capmkt:ReportableSegments3Member"
+      ]
+     ]
+    ],
+    "OneReportable33I": [
+     null,
+     null,
+     "2026-09-30",
+     [
+      [
+       "in-capmkt:ReportableSegmentAssetsAxis",
+       "in-capmkt:ReportableSegments3Member"
+      ]
+     ]
+    ],
+    "OneReportable34D": [
+     "2026-07-01",
+     "2026-09-30",
+     null,
+     [
+      [
+       "in-capmkt:ReportableSegmentAssetsAxis",
+       "in-capmkt:ReportableSegments4Member"
+      ]
+     ]
+    ],
+    "OneReportable34I": [
+     null,
+     null,
+     "2026-09-30",
+     [
+      [
+       "in-capmkt:ReportableSegmentAssetsAxis",
+       "in-capmkt:ReportableSegments4Member"
+      ]
+     ]
+    ],
+    "OneReportable41D": [
+     "2026-07-01",
+     "2026-09-30",
+     null,
+     [
+      [
+       "in-capmkt:ReportableSegmentLiabilitiesAxis",
+       "in-capmkt:ReportableSegments1Member"
+      ]
+     ]
+    ],
+    "OneReportable41I": [
+     null,
+     null,
+     "2026-09-30",
+     [
+      [
+       "in-capmkt:ReportableSegmentLiabilitiesAxis",
+       "in-capmkt:ReportableSegments1Member"
+      ]
+     ]
+    ],
+    "OneReportable42D": [
+     "2026-07-01",
+     "2026-09-30",
+     null,
+     [
+      [
+       "in-capmkt:ReportableSegmentLiabilitiesAxis",
+       "in-capmkt:ReportableSegments2Member"
+      ]
+     ]
+    ],
+    "OneReportable42I": [
+     null,
+     null,
+     "2026-09-30",
+     [
+      [
+       "in-capmkt:ReportableSegmentLiabilitiesAxis",
+       "in-capmkt:ReportableSegments2Member"
+      ]
+     ]
+    ],
+    "OneReportable43D": [
+     "2026-07-01",
+     "2026-09-30",
+     null,
+     [
+      [
+       "in-capmkt:ReportableSegmentLiabilitiesAxis",
+       "in-capmkt:ReportableSegments3Member"
+      ]
+     ]
+    ],
+    "OneReportable43I": [
+     null,
+     null,
+     "2026-09-30",
+     [
+      [
+       "in-capmkt:ReportableSegmentLiabilitiesAxis",
+       "in-capmkt:ReportableSegments3Member"
+      ]
+     ]
+    ],
+    "OneReportable44D": [
+     "2026-07-01",
+     "2026-09-30",
+     null,
+     [
+      [
+       "in-capmkt:ReportableSegmentLiabilitiesAxis",
+       "in-capmkt:ReportableSegments4Member"
+      ]
+     ]
+    ],
+    "OneReportable44I": [
+     null,
+     null,
+     "2026-09-30",
+     [
+      [
+       "in-capmkt:ReportableSegmentLiabilitiesAxis",
+       "in-capmkt:ReportableSegments4Member"
+      ]
+     ]
+    ],
+    "D_RelatedPartyTransaction1": [
+     "2026-07-01",
+     "2026-09-30",
+     null,
+     []
+    ],
+    "I_RelatedPartyTransaction_PY1": [
+     null,
+     null,
+     "2026-06-30",
+     []
+    ],
+    "I_RelatedPartyTransaction1": [
+     null,
+     null,
+     "2026-09-30",
+     []
+    ],
+    "D_RelatedPartyTransaction2": [
+     "2026-07-01",
+     "2026-09-30",
+     null,
+     []
+    ],
+    "I_RelatedPartyTransaction_PY2": [
+     null,
+     null,
+     "2026-06-30",
+     []
+    ],
+    "I_RelatedPartyTransaction2": [
+     null,
+     null,
+     "2026-09-30",
+     []
+    ],
+    "D_RelatedPartyTransaction3": [
+     "2026-07-01",
+     "2026-09-30",
+     null,
+     []
+    ],
+    "I_RelatedPartyTransaction_PY3": [
+     null,
+     null,
+     "2026-06-30",
+     []
+    ],
+    "I_RelatedPartyTransaction3": [
+     null,
+     null,
+     "2026-09-30",
+     []
+    ],
+    "D_RelatedPartyTransaction4": [
+     "2026-07-01",
+     "2026-09-30",
+     null,
+     []
+    ],
+    "I_RelatedPartyTransaction_PY4": [
+     null,
+     null,
+     "2026-06-30",
+     []
+    ],
+    "I_RelatedPartyTransaction4": [
+     null,
+     null,
+     "2026-09-30",
+     []
+    ],
+    "D_RelatedPartyTransaction5": [
+     "2026-07-01",
+     "2026-09-30",
+     null,
+     []
+    ],
+    "I_RelatedPartyTransaction_PY5": [
+     null,
+     null,
+     "2026-06-30",
+     []
+    ],
+    "I_RelatedPartyTransaction5": [
+     null,
+     null,
+     "2026-09-30",
+     []
+    ],
+    "D_Auditor1": [
+     "2026-07-01",
+     "2026-09-30",
+     null,
+     []
+    ],
+    "D_Auditor2": [
+     "2026-07-01",
+     "2026-09-30",
+     null,
+     []
+    ]
    },
-   "data": {
-    "type": "list",
-    "len": 33,
-    "first": {
-     "acqSaleType": "Sale",
-     "acqType": "Equity shares",
-     "acquirerDate": "28-SEP-2026 to 28-SEP-2026",
-     "acquirerName": "Gaurav Goyal",
-     "acquisitionMode": "Others",
-     "application_no": "179945",
-     "attachement": "https://nsearchives.nseindia.com/corporate/Tikona_10232026170502_54091.zip",
-     "company": "Tikona Communication Limited",
-     "noOfShareAcq": null,
-     "noOfShareAft": "0",
-     "noOfShareSale": "17080288",
-     "promoterType": "Y",
-     "regType": "Reg29(2)",
-     "remarks": null,
-     "symbol": "TIKONA",
-     "sysTime": "23-Oct-2026 17:05",
-     "time": "23-Oct-2026, 17-05",
-     "timeDifference": "00:00:05",
-     "timestamp": "23-Oct-2026 17:05",
-     "totAcqDiluted": "-",
-     "totAcqShare": null,
-     "totAftDiluted": "0",
-     "totAftShare": "0",
-     "totSaleDiluted": "56.13",
-     "totSaleShare": "56.13"
-    }
+   "facts": [
+    [
+     "in-capmkt:DateOfStartOfFinancialYear",
+     "OneD",
+     "2026-04-01"
+    ],
+    [
+     "in-capmkt:DateOfEndOfFinancialYear",
+     "OneD",
+     "2027-03-31"
+    ],
+    [
+     "in-capmkt:DateOfBoardMeetingWhenFinancialResultsWereApproved",
+     "OneD",
+     "2026-10-23"
+    ],
+    [
+     "in-capmkt:DateOnWhichPriorIntimationOfTheMeetingForConsideringFinancialResultsWasInformedToTheExchange",
+     "OneD",
+     "2026-10-05"
+    ],
+    [
+     "in-capmkt:LevelOfRounding",
+     "OneD",
+     "Lakhs"
+    ],
+    [
+     "in-capmkt:TypeOfReportingPeriod",
+     "OneD",
+     "Quarterly"
+    ],
+    [
+     "in-capmkt:IsCompanyReportingMultisegmentOrSingleSegment",
+     "OneD",
+     "Multi segment"
+    ],
+    [
+     "in-capmkt:DateOfStartOfBoardMeeting",
+     "OneD",
+     "2026-10-23"
+    ],
+    [
+     "in-capmkt:DateOfEndOfBoardMeeting",
+     "OneD",
+     "2026-10-23"
+    ],
+    [
+     "in-capmkt:WhetherCashFlowStatementIsApplicableOnCompany",
+     "OneD",
+     "true"
+    ],
+    [
+     "in-capmkt:TypeOfCashFlowStatement",
+     "OneD",
+     "Cash Flow Indirect"
+    ],
+    [
+     "in-capmkt:WhetherTheCompanyHasAnyRelatedParty",
+     "OneD",
+     "true"
+    ],
+    [
+     "in-capmkt:WhetherTheCompanyHasEnteredIntoAnyRelatedPartyTransactionDuringThePeriod",
+     "OneD",
+     "true"
+    ],
+    [
+     "in-capmkt:WeDeclareThatTheScheduledCommercialBankAsPerRBICircularRBIDBR20151619Dated03March2016HasAllowedAdditionalInterestOfOnePerCentPerAnnumOverAndAboveTheRateOfInterestMentionedInTheScheduleOfInterestRatesOnSavings",
+     "OneD",
+     "Yes"
+    ],
+    [
+     "in-capmkt:WhetherTheCompanyIsAHighValueDebtListedEntityAccordingTo1AOfRegulation15",
+     "OneI",
+     "false"
+    ],
+    [
+     "in-capmkt:WhetherTheUpdatedRelatedPartyTransactionsPolicyHasBeenUploadedOnTheWebsiteOfTheCompanyInComplianceWithRegulation23",
+     "OneD",
+     "true"
+    ],
+    [
+     "in-capmkt:LatestDateOnWhichRelatedPartyTransactionsPolicyIsUpdated",
+     "OneD",
+     "2025-09-26"
+    ],
+    [
+     "in-capmkt:WhetherStatementOnDeviationOrVariationForProceedsOfPublicIssueOrRightIssueOrPreferentialIssueOrQIPEtcIsApplicableToTheCompanyForTheCurrentQuarter",
+     "OneD",
+     "false"
+    ],
+    [
+     "in-capmkt:WhetherTheDisclosureForTheDefaultOnLoansAndDebtSecuritiesIsApplicableToTheEntity",
+     "OneD",
+     "false"
+    ],
+    [
+     "in-capmkt:DateOfStartOfReportingPeriod",
+     "OneD",
+     "2026-07-01"
+    ],
+    [
+     "in-capmkt:DateOfEndOfReportingPeriod",
+     "OneD",
+     "2026-09-30"
+    ],
+    [
+     "in-capmkt:WhetherResultsAreAuditedOrUnaudited",
+     "OneD",
+     "Unaudited"
+    ],
+    [
+     "in-capmkt:NatureOfReportStandaloneConsolidated",
+     "OneD",
+     "Standalone"
+    ],
+    [
+     "in-capmkt:RevenueOnInvestments",
+     "OneD",
+     "2108700000"
+    ],
+    [
+     "in-capmkt:OtherIncome",
+     "OneD",
+     "2735100000"
+    ],
+    [
+     "in-capmkt:Income",
+     "OneD",
+     "16124800000"
+    ],
+    [
+     "in-capmkt:OtherOperatingExpenses",
+     "OneD",
+     "2414300000"
+    ],
+    [
+     "in-capmkt:OperatingExpenses",
+     "OneD",
+     "5076800000"
+    ],
+    [
+     "in-capmkt:OperatingProfitBeforeProvisionAndContingencies",
+     "OneD",
+     "2757600000"
+    ],
+    [
+     "in-capmkt:ProvisionsOtherThanTaxAndContingencies",
+     "OneD",
+     "300900000"
+    ],
+    [
+     "in-capmkt:ProfitLossFromOrdinaryActivitiesBeforeTax",
+     "OneD",
+     "2456700000"
+    ],
+    [
+     "in-capmkt:TaxExpense",
+     "OneD",
+     "629500000"
+    ],
+    [
+     "in-capmkt:ProfitLossFromOrdinaryActivitiesAfterTax",
+     "OneD",
+     "1827200000"
+    ],
+    [
+     "in-capmkt:ProfitLossForThePeriod",
+     "OneD",
+     "1827200000"
+    ],
+    [
+     "in-capmkt:ProfitLossAfterTaxesMinorityInterestAndShareOfProfitLossOfAssociates",
+     "OneD",
+     "1827200000"
+    ],
+    [
+     "in-capmkt:BasicEarningsPerShareBeforeExtraordinaryItems",
+     "OneD",
+     "10.53"
+    ],
+    [
+     "in-capmkt:DilutedEarningsPerShareBeforeExtraordinaryItems",
+     "OneD",
+     "10.53"
+    ],
+    [
+     "in-capmkt:BasicEarningsPerShareAfterExtraordinaryItems",
+     "OneD",
+     "10.53"
+    ],
+    [
+     "in-capmkt:DilutedEarningsPerShareAfterExtraordinaryItems",
+     "OneD",
+     "10.53"
+    ],
+    [
+     "in-capmkt:DateOfStartOfReportingPeriod",
+     "FourD",
+     "2026-04-01"
+    ],
+    [
+     "in-capmkt:DateOfEndOfReportingPeriod",
+     "FourD",
+     "2026-09-30"
+    ],
+    [
+     "in-capmkt:WhetherResultsAreAuditedOrUnaudited",
+     "FourD",
+     "Unaudited"
+    ],
+    [
+     "in-capmkt:NatureOfReportStandaloneConsolidated",
+     "FourD",
+     "Standalone"
+    ],
+    [
+     "in-capmkt:RevenueOnInvestments",
+     "FourD",
+     "4152100000"
+    ],
+    [
+     "in-capmkt:OtherIncome",
+     "FourD",
+     "5022600000"
+    ],
+    [
+     "in-capmkt:Income",
+     "FourD",
+     "31285500000"
+    ],
+    [
+     "in-capmkt:OtherOperatingExpenses",
+     "FourD",
+     "4455100000"
+    ],
+    [
+     "in-capmkt:OperatingExpenses",
+     "FourD",
+     "9643200000"
+    ],
+    [
+     "in-capmkt:OperatingProfitBeforeProvisionAndContingencies",
+     "FourD",
+     "5265300000"
+    ],
+    [
+     "in-capmkt:ProvisionsOtherThanTaxAndContingencies",
+     "FourD",
+     "791200000"
+    ],
+    [
+     "in-capmkt:ProfitLossFromOrdinaryActivitiesBeforeTax",
+     "FourD",
+     "4474100000"
+    ],
+    [
+     "in-capmkt:TaxExpense",
+     "FourD",
+     "1146500000"
+    ],
+    [
+     "in-capmkt:ProfitLossFromOrdinaryActivitiesAfterTax",
+     "FourD",
+     "3327600000"
+    ],
+    [
+     "in-capmkt:ProfitLossForThePeriod",
+     "FourD",
+     "3327600000"
+    ],
+    [
+     "in-capmkt:ProfitLossAfterTaxesMinorityInterestAndShareOfProfitLossOfAssociates",
+     "FourD",
+     "3327600000"
+    ],
+    [
+     "in-capmkt:BasicEarningsPerShareBeforeExtraordinaryItems",
+     "FourD",
+     "19.18"
+    ],
+    [
+     "in-capmkt:DilutedEarningsPerShareBeforeExtraordinaryItems",
+     "FourD",
+     "19.18"
+    ],
+    [
+     "in-capmkt:BasicEarningsPerShareAfterExtraordinaryItems",
+     "FourD",
+     "19.18"
+    ],
+    [
+     "in-capmkt:DilutedEarningsPerShareAfterExtraordinaryItems",
+     "FourD",
+     "19.18"
+    ],
+    [
+     "in-capmkt:DescriptionOfOperatingExpenses",
+     "OneExpenses1D",
+     "Other operating expense"
+    ],
+    [
+     "in-capmkt:OtherOperatingExpenses",
+     "OneExpenses1D",
+     "2414300000"
+    ],
+    [
+     "in-capmkt:DescriptionOfOperatingExpenses",
+     "FourExpenses1D",
+     "Other operating expense"
+    ],
+    [
+     "in-capmkt:OtherOperatingExpenses",
+     "FourExpenses1D",
+     "4455100000"
+    ],
+    [
+     "in-capmkt:DescriptionOfReportableSegment",
+     "OneReportable11D",
+     "Treasury"
+    ],
+    [
+     "in-capmkt:SegmentRevenue",
+     "OneReportable11D",
+     "2326700000"
+    ],
+    [
+     "in-capmkt:DescriptionOfReportableSegment",
+     "OneReportable12D",
+     "Corporate/Wholesale Banking"
+    ],
+    [
+     "in-capmkt:SegmentRevenue",
+     "OneReportable12D",
+     "4260500000"
+    ],
+    [
+     "in-capmkt:DescriptionOfReportableSegment",
+     "OneReportable13D",
+     "Retail Banking"
+    ],
+    [
+     "in-capmkt:SegmentRevenue",
+     "OneReportable13D",
+     "8980800000"
+    ],
+    [
+     "in-capmkt:DescriptionOfReportableSegment",
+     "OneReportable14D",
+     "Other Banking Operations"
+    ],
+    [
+     "in-capmkt:SegmentRevenue",
+     "OneReportable14D",
+     "556800000"
+    ],
+    [
+     "in-capmkt:DescriptionOfReportableSegment",
+     "FourReportable11D",
+     "Treasury"
+    ],
+    [
+     "in-capmkt:SegmentRevenue",
+     "FourReportable11D",
+     "4683100000"
+    ],
+    [
+     "in-capmkt:DescriptionOfReportableSegment",
+     "FourReportable12D",
+     "Corporate/Wholesale Banking"
+    ],
+    [
+     "in-capmkt:SegmentRevenue",
+     "FourReportable12D",
+     "8082500000"
+    ],
+    [
+     "in-capmkt:DescriptionOfReportableSegment",
+     "FourReportable13D",
+     "Retail Banking"
+    ],
+    [
+     "in-capmkt:SegmentRevenue",
+     "FourReportable13D",
+     "17602400000"
+    ],
+    [
+     "in-capmkt:DescriptionOfReportableSegment",
+     "FourReportable14D",
+     "Other Banking Operations"
+    ],
+    [
+     "in-capmkt:SegmentRevenue",
+     "FourReportable14D",
+     "917500000"
+    ],
+    [
+     "in-capmkt:SegmentRevenue",
+     "OneD",
+     "16124800000"
+    ],
+    [
+     "in-capmkt:SegmentRevenue",
+     "FourD",
+     "31285500000"
+    ],
+    [
+     "in-capmkt:InterSegmentRevenue",
+     "OneD",
+     "0"
+    ],
+    [
+     "in-capmkt:InterSegmentRevenue",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:SegmentRevenueFromOperations",
+     "OneD",
+     "16124800000"
+    ],
+    [
+     "in-capmkt:SegmentRevenueFromOperations",
+     "FourD",
+     "31285500000"
+    ],
+    [
+     "in-capmkt:DescriptionOfReportableSegment",
+     "OneReportable21D",
+     "Treasury"
+    ],
+    [
+     "in-capmkt:SegmentProfitLossBeforeTaxAndFinanceCosts",
+     "OneReportable21D",
+     "31200000"
+    ],
+    [
+     "in-capmkt:DescriptionOfReportableSegment",
+     "OneReportable22D",
+     "Corporate/Wholesale Banking"
+    ],
+    [
+     "in-capmkt:SegmentProfitLossBeforeTaxAndFinanceCosts",
+     "OneReportable22D",
+     "359000000"
+    ],
+    [
+     "in-capmkt:DescriptionOfReportableSegment",
+     "OneReportable23D",
+     "Retail Banking"
+    ],
+    [
+     "in-capmkt:SegmentProfitLossBeforeTaxAndFinanceCosts",
+     "OneReportable23D",
+     "1877100000"
+    ],
+    [
+     "in-capmkt:DescriptionOfReportableSegment",
+     "OneReportable24D",
+     "Other Banking Operations"
+    ],
+    [
+     "in-capmkt:SegmentProfitLossBeforeTaxAndFinanceCosts",
+     "OneReportable24D",
+     "196200000"
+    ],
+    [
+     "in-capmkt:DescriptionOfReportableSegment",
+     "FourReportable21D",
+     "Treasury"
+    ],
+    [
+     "in-capmkt:SegmentProfitLossBeforeTaxAndFinanceCosts",
+     "FourReportable21D",
+     "178200000"
+    ],
+    [
+     "in-capmkt:DescriptionOfReportableSegment",
+     "FourReportable22D",
+     "Corporate/Wholesale Banking"
+    ],
+    [
+     "in-capmkt:SegmentProfitLossBeforeTaxAndFinanceCosts",
+     "FourReportable22D",
+     "642900000"
+    ],
+    [
+     "in-capmkt:DescriptionOfReportableSegment",
+     "FourReportable23D",
+     "Retail Banking"
+    ],
+    [
+     "in-capmkt:SegmentProfitLossBeforeTaxAndFinanceCosts",
+     "FourReportable23D",
+     "3337000000"
+    ],
+    [
+     "in-capmkt:DescriptionOfReportableSegment",
+     "FourReportable24D",
+     "Other Banking Operations"
+    ],
+    [
+     "in-capmkt:SegmentProfitLossBeforeTaxAndFinanceCosts",
+     "FourReportable24D",
+     "324100000"
+    ],
+    [
+     "in-capmkt:SegmentProfitLossBeforeTaxAndFinanceCosts",
+     "OneD",
+     "2463500000"
+    ],
+    [
+     "in-capmkt:SegmentProfitLossBeforeTaxAndFinanceCosts",
+     "FourD",
+     "4482200000"
+    ],
+    [
+     "in-capmkt:OtherUnallocableExpenditureNetOffUnAllocableIncome",
+     "OneD",
+     "6800000"
+    ],
+    [
+     "in-capmkt:OtherUnallocableExpenditureNetOffUnAllocableIncome",
+     "FourD",
+     "8100000"
+    ],
+    [
+     "in-capmkt:SegmentProfitBeforeTax",
+     "OneD",
+     "2456700000"
+    ],
+    [
+     "in-capmkt:SegmentProfitBeforeTax",
+     "FourD",
+     "4474100000"
+    ],
+    [
+     "in-capmkt:DescriptionOfReportableSegment",
+     "OneReportable31D",
+     "Treasury"
+    ],
+    [
+     "in-capmkt:SegmentAssets",
+     "OneReportable31I",
+     "161902500000"
+    ],
+    [
+     "in-capmkt:DescriptionOfReportableSegment",
+     "OneReportable32D",
+     "Corporate/Wholesale Banking"
+    ],
+    [
+     "in-capmkt:SegmentAssets",
+     "OneReportable32I",
+     "157226900000"
+    ],
+    [
+     "in-capmkt:DescriptionOfReportableSegment",
+     "OneReportable33D",
+     "Retail Banking"
+    ],
+    [
+     "in-capmkt:SegmentAssets",
+     "OneReportable33I",
+     "285191300000"
+    ],
+    [
+     "in-capmkt:DescriptionOfReportableSegment",
+     "OneReportable34D",
+     "Other Banking Operations"
+    ],
+    [
+     "in-capmkt:SegmentAssets",
+     "OneReportable34I",
+     "504600000"
+    ],
+    [
+     "in-capmkt:SegmentAssets",
+     "OneI",
+     "604825300000"
+    ],
+    [
+     "in-capmkt:NetSegmentAssets",
+     "OneI",
+     "605611200000"
+    ],
+    [
+     "in-capmkt:DescriptionOfReportableSegment",
+     "OneReportable41D",
+     "Treasury"
+    ],
+    [
+     "in-capmkt:SegmentLiabilities",
+     "OneReportable41I",
+     "42606500000"
+    ],
+    [
+     "in-capmkt:DescriptionOfReportableSegment",
+     "OneReportable42D",
+     "Corporate/Wholesale Banking"
+    ],
+    [
+     "in-capmkt:SegmentLiabilities",
+     "OneReportable42I",
+     "279009700000"
+    ],
+    [
+     "in-capmkt:DescriptionOfReportableSegment",
+     "OneReportable43D",
+     "Retail Banking"
+    ],
+    [
+     "in-capmkt:SegmentLiabilities",
+     "OneReportable43I",
+     "231930300000"
+    ],
+    [
+     "in-capmkt:DescriptionOfReportableSegment",
+     "OneReportable44D",
+     "Other Banking Operations"
+    ],
+    [
+     "in-capmkt:SegmentLiabilities",
+     "OneReportable44I",
+     "0"
+    ],
+    [
+     "in-capmkt:SegmentLiabilities",
+     "OneI",
+     "553546500000"
+    ],
+    [
+     "in-capmkt:NetSegmentLiabilities",
+     "OneI",
+     "553546500000"
+    ],
+    [
+     "in-capmkt:ProfitBeforeExtraordinaryItemsAndTax",
+     "FourD",
+     "4474100000"
+    ],
+    [
+     "in-capmkt:AdjustmentsForDepreciationAndAmortisationExpense",
+     "FourD",
+     "662500000"
+    ],
+    [
+     "in-capmkt:AdjustmentsForImpairmentLossReversalOfImpairmentLossRecognisedInProfitOrLoss",
+     "FourD",
+     "954000000"
+    ],
+    [
+     "in-capmkt:AdjustmentsForDividendIncome",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:OtherAdjustmentsToReconcileProfitLoss",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:ShareOfProfitAndLossFromPartnershipFirmOrAssociationOfPersonsOrLimitedLiabilityPartnerships",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:AdjustmentsToProfitLoss",
+     "FourD",
+     "1640300000"
+    ],
+    [
+     "in-capmkt:AdjustmentsForReconcileProfitLoss",
+     "FourD",
+     "15410600000"
+    ],
+    [
+     "in-capmkt:IncomeTaxesPaidRefundClassifiedAsOperatingActivities",
+     "FourD",
+     "1117800000"
+    ],
+    [
+     "in-capmkt:CashReceiptsFromShareOfProfitsOfPartnershipFirmOrAssociationOfPersonsOrLimitedLiabilityPartnerships",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:IncomeTaxesPaidRefundClassifiedAsInvestingActivities",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:IncomeTaxesPaidRefundClassifiedAsFinancingActivities",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:TypeOfRelatedPartyTransaction",
+     "D_RelatedPartyTransaction1",
+     "Any other transaction"
+    ],
+    [
+     "in-capmkt:TypeOfRelatedPartyTransaction",
+     "D_RelatedPartyTransaction2",
+     "Interest paid"
+    ],
+    [
+     "in-capmkt:TypeOfRelatedPartyTransaction",
+     "D_RelatedPartyTransaction3",
+     "Any other transaction"
+    ],
+    [
+     "in-capmkt:TypeOfRelatedPartyTransaction",
+     "D_RelatedPartyTransaction4",
+     "Interest paid"
+    ],
+    [
+     "in-capmkt:TypeOfRelatedPartyTransaction",
+     "D_RelatedPartyTransaction5",
+     "Any other transaction"
+    ],
+    [
+     "in-capmkt:WhetherResultsAreAuditedOrUnauditedForImpactOfAuditQualification",
+     "OneD",
+     "Unaudited"
+    ],
+    [
+     "in-capmkt:WhetherTheFirmHoldsAValidPeerReviewCertificateIssuedByPeerReviewBoardOfICAI",
+     "D_Auditor1",
+     "true"
+    ],
+    [
+     "in-capmkt:ValidityDateOfCertificate",
+     "D_Auditor1",
+     "2027-09-30"
+    ],
+    [
+     "in-capmkt:WhetherTheFirmHoldsAValidPeerReviewCertificateIssuedByPeerReviewBoardOfICAI",
+     "D_Auditor2",
+     "true"
+    ],
+    [
+     "in-capmkt:ValidityDateOfCertificate",
+     "D_Auditor2",
+     "2028-07-31"
+    ]
+   ],
+   "len": 95145
+  },
+  "UTIAMC|https://nsearchives.nseindia.com/corporate/xbrl/INTEGRATED_FILING_NBFC_INDAS_1745097_23102026083651_WEB.xml": {
+   "contexts": {
+    "OneD": [
+     "2026-07-01",
+     "2026-09-30",
+     null,
+     []
+    ],
+    "OneI": [
+     null,
+     null,
+     "2026-09-30",
+     []
+    ],
+    "PY_I": [
+     null,
+     null,
+     "2026-03-31",
+     []
+    ],
+    "FourD": [
+     "2026-04-01",
+     "2026-09-30",
+     null,
+     []
+    ],
+    "OneExpenses1D": [
+     "2026-07-01",
+     "2026-09-30",
+     null,
+     [
+      [
+       "in-capmkt:DetailsOfOtherExpensesAxis",
+       "in-capmkt:OtherExpenses1Member"
+      ]
+     ]
+    ],
+    "FourExpenses1D": [
+     "2026-04-01",
+     "2026-09-30",
+     null,
+     [
+      [
+       "in-capmkt:DetailsOfOtherExpensesAxis",
+       "in-capmkt:OtherExpenses1Member"
+      ]
+     ]
+    ],
+    "I_OtherFinancialAssets1": [
+     null,
+     null,
+     "2026-09-30",
+     []
+    ],
+    "I_OtherNonFinancialAssets1": [
+     null,
+     null,
+     "2026-09-30",
+     []
+    ],
+    "I_OtherFinancialLiabilities1": [
+     null,
+     null,
+     "2026-09-30",
+     []
+    ],
+    "I_OtherNonFinancialLiabilities1": [
+     null,
+     null,
+     "2026-09-30",
+     []
+    ],
+    "OneReportable1D": [
+     "2026-07-01",
+     "2026-09-30",
+     null,
+     [
+      [
+       "in-capmkt:ReportableSegmentsAxis",
+       "in-capmkt:ReportableSegments1Member"
+      ]
+     ]
+    ],
+    "OneReportable2D": [
+     "2026-07-01",
+     "2026-09-30",
+     null,
+     [
+      [
+       "in-capmkt:ReportableSegmentsAxis",
+       "in-capmkt:ReportableSegments2Member"
+      ]
+     ]
+    ],
+    "FourReportable1D": [
+     "2026-04-01",
+     "2026-09-30",
+     null,
+     [
+      [
+       "in-capmkt:ReportableSegmentsAxis",
+       "in-capmkt:ReportableSegments1Member"
+      ]
+     ]
+    ],
+    "FourReportable2D": [
+     "2026-04-01",
+     "2026-09-30",
+     null,
+     [
+      [
+       "in-capmkt:ReportableSegmentsAxis",
+       "in-capmkt:ReportableSegments2Member"
+      ]
+     ]
+    ],
+    "OneReportableFinance1D": [
+     "2026-07-01",
+     "2026-09-30",
+     null,
+     [
+      [
+       "in-capmkt:ReportableSegmentsFinanceCostsAxis",
+       "in-capmkt:ReportableSegments1Member"
+      ]
+     ]
+    ],
+    "OneReportableFinance2D": [
+     "2026-07-01",
+     "2026-09-30",
+     null,
+     [
+      [
+       "in-capmkt:ReportableSegmentsFinanceCostsAxis",
+       "in-capmkt:ReportableSegments2Member"
+      ]
+     ]
+    ],
+    "FourReportableFinance1D": [
+     "2026-04-01",
+     "2026-09-30",
+     null,
+     [
+      [
+       "in-capmkt:ReportableSegmentsFinanceCostsAxis",
+       "in-capmkt:ReportableSegments1Member"
+      ]
+     ]
+    ],
+    "FourReportableFinance2D": [
+     "2026-04-01",
+     "2026-09-30",
+     null,
+     [
+      [
+       "in-capmkt:ReportableSegmentsFinanceCostsAxis",
+       "in-capmkt:ReportableSegments2Member"
+      ]
+     ]
+    ],
+    "OneReportable31D": [
+     "2026-07-01",
+     "2026-09-30",
+     null,
+     [
+      [
+       "in-capmkt:ReportableSegmentAssetsAxis",
+       "in-capmkt:ReportableSegments1Member"
+      ]
+     ]
+    ],
+    "OneReportable31I": [
+     null,
+     null,
+     "2026-09-30",
+     [
+      [
+       "in-capmkt:ReportableSegmentAssetsAxis",
+       "in-capmkt:ReportableSegments1Member"
+      ]
+     ]
+    ],
+    "OneReportable32D": [
+     "2026-07-01",
+     "2026-09-30",
+     null,
+     [
+      [
+       "in-capmkt:ReportableSegmentAssetsAxis",
+       "in-capmkt:ReportableSegments2Member"
+      ]
+     ]
+    ],
+    "OneReportable32I": [
+     null,
+     null,
+     "2026-09-30",
+     [
+      [
+       "in-capmkt:ReportableSegmentAssetsAxis",
+       "in-capmkt:ReportableSegments2Member"
+      ]
+     ]
+    ],
+    "OneReportable41D": [
+     "2026-07-01",
+     "2026-09-30",
+     null,
+     [
+      [
+       "in-capmkt:ReportableSegmentLiabilitiesAxis",
+       "in-capmkt:ReportableSegments1Member"
+      ]
+     ]
+    ],
+    "OneReportable41I": [
+     null,
+     null,
+     "2026-09-30",
+     [
+      [
+       "in-capmkt:ReportableSegmentLiabilitiesAxis",
+       "in-capmkt:ReportableSegments1Member"
+      ]
+     ]
+    ],
+    "OneReportable42D": [
+     "2026-07-01",
+     "2026-09-30",
+     null,
+     [
+      [
+       "in-capmkt:ReportableSegmentLiabilitiesAxis",
+       "in-capmkt:ReportableSegments2Member"
+      ]
+     ]
+    ],
+    "OneReportable42I": [
+     null,
+     null,
+     "2026-09-30",
+     [
+      [
+       "in-capmkt:ReportableSegmentLiabilitiesAxis",
+       "in-capmkt:ReportableSegments2Member"
+      ]
+     ]
+    ],
+    "D_ItemsThatWillNotBeReclassifiedToProfitAndLoss11": [
+     "2026-07-01",
+     "2026-09-30",
+     null,
+     []
+    ],
+    "D_ItemsThatWillNotBeReclassifiedToProfitAndLoss41": [
+     "2026-04-01",
+     "2026-09-30",
+     null,
+     []
+    ],
+    "D_ItemsThatWillBeReclassifiedToProfitAndLoss11": [
+     "2026-07-01",
+     "2026-09-30",
+     null,
+     []
+    ],
+    "D_ItemsThatWillBeReclassifiedToProfitAndLoss41": [
+     "2026-04-01",
+     "2026-09-30",
+     null,
+     []
+    ]
+   },
+   "facts": [
+    [
+     "in-capmkt:TypeOfCompany",
+     "OneD",
+     "Main Board"
+    ],
+    [
+     "in-capmkt:DateOfStartOfFinancialYear",
+     "OneD",
+     "2026-04-01"
+    ],
+    [
+     "in-capmkt:DateOfEndOfFinancialYear",
+     "OneD",
+     "2027-03-31"
+    ],
+    [
+     "in-capmkt:DateOfBoardMeetingWhenFinancialResultsWereApproved",
+     "OneD",
+     "2026-10-23"
+    ],
+    [
+     "in-capmkt:DateOnWhichPriorIntimationOfTheMeetingForConsideringFinancialResultsWasInformedToTheExchange",
+     "OneD",
+     "2026-09-22"
+    ],
+    [
+     "in-capmkt:LevelOfRounding",
+     "OneD",
+     "Crores"
+    ],
+    [
+     "in-capmkt:TypeOfReportingPeriod",
+     "OneD",
+     "Quarterly"
+    ],
+    [
+     "in-capmkt:IsCompanyReportingMultisegmentOrSingleSegment",
+     "OneD",
+     "Geographical"
+    ],
+    [
+     "in-capmkt:DateOfStartOfBoardMeeting",
+     "OneD",
+     "2026-10-23"
+    ],
+    [
+     "in-capmkt:DateOfEndOfBoardMeeting",
+     "OneD",
+     "2026-10-23"
+    ],
+    [
+     "in-capmkt:WhetherCashFlowStatementIsApplicableOnCompany",
+     "OneD",
+     "true"
+    ],
+    [
+     "in-capmkt:TypeOfCashFlowStatement",
+     "OneD",
+     "Cash Flow Indirect"
+    ],
+    [
+     "in-capmkt:DateOfStartOfReportingPeriod",
+     "OneD",
+     "2026-07-01"
+    ],
+    [
+     "in-capmkt:DateOfEndOfReportingPeriod",
+     "OneD",
+     "2026-09-30"
+    ],
+    [
+     "in-capmkt:WhetherResultsAreAuditedOrUnaudited",
+     "OneD",
+     "Unaudited"
+    ],
+    [
+     "in-capmkt:NatureOfReportStandaloneConsolidated",
+     "OneD",
+     "Consolidated"
+    ],
+    [
+     "in-capmkt:DividendIncome",
+     "OneD",
+     "0"
+    ],
+    [
+     "in-capmkt:RentalIncome",
+     "OneD",
+     "40200000"
+    ],
+    [
+     "in-capmkt:FeesAndCommissionIncome",
+     "OneD",
+     "0"
+    ],
+    [
+     "in-capmkt:RevenueFromSaleOfProduct",
+     "OneD",
+     "0"
+    ],
+    [
+     "in-capmkt:RevenueFromSaleOfServices",
+     "OneD",
+     "3984000000"
+    ],
+    [
+     "in-capmkt:RevenueFromOperations",
+     "OneD",
+     "4145900000"
+    ],
+    [
+     "in-capmkt:OtherIncome",
+     "OneD",
+     "1700000"
+    ],
+    [
+     "in-capmkt:Income",
+     "OneD",
+     "4147600000"
+    ],
+    [
+     "in-capmkt:EmployeeBenefitExpense",
+     "OneD",
+     "1282000000"
+    ],
+    [
+     "in-capmkt:DepreciationDepletionAndAmortisationExpense",
+     "OneD",
+     "131100000"
+    ],
+    [
+     "in-capmkt:FeesAndCommissionExpense",
+     "OneD",
+     "14500000"
+    ],
+    [
+     "in-capmkt:OtherExpenses",
+     "OneD",
+     "787900000"
+    ],
+    [
+     "in-capmkt:Expenses",
+     "OneD",
+     "2395600000"
+    ],
+    [
+     "in-capmkt:ProfitBeforeExceptionalItemsAndTax",
+     "OneD",
+     "1752000000"
+    ],
+    [
+     "in-capmkt:ExceptionalItemsBeforeTax",
+     "OneD",
+     "0"
+    ],
+    [
+     "in-capmkt:ProfitBeforeTax",
+     "OneD",
+     "1752000000"
+    ],
+    [
+     "in-capmkt:CurrentTax",
+     "OneD",
+     "528200000"
+    ],
+    [
+     "in-capmkt:DeferredTax",
+     "OneD",
+     "-99300000"
+    ],
+    [
+     "in-capmkt:TaxExpense",
+     "OneD",
+     "428900000"
+    ],
+    [
+     "in-capmkt:ProfitLossForPeriodFromContinuingOperations",
+     "OneD",
+     "1323100000"
+    ],
+    [
+     "in-capmkt:ProfitLossFromDiscontinuedOperationsBeforeTax",
+     "OneD",
+     "0"
+    ],
+    [
+     "in-capmkt:TaxExpenseOfDiscontinuedOperations",
+     "OneD",
+     "0"
+    ],
+    [
+     "in-capmkt:ProfitLossFromDiscontinuedOperationsAfterTax",
+     "OneD",
+     "0"
+    ],
+    [
+     "in-capmkt:ShareOfProfitLossOfAssociatesAndJointVenturesAccountedForUsingEquityMethod",
+     "OneD",
+     "0"
+    ],
+    [
+     "in-capmkt:ProfitLossForPeriod",
+     "OneD",
+     "1323100000"
+    ],
+    [
+     "in-capmkt:OtherComprehensiveIncomeNetOfTaxes",
+     "OneD",
+     "88200000"
+    ],
+    [
+     "in-capmkt:ComprehensiveIncomeForThePeriod",
+     "OneD",
+     "1411300000"
+    ],
+    [
+     "in-capmkt:ProfitOrLossAttributableToOwnersOfParent",
+     "OneD",
+     "1323100000"
+    ],
+    [
+     "in-capmkt:ProfitOrLossAttributableToNonControllingInterests",
+     "OneD",
+     "0"
+    ],
+    [
+     "in-capmkt:ComprehensiveIncomeForThePeriodAttributableToOwnersOfParent",
+     "OneD",
+     "1411300000"
+    ],
+    [
+     "in-capmkt:ComprehensiveIncomeForThePeriodAttributableToOwnersOfParentNonControllingInterests",
+     "OneD",
+     "0"
+    ],
+    [
+     "in-capmkt:BasicEarningsLossPerShareFromContinuingOperations",
+     "OneD",
+     "10.29"
+    ],
+    [
+     "in-capmkt:DilutedEarningsLossPerShareFromContinuingOperations",
+     "OneD",
+     "10.29"
+    ],
+    [
+     "in-capmkt:BasicEarningsLossPerShareFromDiscontinuedOperations",
+     "OneD",
+     "0"
+    ],
+    [
+     "in-capmkt:DilutedEarningsLossPerShareFromDiscontinuedOperations",
+     "OneD",
+     "0"
+    ],
+    [
+     "in-capmkt:BasicEarningsLossPerShareFromContinuingAndDiscontinuedOperations",
+     "OneD",
+     "10.29"
+    ],
+    [
+     "in-capmkt:DilutedEarningsLossPerShareFromContinuingAndDiscontinuedOperations",
+     "OneD",
+     "10.29"
+    ],
+    [
+     "in-capmkt:DateOfStartOfReportingPeriod",
+     "FourD",
+     "2026-04-01"
+    ],
+    [
+     "in-capmkt:DateOfEndOfReportingPeriod",
+     "FourD",
+     "2026-09-30"
+    ],
+    [
+     "in-capmkt:WhetherResultsAreAuditedOrUnaudited",
+     "FourD",
+     "Unaudited"
+    ],
+    [
+     "in-capmkt:NatureOfReportStandaloneConsolidated",
+     "FourD",
+     "Consolidated"
+    ],
+    [
+     "in-capmkt:DividendIncome",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:RentalIncome",
+     "FourD",
+     "80400000"
+    ],
+    [
+     "in-capmkt:FeesAndCommissionIncome",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:RevenueFromSaleOfProduct",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:RevenueFromSaleOfServices",
+     "FourD",
+     "7771400000"
+    ],
+    [
+     "in-capmkt:RevenueFromOperations",
+     "FourD",
+     "9833600000"
+    ],
+    [
+     "in-capmkt:OtherIncome",
+     "FourD",
+     "18900000"
+    ],
+    [
+     "in-capmkt:Income",
+     "FourD",
+     "9852500000"
+    ],
+    [
+     "in-capmkt:EmployeeBenefitExpense",
+     "FourD",
+     "2498300000"
+    ],
+    [
+     "in-capmkt:DepreciationDepletionAndAmortisationExpense",
+     "FourD",
+     "261800000"
+    ],
+    [
+     "in-capmkt:FeesAndCommissionExpense",
+     "FourD",
+     "25800000"
+    ],
+    [
+     "in-capmkt:OtherExpenses",
+     "FourD",
+     "1569700000"
+    ],
+    [
+     "in-capmkt:Expenses",
+     "FourD",
+     "4421100000"
+    ],
+    [
+     "in-capmkt:ProfitBeforeExceptionalItemsAndTax",
+     "FourD",
+     "5431400000"
+    ],
+    [
+     "in-capmkt:ExceptionalItemsBeforeTax",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:ProfitBeforeTax",
+     "FourD",
+     "5431400000"
+    ],
+    [
+     "in-capmkt:CurrentTax",
+     "FourD",
+     "1143000000"
+    ],
+    [
+     "in-capmkt:DeferredTax",
+     "FourD",
+     "26700000"
+    ],
+    [
+     "in-capmkt:TaxExpense",
+     "FourD",
+     "1169700000"
+    ],
+    [
+     "in-capmkt:ProfitLossForPeriodFromContinuingOperations",
+     "FourD",
+     "4261700000"
+    ],
+    [
+     "in-capmkt:ProfitLossFromDiscontinuedOperationsBeforeTax",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:TaxExpenseOfDiscontinuedOperations",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:ProfitLossFromDiscontinuedOperationsAfterTax",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:ShareOfProfitLossOfAssociatesAndJointVenturesAccountedForUsingEquityMethod",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:ProfitLossForPeriod",
+     "FourD",
+     "4261700000"
+    ],
+    [
+     "in-capmkt:OtherComprehensiveIncomeNetOfTaxes",
+     "FourD",
+     "-80700000"
+    ],
+    [
+     "in-capmkt:ComprehensiveIncomeForThePeriod",
+     "FourD",
+     "4181000000"
+    ],
+    [
+     "in-capmkt:ProfitOrLossAttributableToOwnersOfParent",
+     "FourD",
+     "4261700000"
+    ],
+    [
+     "in-capmkt:ProfitOrLossAttributableToNonControllingInterests",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:ComprehensiveIncomeForThePeriodAttributableToOwnersOfParent",
+     "FourD",
+     "4181000000"
+    ],
+    [
+     "in-capmkt:ComprehensiveIncomeForThePeriodAttributableToOwnersOfParentNonControllingInterests",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:BasicEarningsLossPerShareFromContinuingOperations",
+     "FourD",
+     "33.16"
+    ],
+    [
+     "in-capmkt:DilutedEarningsLossPerShareFromContinuingOperations",
+     "FourD",
+     "33.13"
+    ],
+    [
+     "in-capmkt:BasicEarningsLossPerShareFromDiscontinuedOperations",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:DilutedEarningsLossPerShareFromDiscontinuedOperations",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:BasicEarningsLossPerShareFromContinuingAndDiscontinuedOperations",
+     "FourD",
+     "33.16"
+    ],
+    [
+     "in-capmkt:DilutedEarningsLossPerShareFromContinuingAndDiscontinuedOperations",
+     "FourD",
+     "33.13"
+    ],
+    [
+     "in-capmkt:DescriptionOfOtherExpenses",
+     "OneExpenses1D",
+     "Other expenses"
+    ],
+    [
+     "in-capmkt:OtherExpenses",
+     "OneExpenses1D",
+     "787900000"
+    ],
+    [
+     "in-capmkt:DescriptionOfOtherExpenses",
+     "FourExpenses1D",
+     "Other expenses"
+    ],
+    [
+     "in-capmkt:OtherExpenses",
+     "FourExpenses1D",
+     "1569700000"
+    ],
+    [
+     "in-capmkt:CurrentTaxAssetsNet",
+     "OneI",
+     "598100000"
+    ],
+    [
+     "in-capmkt:DeferredTaxAssetsNet",
+     "OneI",
+     "0"
+    ],
+    [
+     "in-capmkt:CurrentTaxLiabilities",
+     "OneI",
+     "253300000"
+    ],
+    [
+     "in-capmkt:DeferredTaxLiabilitiesNet",
+     "OneI",
+     "490500000"
+    ],
+    [
+     "in-capmkt:DescriptionOfReportableSegment",
+     "OneReportable1D",
+     "Domestic Segment (India)"
+    ],
+    [
+     "in-capmkt:SegmentRevenue",
+     "OneReportable1D",
+     "3898300000"
+    ],
+    [
+     "in-capmkt:DescriptionOfReportableSegment",
+     "OneReportable2D",
+     "International Segment"
+    ],
+    [
+     "in-capmkt:SegmentRevenue",
+     "OneReportable2D",
+     "100200000"
+    ],
+    [
+     "in-capmkt:DescriptionOfReportableSegment",
+     "FourReportable1D",
+     "Domestic Segment (India)"
+    ],
+    [
+     "in-capmkt:SegmentRevenue",
+     "FourReportable1D",
+     "8813100000"
+    ],
+    [
+     "in-capmkt:DescriptionOfReportableSegment",
+     "FourReportable2D",
+     "International Segment"
+    ],
+    [
+     "in-capmkt:SegmentRevenue",
+     "FourReportable2D",
+     "1020500000"
+    ],
+    [
+     "in-capmkt:SegmentRevenue",
+     "OneD",
+     "3998500000"
+    ],
+    [
+     "in-capmkt:SegmentRevenue",
+     "FourD",
+     "9833600000"
+    ],
+    [
+     "in-capmkt:SegmentRevenueFromOperations",
+     "OneD",
+     "3998500000"
+    ],
+    [
+     "in-capmkt:SegmentRevenueFromOperations",
+     "FourD",
+     "9833600000"
+    ],
+    [
+     "in-capmkt:DescriptionOfReportableSegment",
+     "OneReportableFinance1D",
+     "Domestic Segment (India)"
+    ],
+    [
+     "in-capmkt:SegmentProfitLossBeforeTaxAndFinanceCosts",
+     "OneReportableFinance1D",
+     "2027100000"
+    ],
+    [
+     "in-capmkt:DescriptionOfReportableSegment",
+     "OneReportableFinance2D",
+     "International Segment"
+    ],
+    [
+     "in-capmkt:SegmentProfitLossBeforeTaxAndFinanceCosts",
+     "OneReportableFinance2D",
+     "-242400000"
+    ],
+    [
+     "in-capmkt:DescriptionOfReportableSegment",
+     "FourReportableFinance1D",
+     "Domestic Segment (India)"
+    ],
+    [
+     "in-capmkt:SegmentProfitLossBeforeTaxAndFinanceCosts",
+     "FourReportableFinance1D",
+     "5133000000"
+    ],
+    [
+     "in-capmkt:DescriptionOfReportableSegment",
+     "FourReportableFinance2D",
+     "International Segment"
+    ],
+    [
+     "in-capmkt:SegmentProfitLossBeforeTaxAndFinanceCosts",
+     "FourReportableFinance2D",
+     "363900000"
+    ],
+    [
+     "in-capmkt:SegmentProfitLossBeforeTaxAndFinanceCosts",
+     "OneD",
+     "1784700000"
+    ],
+    [
+     "in-capmkt:SegmentProfitLossBeforeTaxAndFinanceCosts",
+     "FourD",
+     "5496900000"
+    ],
+    [
+     "in-capmkt:SegmentFinanceCosts",
+     "OneD",
+     "32700000"
+    ],
+    [
+     "in-capmkt:SegmentFinanceCosts",
+     "FourD",
+     "65500000"
+    ],
+    [
+     "in-capmkt:SegmentProfitBeforeTax",
+     "OneD",
+     "1752000000"
+    ],
+    [
+     "in-capmkt:SegmentProfitBeforeTax",
+     "FourD",
+     "5431400000"
+    ],
+    [
+     "in-capmkt:DescriptionOfReportableSegment",
+     "OneReportable31D",
+     "Domestic Segment (India)"
+    ],
+    [
+     "in-capmkt:SegmentAssets",
+     "OneReportable31I",
+     "41636200000"
+    ],
+    [
+     "in-capmkt:DescriptionOfReportableSegment",
+     "OneReportable32D",
+     "International Segment"
+    ],
+    [
+     "in-capmkt:SegmentAssets",
+     "OneReportable32I",
+     "7926100000"
+    ],
+    [
+     "in-capmkt:SegmentAssets",
+     "OneI",
+     "49562300000"
+    ],
+    [
+     "in-capmkt:NetSegmentAssets",
+     "OneI",
+     "49562300000"
+    ],
+    [
+     "in-capmkt:DescriptionOfReportableSegment",
+     "OneReportable41D",
+     "Domestic Segment (India)"
+    ],
+    [
+     "in-capmkt:SegmentLiabilities",
+     "OneReportable41I",
+     "4753000000"
+    ],
+    [
+     "in-capmkt:DescriptionOfReportableSegment",
+     "OneReportable42D",
+     "International Segment"
+    ],
+    [
+     "in-capmkt:SegmentLiabilities",
+     "OneReportable42I",
+     "674000000"
+    ],
+    [
+     "in-capmkt:SegmentLiabilities",
+     "OneI",
+     "5427000000"
+    ],
+    [
+     "in-capmkt:NetSegmentLiabilities",
+     "OneI",
+     "5427000000"
+    ],
+    [
+     "in-capmkt:DescriptionOfItemThatWillNotBeReclassifiedToProfitAndLoss",
+     "D_ItemsThatWillNotBeReclassifiedToProfitAndLoss11",
+     "Remeasurement of defined benefit liability / (assets)"
+    ],
+    [
+     "in-capmkt:AmountOfItemThatWillNotBeReclassifiedToProfitAndLoss",
+     "D_ItemsThatWillNotBeReclassifiedToProfitAndLoss11",
+     "-35000000"
+    ],
+    [
+     "in-capmkt:AmountOfItemThatWillNotBeReclassifiedToProfitAndLoss",
+     "OneD",
+     "-35000000"
+    ],
+    [
+     "in-capmkt:DescriptionOfItemThatWillNotBeReclassifiedToProfitAndLoss",
+     "D_ItemsThatWillNotBeReclassifiedToProfitAndLoss41",
+     "Remeasurement of defined benefit liability / (assets)"
+    ],
+    [
+     "in-capmkt:AmountOfItemThatWillNotBeReclassifiedToProfitAndLoss",
+     "D_ItemsThatWillNotBeReclassifiedToProfitAndLoss41",
+     "-197700000"
+    ],
+    [
+     "in-capmkt:AmountOfItemThatWillNotBeReclassifiedToProfitAndLoss",
+     "FourD",
+     "-197700000"
+    ],
+    [
+     "in-capmkt:IncomeTaxRelatingToItemsThatWillNotBeReclassifiedToProfitOrLoss",
+     "OneD",
+     "-7200000"
+    ],
+    [
+     "in-capmkt:IncomeTaxRelatingToItemsThatWillNotBeReclassifiedToProfitOrLoss",
+     "FourD",
+     "-38200000"
+    ],
+    [
+     "in-capmkt:AmountOfItemThatWillBeReclassifiedToProfitAndLoss",
+     "D_ItemsThatWillBeReclassifiedToProfitAndLoss11",
+     "116000000"
+    ],
+    [
+     "in-capmkt:AmountOfItemThatWillBeReclassifiedToProfitAndLoss",
+     "OneD",
+     "116000000"
+    ],
+    [
+     "in-capmkt:AmountOfItemThatWillBeReclassifiedToProfitAndLoss",
+     "D_ItemsThatWillBeReclassifiedToProfitAndLoss41",
+     "78800000"
+    ],
+    [
+     "in-capmkt:AmountOfItemThatWillBeReclassifiedToProfitAndLoss",
+     "FourD",
+     "78800000"
+    ],
+    [
+     "in-capmkt:IncomeTaxRelatingToItemsThatWillBeReclassifiedToProfitOrLoss",
+     "OneD",
+     "0"
+    ],
+    [
+     "in-capmkt:IncomeTaxRelatingToItemsThatWillBeReclassifiedToProfitOrLoss",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:OtherComprehensiveIncome",
+     "OneD",
+     "88200000"
+    ],
+    [
+     "in-capmkt:OtherComprehensiveIncome",
+     "FourD",
+     "-80700000"
+    ],
+    [
+     "in-capmkt:AdjustmentsForDepreciationAndAmortisationExpense",
+     "FourD",
+     "261800000"
+    ],
+    [
+     "in-capmkt:AdjustmentsForImpairmentLossReversalOfImpairmentLossRecognisedInProfitOrLoss",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:AdjustmentsForDividendIncome",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:AdjustmentsForInterestIncome",
+     "FourD",
+     "257900000"
+    ],
+    [
+     "in-capmkt:AdjustmentsForUndistributedProfitsOfAssociates",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:OtherAdjustmentsToReconcileProfitLoss",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:ShareOfProfitAndLossFromPartnershipFirmOrAssociationOfPersonsOrLimitedLiabilityPartnerships",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:AdjustmentsForReconcileProfitLoss",
+     "FourD",
+     "-1735200000"
+    ],
+    [
+     "in-capmkt:IncomeTaxesPaidRefundClassifiedAsOperatingActivities",
+     "FourD",
+     "1124300000"
+    ],
+    [
+     "in-capmkt:CashReceiptsFromShareOfProfitsOfPartnershipFirmOrAssociationOfPersonsOrLimitedLiabilityPartnerships",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:IncomeTaxesPaidRefundClassifiedAsInvestingActivities",
+     "FourD",
+     "0"
+    ],
+    [
+     "in-capmkt:IncomeTaxesPaidRefundClassifiedAsFinancingActivities",
+     "FourD",
+     "0"
+    ]
+   ],
+   "len": 70106
+  }
+ },
+ "shp_LT": {
+  "len": 22,
+  "first": [
+   {
+    "broadcastDate": "17-OCT-2026 10:11:10",
+    "cgTimeStamp": null,
+    "countString": null,
+    "date": "30-SEP-2026",
+    "desc": "NEW_1",
+    "employeeTrusts": "0",
+    "format": null,
+    "index": "-",
+    "industry": "-",
+    "isin": "INE018A01030",
+    "name": "Larsen & Toubro Limited",
+    "newColumn": true,
+    "pr_and_prgrp": "0",
+    "promoterDematNotes": "",
+    "publicShareholdingNotes": "",
+    "public_val": "100",
+    "recordId": "215152",
+    "remarksWeb": "N",
+    "revisedData": "N",
+    "revisedDate": null,
+    "revisedRemark": null,
+    "revisedStatus": "-",
+    "revisionDate": null,
+    "revisionRemark": null,
+    "shareholdingPatternNotes": "",
+    "submissionDate": "17-OCT-2026",
+    "symbol": "LT",
+    "systemDate": "17-OCT-2026 10:11:14",
+    "timeDifference": "00:00:04",
+    "typeOfSubmission": null,
+    "underlyingDrs": null,
+    "xbrl": "https://nsearchives.nseindia.com/corporate/xbrl/SHP_1740540_17102026101104_WEB.xml",
+    "xbrlFileSize": "172.54 KB"
+   },
+   {
+    "broadcastDate": "16-JUL-2026 16:11:17",
+    "cgTimeStamp": null,
+    "countString": null,
+    "date": "30-JUN-2026",
+    "desc": "NEW_1",
+    "employeeTrusts": "0",
+    "format": null,
+    "index": "-",
+    "industry": "-",
+    "isin": "INE018A01030",
+    "name": "Larsen & Toubro Limited",
+    "newColumn": true,
+    "pr_and_prgrp": "0",
+    "promoterDematNotes": "",
+    "publicShareholdingNotes": "",
+    "public_val": "100",
+    "recordId": "211487",
+    "remarksWeb": "N",
+    "revisedData": "N",
+    "revisedDate": null,
+    "revisedRemark": null,
+    "revisedStatus": "-",
+    "revisionDate": null,
+    "revisionRemark": null,
+    "shareholdingPatternNotes": "",
+    "submissionDate": "16-JUL-2026",
+    "symbol": "LT",
+    "systemDate": "16-JUL-2026 16:11:21",
+    "timeDifference": "00:00:04",
+    "typeOfSubmission": null,
+    "underlyingDrs": null,
+    "xbrl": "https://nsearchives.nseindia.com/corporate/xbrl/SHP_1694210_16072026041111_WEB.xml",
+    "xbrlFileSize": "180.84 KB"
    }
-  }
- },
- "quote_LT": {
-  "ok": false,
-  "err": "RuntimeError('https://www.nseindia.com/api/quote-equity failed: HTTP 403')"
- },
- "ann_desc_counts": [
-  [
-   "Analysts/Institutional Investor Meet/Con. Call Updates",
-   329
-  ],
-  [
-   "General Updates",
-   171
-  ],
-  [
-   "Outcome of Board Meeting",
-   160
-  ],
-  [
-   "Copy of Newspaper Publication",
-   144
-  ],
-  [
-   "Press Release",
-   131
-  ],
-  [
-   "Updates",
-   107
-  ],
-  [
-   "Investor Presentation",
-   61
-  ],
-  [
-   "Shareholders meeting",
-   55
-  ],
-  [
-   "Certificate under SEBI (Depositories and Participants) Regulations, 2018",
-   42
-  ],
-  [
-   "ESOP/ESOS/ESPS",
-   27
-  ],
-  [
-   "Record Date",
-   25
-  ],
-  [
-   "Change in Management",
-   25
-  ],
-  [
-   "Trading Window",
-   24
-  ],
-  [
-   "Bagging/Receiving of orders/contracts",
-   20
-  ],
-  [
-   "Resignation of Director/KMP/SMP",
-   19
-  ],
-  [
-   "Appointment",
-   18
-  ],
-  [
-   "Credit Rating",
-   16
-  ],
-  [
-   "Allotment of Securities",
-   16
-  ],
-  [
-   "Structural Digital Database",
-   15
-  ],
-  [
-   "Monitoring Agency Report",
-   15
-  ],
-  [
-   "Acquisition",
-   13
-  ],
-  [
-   "Resignation",
-   13
-  ],
-  [
-   "Change in Director(s)",
-   12
-  ],
-  [
-   "Dividend",
-   12
-  ],
-  [
-   "Statement of deviation(s) or variation(s) under Reg. 32",
-   12
-  ],
-  [
-   "Price movement",
-   12
-  ],
-  [
-   "Action(s) taken or orders passed",
-   9
-  ],
-  [
-   "Credit Rating- Revision",
-   7
-  ],
-  [
-   "Agreements",
-   7
-  ],
-  [
-   "Commencement of commercial production/operations",
-   6
-  ],
-  [
-   "Corporate Insolvency Resolution Process",
-   6
-  ],
-  [
-   "Action(s) initiated or orders passed",
-   5
-  ],
-  [
-   "Amalgamation/Merger",
-   5
-  ],
-  [
-   "Capacity addition",
-   5
-  ],
-  [
-   "Cessation",
-   4
-  ],
-  [
-   "Spurt in Volume",
-   4
-  ],
-  [
-   "Change in Auditors",
-   4
-  ],
-  [
-   "Awarding of order(s)/contract(s)",
-   4
-  ],
-  [
-   "Committee Meeting Updates",
-   3
-  ],
-  [
-   "Options to purchase securities",
-   3
-  ],
-  [
-   "News Verification",
-   3
-  ],
-  [
-   "Others",
-   3
-  ],
-  [
-   "Amendment to AOA/MOA",
-   3
-  ],
-  [
-   "Suspension of Trading",
-   3
-  ],
-  [
-   "Loss of Share Certificates",
-   3
-  ],
-  [
-   "Pendency of Litigation(s)/dispute(s) or the outcome impacting the Company",
-   2
-  ],
-  [
-   "Granting/withdrawal/surrender/cancellation/suspension of key licenses/ regulatory approvals",
-   2
-  ],
-  [
-   "Sale or disposal",
-   2
-  ],
-  [
-   "Corrigendum",
-   2
-  ],
-  [
-   "Related Party Transactions",
-   2
-  ],
-  [
-   "Disclosure under SEBI Takeover Regulations",
-   2
-  ],
-  [
-   "Demise",
-   2
-  ],
-  [
-   "Initiation of Forensic Audit",
-   2
-  ],
-  [
-   "Utilisation of Funds",
-   2
-  ],
-  [
-   "Issue of Securities",
-   2
-  ],
-  [
-   "Rights Issue",
-   1
-  ],
-  [
-   "Buyback",
-   1
-  ],
-  [
-   "Product launch",
-   1
-  ],
-  [
-   "Disclosure of material issue",
-   1
-  ],
-  [
-   "Retirement",
-   1
-  ],
-  [
-   "Clarification - Financial Results",
-   1
-  ],
-  [
-   "Integrated Filing- Financial",
-   1
-  ],
-  [
-   "Alteration/revision(s)",
-   1
-  ],
-  [
-   "Registrar & Share Transfer Agent Update",
-   1
-  ],
-  [
-   "Effect(s) on listed entity due to changed regulatory  framework applicable",
-   1
-  ],
-  [
-   "Press Release (Revised)",
-   1
-  ],
-  [
-   "Integrated Filing- Governance",
-   1
-  ],
-  [
-   "Closure of operations",
-   1
-  ],
-  [
-   "Issue of Duplicate Share Certificate",
-   1
-  ],
-  [
-   "Quarterly Compliance Report on Corporate governance - within 21 days from the end of the quarter",
-   1
-  ],
-  [
-   "Rumour Verification - Regulation 30(11)",
-   1
-  ],
-  [
-   "Post Buyback Public Announcement",
-   1
-  ],
-  [
-   "Credit Rating- New",
-   1
-  ],
-  [
-   "Stock split",
-   1
   ]
- ],
- "ann_orders": [
-  {
-   "an_dt": "24-Oct-2026 12:36:43",
-   "attFileSize": "488.30 KB",
-   "attchmntFile": "https://nsearchives.nseindia.com/corporate/BLKASHYAP_24102026123628_BLK_LOA.pdf",
-   "attchmntText": "B. L. Kashyap and Sons Limited has informed the Exchange about the Company has secured a work order of Rs.  495.86 Crores.",
-   "bflag": null,
-   "csvName": null,
-   "desc": "Bagging/Receiving of orders/contracts",
-   "difference": "00:00:01",
-   "dt": "24102026123643",
-   "exchdisstime": "24-Oct-2026 12:36:44",
-   "fileSize": "488.30 KB",
-   "hasXbrl": true,
-   "old_new": null,
-   "orgid": null,
-   "seq_id": "106827405",
-   "smIndustry": "Construction",
-   "sm_isin": "INE350H01024",
-   "sm_name": "B. L. Kashyap and Sons Limited",
-   "sort_date": "2026-10-24 12:36:43",
-   "symbol": "BLKASHYAP"
-  },
-  {
-   "an_dt": "24-Oct-2026 12:17:08",
-   "attFileSize": "371.95 KB",
-   "attchmntFile": "https://nsearchives.nseindia.com/corporate/SAHAJANAND_24102026121647_Disclosure_Under_Reg_30_Summons_under_GST_ACT.pdf",
-   "attchmntText": "Sahajanand Medical Technologies Limited has informed the Exchange about summons received under section 70 of Central Goods and Service tax Act.",
-   "bflag": null,
-   "csvName": null,
-   "desc": "Action(s) initiated or orders passed",
-   "difference": "00:00:01",
-   "dt": "24102026121708",
-   "exchdisstime": "24-Oct-2026 12:17:09",
-   "fileSize": "371.95 KB",
-   "hasXbrl": true,
-   "old_new": null,
-   "orgid": null,
-   "seq_id": "106827392",
-   "smIndustry": null,
-   "sm_isin": "INE356Y01018",
-   "sm_name": "Sahajanand Medical Technologies Limited",
-   "sort_date": "2026-10-24 12:17:08",
-   "symbol": "SMT"
-  },
-  {
-   "an_dt": "24-Oct-2026 09:35:46",
-   "attFileSize": "486.08 KB",
-   "attchmntFile": "https://nsearchives.nseindia.com/corporate/KEC_24102026093524_PressRelease.pdf",
-   "attchmntText": "KEC wins Substantial Orders of Rs. 2,872 crores from PGCIL",
-   "bflag": null,
-   "csvName": null,
-   "desc": "Bagging/Receiving of orders/contracts",
-   "difference": "00:00:01",
-   "dt": "24102026093546",
-   "exchdisstime": "24-Oct-2026 09:35:47",
-   "fileSize": "486.08 KB",
-   "hasXbrl": true,
-   "old_new": null,
-   "orgid": null,
-   "seq_id": "106827318",
-   "smIndustry": "Transmission Towers",
-   "sm_isin": "INE389H01014",
-   "sm_name": "KEC International Limited",
-   "sort_date": "2026-10-24 09:35:46",
-   "symbol": "KEC"
-  },
-  {
-   "an_dt": "24-Oct-2026 07:50:13",
-   "attFileSize": "327.44 KB",
-   "attchmntFile": "https://nsearchives.nseindia.com/corporate/RAILTEL_24102026074933_78316a37-9a40-4548-a0e4-3e99ba547da7.pdf",
-   "attchmntText": "Railtel Corporation Of India Limited has informed the Exchange about Bagging/Receiving of orders/contracts",
-   "bflag": null,
-   "csvName": null,
-   "desc": "Bagging/Receiving of orders/contracts",
-   "difference": "00:00:01",
-   "dt": "24102026075013",
-   "exchdisstime": "24-Oct-2026 07:50:14",
-   "fileSize": "327.44 KB",
-   "hasXbrl": true,
-   "old_new": null,
-   "orgid": null,
-   "seq_id": "106827304",
-   "smIndustry": null,
-   "sm_isin": "INE0DD101019",
-   "sm_name": "Railtel Corporation Of India Limited",
-   "sort_date": "2026-10-24 07:50:13",
-   "symbol": "RAILTEL"
-  },
-  {
-   "an_dt": "24-Oct-2026 01:33:09",
-   "attFileSize": "865.02 KB",
-   "attchmntFile": "https://nsearchives.nseindia.com/corporate/RCOM_24102026013248_DisclosureNCLTAGMRCOM23102026.pdf",
-   "attchmntText": "Reliance Communications Limited has informed the Exchange about Action(s) taken or orders passed",
-   "bflag": null,
-   "csvName": null,
-   "desc": "Action(s) taken or orders passed",
-   "difference": "00:00:02",
-   "dt": "24102026013309",
-   "exchdisstime": "24-Oct-2026 01:33:11",
-   "fileSize": "865.02 KB",
-   "hasXbrl": true,
-   "old_new": null,
-   "orgid": null,
-   "seq_id": "106827285",
-   "smIndustry": "Telecommunication - Services",
-   "sm_isin": "INE330H01018",
-   "sm_name": "Reliance Communications Limited",
-   "sort_date": "2026-10-24 01:33:09",
-   "symbol": "RCOM"
-  },
-  {
-   "an_dt": "23-Oct-2026 20:47:04",
-   "attFileSize": "749.08 KB",
-   "attchmntFile": "https://nsearchives.nseindia.com/corporate/HIGHWAY123_23102026204654_HIL_Reg30_Palayam_231026.pdf",
-   "attchmntText": "Highway Infrastructure Limited has informed the Exchange about Bagging/Receiving of orders/contracts",
-   "bflag": null,
-   "csvName": null,
-   "desc": "Bagging/Receiving of orders/contracts",
-   "difference": "00:00:02",
-   "dt": "23102026204704",
-   "exchdisstime": "23-Oct-2026 20:47:06",
-   "fileSize": "749.08 KB",
-   "hasXbrl": true,
-   "old_new": null,
-   "orgid": null,
-   "seq_id": "106827054",
-   "smIndustry": null,
-   "sm_isin": "INE00RL01028",
-   "sm_name": "Highway Infrastructure Limited",
-   "sort_date": "2026-10-23 20:47:04",
-   "symbol": "HILINFRA"
-  },
-  {
-   "an_dt": "23-Oct-2026 19:52:14",
-   "attFileSize": "291.36 KB",
-   "attchmntFile": "https://nsearchives.nseindia.com/corporate/Crompton123_23102026195153_IntimationforOrderspassed_1__1_.pdf",
-   "attchmntText": "Crompton Greaves Consumer Electricals Limited has informed the Exchange about Action(s) taken or orders passed",
-   "bflag": null,
-   "csvName": null,
-   "desc": "Action(s) taken or orders passed",
-   "difference": "00:00:00",
-   "dt": "23102026195214",
-   "exchdisstime": "23-Oct-2026 19:52:14",
-   "fileSize": "291.36 KB",
-   "hasXbrl": true,
-   "old_new": null,
-   "orgid": null,
-   "seq_id": "106826982",
-   "smIndustry": null,
-   "sm_isin": "INE299U01018",
-   "sm_name": "Crompton Greaves Consumer Electricals Limited",
-   "sort_date": "2026-10-23 19:52:14",
-   "symbol": "CROMPTON"
-  },
-  {
-   "an_dt": "23-Oct-2026 17:56:12",
-   "attFileSize": "206.45 KB",
-   "attchmntFile": "https://nsearchives.nseindia.com/corporate/9136565850_23102026175554_Reg_30_GST_Order.pdf",
-   "attchmntText": "Hindustan Foods Limited has informed the Exchange about Intimation of order received under section 73 of CGST/SGST Act, 2017",
-   "bflag": null,
-   "csvName": null,
-   "desc": "Action(s) taken or orders passed",
-   "difference": "00:00:01",
-   "dt": "23102026175612",
-   "exchdisstime": "23-Oct-2026 17:56:13",
-   "fileSize": "206.45 KB",
-   "hasXbrl": true,
-   "old_new": null,
-   "orgid": null,
-   "seq_id": "106826773",
-   "smIndustry": null,
-   "sm_isin": "INE254N01018",
-   "sm_name": "Hindustan Foods Limited",
-   "sort_date": "2026-10-23 17:56:12",
-   "symbol": "HNDFDS"
-  }
- ],
- "ann_penalty": [
-  {
-   "an_dt": "24-Oct-2026 12:17:08",
-   "attFileSize": "371.95 KB",
-   "attchmntFile": "https://nsearchives.nseindia.com/corporate/SAHAJANAND_24102026121647_Disclosure_Under_Reg_30_Summons_under_GST_ACT.pdf",
-   "attchmntText": "Sahajanand Medical Technologies Limited has informed the Exchange about summons received under section 70 of Central Goods and Service tax Act.",
-   "bflag": null,
-   "csvName": null,
-   "desc": "Action(s) initiated or orders passed",
-   "difference": "00:00:01",
-   "dt": "24102026121708",
-   "exchdisstime": "24-Oct-2026 12:17:09",
-   "fileSize": "371.95 KB",
-   "hasXbrl": true,
-   "old_new": null,
-   "orgid": null,
-   "seq_id": "106827392",
-   "smIndustry": null,
-   "sm_isin": "INE356Y01018",
-   "sm_name": "Sahajanand Medical Technologies Limited",
-   "sort_date": "2026-10-24 12:17:08",
-   "symbol": "SMT"
-  },
-  {
-   "an_dt": "24-Oct-2026 01:33:09",
-   "attFileSize": "865.02 KB",
-   "attchmntFile": "https://nsearchives.nseindia.com/corporate/RCOM_24102026013248_DisclosureNCLTAGMRCOM23102026.pdf",
-   "attchmntText": "Reliance Communications Limited has informed the Exchange about Action(s) taken or orders passed",
-   "bflag": null,
-   "csvName": null,
-   "desc": "Action(s) taken or orders passed",
-   "difference": "00:00:02",
-   "dt": "24102026013309",
-   "exchdisstime": "24-Oct-2026 01:33:11",
-   "fileSize": "865.02 KB",
-   "hasXbrl": true,
-   "old_new": null,
-   "orgid": null,
-   "seq_id": "106827285",
-   "smIndustry": "Telecommunication - Services",
-   "sm_isin": "INE330H01018",
-   "sm_name": "Reliance Communications Limited",
-   "sort_date": "2026-10-24 01:33:09",
-   "symbol": "RCOM"
-  },
-  {
-   "an_dt": "23-Oct-2026 19:52:14",
-   "attFileSize": "291.36 KB",
-   "attchmntFile": "https://nsearchives.nseindia.com/corporate/Crompton123_23102026195153_IntimationforOrderspassed_1__1_.pdf",
-   "attchmntText": "Crompton Greaves Consumer Electricals Limited has informed the Exchange about Action(s) taken or orders passed",
-   "bflag": null,
-   "csvName": null,
-   "desc": "Action(s) taken or orders passed",
-   "difference": "00:00:00",
-   "dt": "23102026195214",
-   "exchdisstime": "23-Oct-2026 19:52:14",
-   "fileSize": "291.36 KB",
-   "hasXbrl": true,
-   "old_new": null,
-   "orgid": null,
-   "seq_id": "106826982",
-   "smIndustry": null,
-   "sm_isin": "INE299U01018",
-   "sm_name": "Crompton Greaves Consumer Electricals Limited",
-   "sort_date": "2026-10-23 19:52:14",
-   "symbol": "CROMPTON"
-  },
-  {
-   "an_dt": "23-Oct-2026 17:56:12",
-   "attFileSize": "206.45 KB",
-   "attchmntFile": "https://nsearchives.nseindia.com/corporate/9136565850_23102026175554_Reg_30_GST_Order.pdf",
-   "attchmntText": "Hindustan Foods Limited has informed the Exchange about Intimation of order received under section 73 of CGST/SGST Act, 2017",
-   "bflag": null,
-   "csvName": null,
-   "desc": "Action(s) taken or orders passed",
-   "difference": "00:00:01",
-   "dt": "23102026175612",
-   "exchdisstime": "23-Oct-2026 17:56:13",
-   "fileSize": "206.45 KB",
-   "hasXbrl": true,
-   "old_new": null,
-   "orgid": null,
-   "seq_id": "106826773",
-   "smIndustry": null,
-   "sm_isin": "INE254N01018",
-   "sm_name": "Hindustan Foods Limited",
-   "sort_date": "2026-10-23 17:56:12",
-   "symbol": "HNDFDS"
-  },
-  {
-   "an_dt": "23-Oct-2026 17:49:40",
-   "attFileSize": "152.47 KB",
-   "attchmntFile": "https://nsearchives.nseindia.com/corporate/BANKINDIA6_23102026174928_releatedpartyQ2FY27.pdf",
-   "attchmntText": "Bank Of India has informed the Exchange about related Party Transactions for Q2FY2027.",
-   "bflag": null,
-   "csvName": null,
-   "desc": "Related Party Transactions",
-   "difference": "00:00:00",
-   "dt": "23102026174940",
-   "exchdisstime": "23-Oct-2026 17:49:40",
-   "fileSize": "152.47 KB",
-   "hasXbrl": true,
-   "old_new": null,
-   "orgid": null,
-   "seq_id": "106826754",
-   "smIndustry": "Banks",
-   "sm_isin": "INE084A01016",
-   "sm_name": "Bank of India",
-   "sort_date": "2026-10-23 17:49:40",
-   "symbol": "BANKINDIA"
-  },
-  {
-   "an_dt": "23-Oct-2026 17:44:06",
-   "attFileSize": "3.41 MB",
-   "attchmntFile": "https://nsearchives.nseindia.com/corporate/gthakur_23102026174251_SEIntimationsearch23102026.pdf",
-   "attchmntText": "Tilaknagar Industries Limited has informed the Exchange about a disclosure under Regulation 30 of SEBI Listing Regulations.",
-   "bflag": null,
-   "csvName": null,
-   "desc": "Action(s) initiated or orders passed",
-   "difference": "00:00:01",
-   "dt": "23102026174406",
-   "exchdisstime": "23-Oct-2026 17:44:07",
-   "fileSize": "3.41 MB",
-   "hasXbrl": true,
-   "old_new": null,
-   "orgid": null,
-   "seq_id": "106826734",
-   "smIndustry": "Brew/Distilleries",
-   "sm_isin": "INE133E01013",
-   "sm_name": "Tilaknagar Industries Limited",
-   "sort_date": "2026-10-23 17:44:06",
-   "symbol": "TI"
-  },
-  {
-   "an_dt": "23-Oct-2026 17:20:34",
-   "attFileSize": "152.47 KB",
-   "attchmntFile": "https://nsearchives.nseindia.com/corporate/BANKINDIA6_23102026172025_releatedpartyQ2FY27.pdf",
-   "attchmntText": "Bank Of India has informed the Exchange about Related party Transactions for September 2026",
-   "bflag": null,
-   "csvName": null,
-   "desc": "General Updates",
-   "difference": "00:00:01",
-   "dt": "23102026172034",
-   "exchdisstime": "23-Oct-2026 17:20:35",
-   "fileSize": "152.47 KB",
-   "hasXbrl": true,
-   "old_new": null,
-   "orgid": null,
-   "seq_id": "106826675",
-   "smIndustry": "Banks",
-   "sm_isin": "INE084A01016",
-   "sm_name": "Bank of India",
-   "sort_date": "2026-10-23 17:20:34",
-   "symbol": "BANKINDIA"
-  },
-  {
-   "an_dt": "23-Oct-2026 15:53:50",
-   "attFileSize": "11.12 MB",
-   "attchmntFile": "https://nsearchives.nseindia.com/corporate/SECURKLOUD_23102026155046_E32_SEBI_order_sd.pdf",
-   "attchmntText": "SECUREKLOUD TECHNOLOGIES LIMITED has informed the Exchange about Action(s) taken or orders passed",
-   "bflag": null,
-   "csvName": null,
-   "desc": "Action(s) taken or orders passed",
-   "difference": "00:00:01",
-   "dt": "23102026155350",
-   "exchdisstime": "23-Oct-2026 15:53:51",
-   "fileSize": "11.12 MB",
-   "hasXbrl": true,
-   "old_new": null,
-   "orgid": null,
-   "seq_id": "106826418",
-   "smIndustry": null,
-   "sm_isin": "INE650K01021",
-   "sm_name": "SECUREKLOUD TECHNOLOGIES LIMITED",
-   "sort_date": "2026-10-23 15:53:50",
-   "symbol": "SECURKLOUD"
-  }
- ],
- "ann_results": [
-  {
-   "an_dt": "24-Oct-2026 12:59:48",
-   "attFileSize": "3.55 MB",
-   "attchmntFile": "https://nsearchives.nseindia.com/corporate/CSBBANK_24102026125742_BSENSENewsPaperAdUFR3009202624102026f.pdf",
-   "attchmntText": "CSB Bank Limited has informed the Exchange about submission of Newspaper Publication of the Unaudited Financial Results for the quarter and half year ended September 30, 2026",
-   "bflag": null,
-   "csvName": null,
-   "desc": "Copy of Newspaper Publication",
-   "difference": "00:00:00",
-   "dt": "24102026125948",
-   "exchdisstime": "24-Oct-2026 12:59:48",
-   "fileSize": "3.55 MB",
-   "hasXbrl": true,
-   "old_new": null,
-   "orgid": null,
-   "seq_id": "106827421",
-   "smIndustry": null,
-   "sm_isin": "INE679A01013",
-   "sm_name": "CSB Bank Limited",
-   "sort_date": "2026-10-24 12:59:48",
-   "symbol": "CSBBANK"
-  },
-  {
-   "an_dt": "24-Oct-2026 12:56:05",
-   "attFileSize": "3.35 MB",
-   "attchmntFile": "https://nsearchives.nseindia.com/corporate/MODIS_24102026125132_Outcome_of_BM_-_Oct_24th_2026_Final.pdf",
-   "attchmntText": "Modis Navnirman Limited has submitted to the Exchange, the financial results for the period ended September 30, 2026.",
-   "bflag": null,
-   "csvName": null,
-   "desc": "Outcome of Board Meeting",
-   "difference": "00:00:02",
-   "dt": "24102026125605",
-   "exchdisstime": "24-Oct-2026 12:56:07",
-   "fileSize": "3.35 MB",
-   "hasXbrl": true,
-   "old_new": null,
-   "orgid": null,
-   "seq_id": "106827416",
-   "smIndustry": null,
-   "sm_isin": "INE0L0L01012",
-   "sm_name": "Modis Navnirman Limited",
-   "sort_date": "2026-10-24 12:56:05",
-   "symbol": "MODIS"
-  },
-  {
-   "an_dt": "24-Oct-2026 12:44:21",
-   "attFileSize": "3.33 MB",
-   "attchmntFile": "https://nsearchives.nseindia.com/corporate/ORIENTCEM_24102026124243_OCL_Covering_24102026.pdf",
-   "attchmntText": "Orient Cement Limited has informed the Exchange about Copy of Newspaper Publication regarding Extracts of Unaudited Financial Results of the Company for the quarter and half-year ended on September 30, 2026",
-   "bflag": null,
-   "csvName": null,
-   "desc": "Copy of Newspaper Publication",
-   "difference": "00:00:01",
-   "dt": "24102026124421",
-   "exchdisstime": "24-Oct-2026 12:44:22",
-   "fileSize": "3.33 MB",
-   "hasXbrl": true,
-   "old_new": null,
-   "orgid": null,
-   "seq_id": "106827411",
-   "smIndustry": null,
-   "sm_isin": "INE876N01018",
-   "sm_name": "Orient Cement Limited",
-   "sort_date": "2026-10-24 12:44:21",
-   "symbol": "ORIENTCEM"
-  },
-  {
-   "an_dt": "24-Oct-2026 12:07:13",
-   "attFileSize": "4.22 MB",
-   "attchmntFile": "https://nsearchives.nseindia.com/corporate/SHAKTIPUMP_24102026120623_IntimationofNewspaper.pdf",
-   "attchmntText": "Shakti Pumps (India) Limited has informed the Exchange about Copy of Newspaper Publication for Un-audited Financial Results for the quarter and half year ended September 30, 2026",
-   "bflag": null,
-   "csvName": null,
-   "desc": "Copy of Newspaper Publication",
-   "difference": "00:00:02",
-   "dt": "24102026120713",
-   "exchdisstime": "24-Oct-2026 12:07:15",
-   "fileSize": "4.22 MB",
-   "hasXbrl": true,
-   "old_new": null,
-   "orgid": null,
-   "seq_id": "106827387",
-   "smIndustry": "Electronics - Industrial",
-   "sm_isin": "INE908D01010",
-   "sm_name": "Shakti Pumps (India) Limited",
-   "sort_date": "2026-10-24 12:07:13",
-   "symbol": "SHAKTIPUMP"
-  },
-  {
-   "an_dt": "24-Oct-2026 11:50:10",
-   "attFileSize": "3.96 MB",
-   "attchmntFile": "https://nsearchives.nseindia.com/corporate/INDUSINDBK3_24102026114939_SEDisclosure_NewspaperAdv24102026.pdf",
-   "attchmntText": "Indusind Bank Limited has informed the Exchange about Newspaper clippings pertaining to the Unaudited Consolidated and Standalone Financial Results for the quarter and half year ended September 30,  2026",
-   "bflag": null,
-   "csvName": null,
-   "desc": "General Updates",
-   "difference": "00:00:01",
-   "dt": "24102026115010",
-   "exchdisstime": "24-Oct-2026 11:50:11",
-   "fileSize": "3.96 MB",
-   "hasXbrl": true,
-   "old_new": null,
-   "orgid": null,
-   "seq_id": "106827375",
-   "smIndustry": "Banks",
-   "sm_isin": "INE095A01012",
-   "sm_name": "IndusInd Bank Limited",
-   "sort_date": "2026-10-24 11:50:10",
-   "symbol": "INDUSINDBK"
-  },
-  {
-   "an_dt": "24-Oct-2026 11:09:58",
-   "attFileSize": "319.39 KB",
-   "attchmntFile": "https://nsearchives.nseindia.com/corporate/SUKHJIT1944_24102026110900_Advertisement_of_Result300926.pdf",
-   "attchmntText": "Sukhjit Starch & Chemicals Limited has informed the Exchange about Copy of Newspaper Publication containing the unaudited Financial Results (Standalone & Consolidated) for the quarter / half year ended September 30, 2026.",
-   "bflag": null,
-   "csvName": null,
-   "desc": "Copy of Newspaper Publication",
-   "difference": "00:00:01",
-   "dt": "24102026110958",
-   "exchdisstime": "24-Oct-2026 11:09:59",
-   "fileSize": "319.39 KB",
-   "hasXbrl": true,
-   "old_new": null,
-   "orgid": null,
-   "seq_id": "106827348",
-   "smIndustry": null,
-   "sm_isin": "INE450E01011",
-   "sm_name": "Sukhjit Starch & Chemicals Limited",
-   "sort_date": "2026-10-24 11:09:58",
-   "symbol": "SUKHJITS"
-  }
- ],
- "sh_first": {
-  "broadcastDate": "24-OCT-2026 12:34:08",
-  "cgTimeStamp": null,
-  "countString": null,
-  "date": "30-SEP-2026",
-  "desc": "NEW_1",
-  "employeeTrusts": "0",
-  "format": null,
-  "index": "-",
-  "industry": "-",
-  "isin": "INE965W01036",
-  "name": "BMW Ventures Limited",
-  "newColumn": true,
-  "pr_and_prgrp": "73.62",
-  "promoterDematNotes": "",
-  "publicShareholdingNotes": "",
-  "public_val": "26.38",
-  "recordId": "216326",
-  "remarksWeb": "The Scheme of Amalgamation between BMW Project Private Limited, Nupur Heights Private Limited and Ridhi sidhi Fincon Private Limited with BMW Fininvest Private Limited was confirmed vide order received on August 4,2026. However the allotment of shares pursuant to the Scheme is still in process and has not yet been completed. Accordingly, the shareholding position will be updated upon completion of the allotment process",
-  "revisedData": "N",
-  "revisedDate": null,
-  "revisedRemark": null,
-  "revisedStatus": "-",
-  "revisionDate": null,
-  "revisionRemark": null,
-  "shareholdingPatternNotes": "",
-  "submissionDate": "24-OCT-2026",
-  "symbol": "BMWVENTLTD",
-  "systemDate": "24-OCT-2026 12:34:13",
-  "timeDifference": "00:00:05",
-  "typeOfSubmission": null,
-  "underlyingDrs": null,
-  "xbrl": "https://nsearchives.nseindia.com/corporate/xbrl/SHP_1745223_24102026123403_WEB.xml",
-  "xbrlFileSize": "289.82 KB"
  },
- "sh_facts": [
-  [
-   "in-bse-shp:NumberOfShareholders",
-   "IndividualsOrHinduUndividedFamily_ContextI",
-   "8"
-  ],
-  [
-   "in-bse-shp:NumberOfFullyPaidUpEquityShares",
-   "IndividualsOrHinduUndividedFamily_ContextI",
-   "33923900"
-  ],
-  [
-   "in-bse-shp:NumberOfShares",
-   "IndividualsOrHinduUndividedFamily_ContextI",
-   "33923900"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageOfTotalNumberOfShares",
-   "IndividualsOrHinduUndividedFamily_ContextI",
-   "0.3912"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRightsHeldBySameClassOfSecurities",
-   "IndividualsOrHinduUndividedFamily_ContextI",
-   "33923900"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRights",
-   "IndividualsOrHinduUndividedFamily_ContextI",
-   "33923900"
-  ],
-  [
-   "in-bse-shp:PercentageOfTotalVotingRights",
-   "IndividualsOrHinduUndividedFamily_ContextI",
-   "0.3912"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesOnFullyDilutedBasisIncludingWarrantsESOPAndConvertibleSecurities",
-   "IndividualsOrHinduUndividedFamily_ContextI",
-   "33923900"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageAssumingFullConversionOfConvertibleSecuritiesWarrantsAndESOP",
-   "IndividualsOrHinduUndividedFamily_ContextI",
-   "0.3912"
-  ],
-  [
-   "in-bse-shp:NumberOfTheLockedInShares",
-   "IndividualsOrHinduUndividedFamily_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:LockedInSharesAsAPercentageOfTotalNumberOfShares",
-   "IndividualsOrHinduUndividedFamily_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfEquitySharesHeldInDematerializedForm",
-   "IndividualsOrHinduUndividedFamily_ContextI",
-   "33923900"
-  ],
-  [
-   "in-bse-shp:NumberOfShareholders",
-   "OtherIndianShareholders_ContextI",
-   "2"
-  ],
-  [
-   "in-bse-shp:NumberOfFullyPaidUpEquityShares",
-   "OtherIndianShareholders_ContextI",
-   "29917600"
-  ],
-  [
-   "in-bse-shp:NumberOfShares",
-   "OtherIndianShareholders_ContextI",
-   "29917600"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageOfTotalNumberOfShares",
-   "OtherIndianShareholders_ContextI",
-   "0.345"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRightsHeldBySameClassOfSecurities",
-   "OtherIndianShareholders_ContextI",
-   "29917600"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRights",
-   "OtherIndianShareholders_ContextI",
-   "29917600"
-  ],
-  [
-   "in-bse-shp:PercentageOfTotalVotingRights",
-   "OtherIndianShareholders_ContextI",
-   "0.345"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesOnFullyDilutedBasisIncludingWarrantsESOPAndConvertibleSecurities",
-   "OtherIndianShareholders_ContextI",
-   "29917600"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageAssumingFullConversionOfConvertibleSecuritiesWarrantsAndESOP",
-   "OtherIndianShareholders_ContextI",
-   "0.345"
-  ],
-  [
-   "in-bse-shp:NumberOfTheLockedInShares",
-   "OtherIndianShareholders_ContextI",
-   "17500000"
-  ],
-  [
-   "in-bse-shp:LockedInSharesAsAPercentageOfTotalNumberOfShares",
-   "OtherIndianShareholders_ContextI",
-   "0.5849"
-  ],
-  [
-   "in-bse-shp:NumberOfEquitySharesHeldInDematerializedForm",
-   "OtherIndianShareholders_ContextI",
-   "29917600"
-  ],
-  [
-   "in-bse-shp:NumberOfShareholders",
-   "Indian_ContextI",
-   "10"
-  ],
-  [
-   "in-bse-shp:NumberOfFullyPaidUpEquityShares",
-   "Indian_ContextI",
-   "63841500"
-  ],
-  [
-   "in-bse-shp:NumberOfShares",
-   "Indian_ContextI",
-   "63841500"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageOfTotalNumberOfShares",
-   "Indian_ContextI",
-   "0.7362"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRightsHeldBySameClassOfSecurities",
-   "Indian_ContextI",
-   "63841500"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRights",
-   "Indian_ContextI",
-   "63841500"
-  ],
-  [
-   "in-bse-shp:PercentageOfTotalVotingRights",
-   "Indian_ContextI",
-   "0.7362"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesOnFullyDilutedBasisIncludingWarrantsESOPAndConvertibleSecurities",
-   "Indian_ContextI",
-   "63841500"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageAssumingFullConversionOfConvertibleSecuritiesWarrantsAndESOP",
-   "Indian_ContextI",
-   "0.7362"
-  ],
-  [
-   "in-bse-shp:NumberOfTheLockedInShares",
-   "Indian_ContextI",
-   "17500000"
-  ],
-  [
-   "in-bse-shp:LockedInSharesAsAPercentageOfTotalNumberOfShares",
-   "Indian_ContextI",
-   "0.2741"
-  ],
-  [
-   "in-bse-shp:NumberOfEquitySharesHeldInDematerializedForm",
-   "Indian_ContextI",
-   "63841500"
-  ],
-  [
-   "in-bse-shp:NumberOfShareholders",
-   "ShareholdingOfPromoterAndPromoterGroup_ContextI",
-   "10"
-  ],
-  [
-   "in-bse-shp:NumberOfFullyPaidUpEquityShares",
-   "ShareholdingOfPromoterAndPromoterGroup_ContextI",
-   "63841500"
-  ],
-  [
-   "in-bse-shp:NumberOfShares",
-   "ShareholdingOfPromoterAndPromoterGroup_ContextI",
-   "63841500"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageOfTotalNumberOfShares",
-   "ShareholdingOfPromoterAndPromoterGroup_ContextI",
-   "0.7362"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRightsHeldBySameClassOfSecurities",
-   "ShareholdingOfPromoterAndPromoterGroup_ContextI",
-   "63841500"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRights",
-   "ShareholdingOfPromoterAndPromoterGroup_ContextI",
-   "63841500"
-  ],
-  [
-   "in-bse-shp:PercentageOfTotalVotingRights",
-   "ShareholdingOfPromoterAndPromoterGroup_ContextI",
-   "0.7362"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesOnFullyDilutedBasisIncludingWarrantsESOPAndConvertibleSecurities",
-   "ShareholdingOfPromoterAndPromoterGroup_ContextI",
-   "63841500"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageAssumingFullConversionOfConvertibleSecuritiesWarrantsAndESOP",
-   "ShareholdingOfPromoterAndPromoterGroup_ContextI",
-   "0.7362"
-  ],
-  [
-   "in-bse-shp:NumberOfTheLockedInShares",
-   "ShareholdingOfPromoterAndPromoterGroup_ContextI",
-   "17500000"
-  ],
-  [
-   "in-bse-shp:LockedInSharesAsAPercentageOfTotalNumberOfShares",
-   "ShareholdingOfPromoterAndPromoterGroup_ContextI",
-   "0.2741"
-  ],
-  [
-   "in-bse-shp:NumberOfEquitySharesHeldInDematerializedForm",
-   "ShareholdingOfPromoterAndPromoterGroup_ContextI",
-   "63841500"
-  ],
-  [
-   "in-bse-shp:NumberOfShareholders",
-   "AlternativeInvestmentFunds_ContextI",
-   "3"
-  ],
-  [
-   "in-bse-shp:NumberOfFullyPaidUpEquityShares",
-   "AlternativeInvestmentFunds_ContextI",
-   "166667"
-  ],
-  [
-   "in-bse-shp:NumberOfShares",
-   "AlternativeInvestmentFunds_ContextI",
-   "166667"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageOfTotalNumberOfShares",
-   "AlternativeInvestmentFunds_ContextI",
-   "0.0019"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRightsHeldBySameClassOfSecurities",
-   "AlternativeInvestmentFunds_ContextI",
-   "166667"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRights",
-   "AlternativeInvestmentFunds_ContextI",
-   "166667"
-  ],
-  [
-   "in-bse-shp:PercentageOfTotalVotingRights",
-   "AlternativeInvestmentFunds_ContextI",
-   "0.0019"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesOnFullyDilutedBasisIncludingWarrantsESOPAndConvertibleSecurities",
-   "AlternativeInvestmentFunds_ContextI",
-   "166667"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageAssumingFullConversionOfConvertibleSecuritiesWarrantsAndESOP",
-   "AlternativeInvestmentFunds_ContextI",
-   "0.0019"
-  ],
-  [
-   "in-bse-shp:NumberOfEquitySharesHeldInDematerializedForm",
-   "AlternativeInvestmentFunds_ContextI",
-   "166667"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesUnderSubCategoryOne",
-   "AlternativeInvestmentFunds_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesUnderSubCategoryTwo",
-   "AlternativeInvestmentFunds_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesUnderSubCategoryThree",
-   "AlternativeInvestmentFunds_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfShareholders",
-   "Banks_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfFullyPaidUpEquityShares",
-   "Banks_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfShares",
-   "Banks_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageOfTotalNumberOfShares",
-   "Banks_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRightsHeldBySameClassOfSecurities",
-   "Banks_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRights",
-   "Banks_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:PercentageOfTotalVotingRights",
-   "Banks_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesOnFullyDilutedBasisIncludingWarrantsESOPAndConvertibleSecurities",
-   "Banks_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageAssumingFullConversionOfConvertibleSecuritiesWarrantsAndESOP",
-   "Banks_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfEquitySharesHeldInDematerializedForm",
-   "Banks_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesUnderSubCategoryOne",
-   "Banks_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesUnderSubCategoryTwo",
-   "Banks_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesUnderSubCategoryThree",
-   "Banks_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfShareholders",
-   "InstitutionsDomestic_ContextI",
-   "3"
-  ],
-  [
-   "in-bse-shp:NumberOfFullyPaidUpEquityShares",
-   "InstitutionsDomestic_ContextI",
-   "166667"
-  ],
-  [
-   "in-bse-shp:NumberOfShares",
-   "InstitutionsDomestic_ContextI",
-   "166667"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageOfTotalNumberOfShares",
-   "InstitutionsDomestic_ContextI",
-   "0.0019"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRightsHeldBySameClassOfSecurities",
-   "InstitutionsDomestic_ContextI",
-   "166667"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRights",
-   "InstitutionsDomestic_ContextI",
-   "166667"
-  ],
-  [
-   "in-bse-shp:PercentageOfTotalVotingRights",
-   "InstitutionsDomestic_ContextI",
-   "0.0019"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesOnFullyDilutedBasisIncludingWarrantsESOPAndConvertibleSecurities",
-   "InstitutionsDomestic_ContextI",
-   "166667"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageAssumingFullConversionOfConvertibleSecuritiesWarrantsAndESOP",
-   "InstitutionsDomestic_ContextI",
-   "0.0019"
-  ],
-  [
-   "in-bse-shp:NumberOfEquitySharesHeldInDematerializedForm",
-   "InstitutionsDomestic_ContextI",
-   "166667"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesUnderSubCategoryOne",
-   "InstitutionsDomestic_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesUnderSubCategoryTwo",
-   "InstitutionsDomestic_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesUnderSubCategoryThree",
-   "InstitutionsDomestic_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfShareholders",
-   "InstitutionsForeignPortfolioInvestorCategoryOne_ContextI",
-   "1"
-  ],
-  [
-   "in-bse-shp:NumberOfFullyPaidUpEquityShares",
-   "InstitutionsForeignPortfolioInvestorCategoryOne_ContextI",
-   "25"
-  ],
-  [
-   "in-bse-shp:NumberOfShares",
-   "InstitutionsForeignPortfolioInvestorCategoryOne_ContextI",
-   "25"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageOfTotalNumberOfShares",
-   "InstitutionsForeignPortfolioInvestorCategoryOne_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRightsHeldBySameClassOfSecurities",
-   "InstitutionsForeignPortfolioInvestorCategoryOne_ContextI",
-   "25"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRights",
-   "InstitutionsForeignPortfolioInvestorCategoryOne_ContextI",
-   "25"
-  ],
-  [
-   "in-bse-shp:PercentageOfTotalVotingRights",
-   "InstitutionsForeignPortfolioInvestorCategoryOne_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesOnFullyDilutedBasisIncludingWarrantsESOPAndConvertibleSecurities",
-   "InstitutionsForeignPortfolioInvestorCategoryOne_ContextI",
-   "25"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageAssumingFullConversionOfConvertibleSecuritiesWarrantsAndESOP",
-   "InstitutionsForeignPortfolioInvestorCategoryOne_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfEquitySharesHeldInDematerializedForm",
-   "InstitutionsForeignPortfolioInvestorCategoryOne_ContextI",
-   "25"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesUnderSubCategoryOne",
-   "InstitutionsForeignPortfolioInvestorCategoryOne_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesUnderSubCategoryTwo",
-   "InstitutionsForeignPortfolioInvestorCategoryOne_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesUnderSubCategoryThree",
-   "InstitutionsForeignPortfolioInvestorCategoryOne_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfShareholders",
-   "InstitutionsForeignPortfolioInvestorCategoryTwo_ContextI",
-   "1"
-  ],
-  [
-   "in-bse-shp:NumberOfFullyPaidUpEquityShares",
-   "InstitutionsForeignPortfolioInvestorCategoryTwo_ContextI",
-   "11715"
-  ],
-  [
-   "in-bse-shp:NumberOfShares",
-   "InstitutionsForeignPortfolioInvestorCategoryTwo_ContextI",
-   "11715"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageOfTotalNumberOfShares",
-   "InstitutionsForeignPortfolioInvestorCategoryTwo_ContextI",
-   "0.0001"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRightsHeldBySameClassOfSecurities",
-   "InstitutionsForeignPortfolioInvestorCategoryTwo_ContextI",
-   "11715"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRights",
-   "InstitutionsForeignPortfolioInvestorCategoryTwo_ContextI",
-   "11715"
-  ],
-  [
-   "in-bse-shp:PercentageOfTotalVotingRights",
-   "InstitutionsForeignPortfolioInvestorCategoryTwo_ContextI",
-   "0.0001"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesOnFullyDilutedBasisIncludingWarrantsESOPAndConvertibleSecurities",
-   "InstitutionsForeignPortfolioInvestorCategoryTwo_ContextI",
-   "11715"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageAssumingFullConversionOfConvertibleSecuritiesWarrantsAndESOP",
-   "InstitutionsForeignPortfolioInvestorCategoryTwo_ContextI",
-   "0.0001"
-  ],
-  [
-   "in-bse-shp:NumberOfEquitySharesHeldInDematerializedForm",
-   "InstitutionsForeignPortfolioInvestorCategoryTwo_ContextI",
-   "11715"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesUnderSubCategoryOne",
-   "InstitutionsForeignPortfolioInvestorCategoryTwo_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesUnderSubCategoryTwo",
-   "InstitutionsForeignPortfolioInvestorCategoryTwo_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesUnderSubCategoryThree",
-   "InstitutionsForeignPortfolioInvestorCategoryTwo_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfShareholders",
-   "InstitutionsForeign_ContextI",
-   "2"
-  ],
-  [
-   "in-bse-shp:NumberOfFullyPaidUpEquityShares",
-   "InstitutionsForeign_ContextI",
-   "11740"
-  ],
-  [
-   "in-bse-shp:NumberOfShares",
-   "InstitutionsForeign_ContextI",
-   "11740"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageOfTotalNumberOfShares",
-   "InstitutionsForeign_ContextI",
-   "0.0001"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRightsHeldBySameClassOfSecurities",
-   "InstitutionsForeign_ContextI",
-   "11740"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRights",
-   "InstitutionsForeign_ContextI",
-   "11740"
-  ],
-  [
-   "in-bse-shp:PercentageOfTotalVotingRights",
-   "InstitutionsForeign_ContextI",
-   "0.0001"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesOnFullyDilutedBasisIncludingWarrantsESOPAndConvertibleSecurities",
-   "InstitutionsForeign_ContextI",
-   "11740"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageAssumingFullConversionOfConvertibleSecuritiesWarrantsAndESOP",
-   "InstitutionsForeign_ContextI",
-   "0.0001"
-  ],
-  [
-   "in-bse-shp:NumberOfEquitySharesHeldInDematerializedForm",
-   "InstitutionsForeign_ContextI",
-   "11740"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesUnderSubCategoryOne",
-   "InstitutionsForeign_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesUnderSubCategoryTwo",
-   "InstitutionsForeign_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesUnderSubCategoryThree",
-   "InstitutionsForeign_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfShareholders",
-   "ResidentIndividualShareholdersHoldingNominalShareCapitalUpToRsTwoLakh_ContextI",
-   "57982"
-  ],
-  [
-   "in-bse-shp:NumberOfFullyPaidUpEquityShares",
-   "ResidentIndividualShareholdersHoldingNominalShareCapitalUpToRsTwoLakh_ContextI",
-   "15319389"
-  ],
-  [
-   "in-bse-shp:NumberOfShares",
-   "ResidentIndividualShareholdersHoldingNominalShareCapitalUpToRsTwoLakh_ContextI",
-   "15319389"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageOfTotalNumberOfShares",
-   "ResidentIndividualShareholdersHoldingNominalShareCapitalUpToRsTwoLakh_ContextI",
-   "0.1767"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRightsHeldBySameClassOfSecurities",
-   "ResidentIndividualShareholdersHoldingNominalShareCapitalUpToRsTwoLakh_ContextI",
-   "15319389"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRights",
-   "ResidentIndividualShareholdersHoldingNominalShareCapitalUpToRsTwoLakh_ContextI",
-   "15319389"
-  ],
-  [
-   "in-bse-shp:PercentageOfTotalVotingRights",
-   "ResidentIndividualShareholdersHoldingNominalShareCapitalUpToRsTwoLakh_ContextI",
-   "0.1767"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesOnFullyDilutedBasisIncludingWarrantsESOPAndConvertibleSecurities",
-   "ResidentIndividualShareholdersHoldingNominalShareCapitalUpToRsTwoLakh_ContextI",
-   "15319389"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageAssumingFullConversionOfConvertibleSecuritiesWarrantsAndESOP",
-   "ResidentIndividualShareholdersHoldingNominalShareCapitalUpToRsTwoLakh_ContextI",
-   "0.1767"
-  ],
-  [
-   "in-bse-shp:NumberOfEquitySharesHeldInDematerializedForm",
-   "ResidentIndividualShareholdersHoldingNominalShareCapitalUpToRsTwoLakh_ContextI",
-   "15319389"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesUnderSubCategoryOne",
-   "ResidentIndividualShareholdersHoldingNominalShareCapitalUpToRsTwoLakh_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesUnderSubCategoryTwo",
-   "ResidentIndividualShareholdersHoldingNominalShareCapitalUpToRsTwoLakh_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesUnderSubCategoryThree",
-   "ResidentIndividualShareholdersHoldingNominalShareCapitalUpToRsTwoLakh_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfShareholders",
-   "ResidentIndividualShareholdersHoldingNominalShareCapitalInExcessOfRsTwoLakh_ContextI",
-   "38"
-  ],
-  [
-   "in-bse-shp:NumberOfFullyPaidUpEquityShares",
-   "ResidentIndividualShareholdersHoldingNominalShareCapitalInExcessOfRsTwoLakh_ContextI",
-   "2183523"
-  ],
-  [
-   "in-bse-shp:NumberOfShares",
-   "ResidentIndividualShareholdersHoldingNominalShareCapitalInExcessOfRsTwoLakh_ContextI",
-   "2183523"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageOfTotalNumberOfShares",
-   "ResidentIndividualShareholdersHoldingNominalShareCapitalInExcessOfRsTwoLakh_ContextI",
-   "0.0252"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRightsHeldBySameClassOfSecurities",
-   "ResidentIndividualShareholdersHoldingNominalShareCapitalInExcessOfRsTwoLakh_ContextI",
-   "2183523"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRights",
-   "ResidentIndividualShareholdersHoldingNominalShareCapitalInExcessOfRsTwoLakh_ContextI",
-   "2183523"
-  ],
-  [
-   "in-bse-shp:PercentageOfTotalVotingRights",
-   "ResidentIndividualShareholdersHoldingNominalShareCapitalInExcessOfRsTwoLakh_ContextI",
-   "0.0252"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesOnFullyDilutedBasisIncludingWarrantsESOPAndConvertibleSecurities",
-   "ResidentIndividualShareholdersHoldingNominalShareCapitalInExcessOfRsTwoLakh_ContextI",
-   "2183523"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageAssumingFullConversionOfConvertibleSecuritiesWarrantsAndESOP",
-   "ResidentIndividualShareholdersHoldingNominalShareCapitalInExcessOfRsTwoLakh_ContextI",
-   "0.0252"
-  ],
-  [
-   "in-bse-shp:NumberOfEquitySharesHeldInDematerializedForm",
-   "ResidentIndividualShareholdersHoldingNominalShareCapitalInExcessOfRsTwoLakh_ContextI",
-   "2183523"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesUnderSubCategoryOne",
-   "ResidentIndividualShareholdersHoldingNominalShareCapitalInExcessOfRsTwoLakh_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesUnderSubCategoryTwo",
-   "ResidentIndividualShareholdersHoldingNominalShareCapitalInExcessOfRsTwoLakh_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesUnderSubCategoryThree",
-   "ResidentIndividualShareholdersHoldingNominalShareCapitalInExcessOfRsTwoLakh_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfShareholders",
-   "NonResidentIndians_ContextI",
-   "187"
-  ],
-  [
-   "in-bse-shp:NumberOfFullyPaidUpEquityShares",
-   "NonResidentIndians_ContextI",
-   "84399"
-  ],
-  [
-   "in-bse-shp:NumberOfShares",
-   "NonResidentIndians_ContextI",
-   "84399"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageOfTotalNumberOfShares",
-   "NonResidentIndians_ContextI",
-   "0.001"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRightsHeldBySameClassOfSecurities",
-   "NonResidentIndians_ContextI",
-   "84399"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRights",
-   "NonResidentIndians_ContextI",
-   "84399"
-  ],
-  [
-   "in-bse-shp:PercentageOfTotalVotingRights",
-   "NonResidentIndians_ContextI",
-   "0.001"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesOnFullyDilutedBasisIncludingWarrantsESOPAndConvertibleSecurities",
-   "NonResidentIndians_ContextI",
-   "84399"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageAssumingFullConversionOfConvertibleSecuritiesWarrantsAndESOP",
-   "NonResidentIndians_ContextI",
-   "0.001"
-  ],
-  [
-   "in-bse-shp:NumberOfEquitySharesHeldInDematerializedForm",
-   "NonResidentIndians_ContextI",
-   "84399"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesUnderSubCategoryOne",
-   "NonResidentIndians_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesUnderSubCategoryTwo",
-   "NonResidentIndians_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesUnderSubCategoryThree",
-   "NonResidentIndians_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfShareholders",
-   "BodiesCorporate_ContextI",
-   "43"
-  ],
-  [
-   "in-bse-shp:NumberOfFullyPaidUpEquityShares",
-   "BodiesCorporate_ContextI",
-   "3948450"
-  ],
-  [
-   "in-bse-shp:NumberOfShares",
-   "BodiesCorporate_ContextI",
-   "3948450"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageOfTotalNumberOfShares",
-   "BodiesCorporate_ContextI",
-   "0.0455"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRightsHeldBySameClassOfSecurities",
-   "BodiesCorporate_ContextI",
-   "3948450"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRights",
-   "BodiesCorporate_ContextI",
-   "3948450"
-  ],
-  [
-   "in-bse-shp:PercentageOfTotalVotingRights",
-   "BodiesCorporate_ContextI",
-   "0.0455"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesOnFullyDilutedBasisIncludingWarrantsESOPAndConvertibleSecurities",
-   "BodiesCorporate_ContextI",
-   "3948450"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageAssumingFullConversionOfConvertibleSecuritiesWarrantsAndESOP",
-   "BodiesCorporate_ContextI",
-   "0.0455"
-  ],
-  [
-   "in-bse-shp:NumberOfEquitySharesHeldInDematerializedForm",
-   "BodiesCorporate_ContextI",
-   "3948450"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesUnderSubCategoryOne",
-   "BodiesCorporate_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesUnderSubCategoryTwo",
-   "BodiesCorporate_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesUnderSubCategoryThree",
-   "BodiesCorporate_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfShareholders",
-   "OtherNonInstitutions_ContextI",
-   "1420"
-  ],
-  [
-   "in-bse-shp:NumberOfFullyPaidUpEquityShares",
-   "OtherNonInstitutions_ContextI",
-   "1159332"
-  ],
-  [
-   "in-bse-shp:NumberOfShares",
-   "OtherNonInstitutions_ContextI",
-   "1159332"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageOfTotalNumberOfShares",
-   "OtherNonInstitutions_ContextI",
-   "0.0134"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRightsHeldBySameClassOfSecurities",
-   "OtherNonInstitutions_ContextI",
-   "1159332"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRights",
-   "OtherNonInstitutions_ContextI",
-   "1159332"
-  ],
-  [
-   "in-bse-shp:PercentageOfTotalVotingRights",
-   "OtherNonInstitutions_ContextI",
-   "0.0134"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesOnFullyDilutedBasisIncludingWarrantsESOPAndConvertibleSecurities",
-   "OtherNonInstitutions_ContextI",
-   "1159332"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageAssumingFullConversionOfConvertibleSecuritiesWarrantsAndESOP",
-   "OtherNonInstitutions_ContextI",
-   "0.0134"
-  ],
-  [
-   "in-bse-shp:NumberOfEquitySharesHeldInDematerializedForm",
-   "OtherNonInstitutions_ContextI",
-   "1159332"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesUnderSubCategoryOne",
-   "OtherNonInstitutions_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesUnderSubCategoryTwo",
-   "OtherNonInstitutions_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesUnderSubCategoryThree",
-   "OtherNonInstitutions_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfShareholders",
-   "NonInstitutions_ContextI",
-   "59670"
-  ],
-  [
-   "in-bse-shp:NumberOfFullyPaidUpEquityShares",
-   "NonInstitutions_ContextI",
-   "22695093"
-  ],
-  [
-   "in-bse-shp:NumberOfShares",
-   "NonInstitutions_ContextI",
-   "22695093"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageOfTotalNumberOfShares",
-   "NonInstitutions_ContextI",
-   "0.2617"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRightsHeldBySameClassOfSecurities",
-   "NonInstitutions_ContextI",
-   "22695093"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRights",
-   "NonInstitutions_ContextI",
-   "22695093"
-  ],
-  [
-   "in-bse-shp:PercentageOfTotalVotingRights",
-   "NonInstitutions_ContextI",
-   "0.2617"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesOnFullyDilutedBasisIncludingWarrantsESOPAndConvertibleSecurities",
-   "NonInstitutions_ContextI",
-   "22695093"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageAssumingFullConversionOfConvertibleSecuritiesWarrantsAndESOP",
-   "NonInstitutions_ContextI",
-   "0.2617"
-  ],
-  [
-   "in-bse-shp:NumberOfEquitySharesHeldInDematerializedForm",
-   "NonInstitutions_ContextI",
-   "22695093"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesUnderSubCategoryOne",
-   "NonInstitutions_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesUnderSubCategoryTwo",
-   "NonInstitutions_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesUnderSubCategoryThree",
-   "NonInstitutions_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfShareholders",
-   "PublicShareholding_ContextI",
-   "59675"
-  ],
-  [
-   "in-bse-shp:NumberOfFullyPaidUpEquityShares",
-   "PublicShareholding_ContextI",
-   "22873500"
-  ],
-  [
-   "in-bse-shp:NumberOfShares",
-   "PublicShareholding_ContextI",
-   "22873500"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageOfTotalNumberOfShares",
-   "PublicShareholding_ContextI",
-   "0.2638"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRightsHeldBySameClassOfSecurities",
-   "PublicShareholding_ContextI",
-   "22873500"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRights",
-   "PublicShareholding_ContextI",
-   "22873500"
-  ],
-  [
-   "in-bse-shp:PercentageOfTotalVotingRights",
-   "PublicShareholding_ContextI",
-   "0.2638"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesOnFullyDilutedBasisIncludingWarrantsESOPAndConvertibleSecurities",
-   "PublicShareholding_ContextI",
-   "22873500"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageAssumingFullConversionOfConvertibleSecuritiesWarrantsAndESOP",
-   "PublicShareholding_ContextI",
-   "0.2638"
-  ],
-  [
-   "in-bse-shp:NumberOfEquitySharesHeldInDematerializedForm",
-   "PublicShareholding_ContextI",
-   "22873500"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesUnderSubCategoryOne",
-   "PublicShareholding_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesUnderSubCategoryTwo",
-   "PublicShareholding_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesUnderSubCategoryThree",
-   "PublicShareholding_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfShareholders",
-   "ShareholdingPattern_ContextI",
-   "59685"
-  ],
-  [
-   "in-bse-shp:NumberOfFullyPaidUpEquityShares",
-   "ShareholdingPattern_ContextI",
-   "86715000"
-  ],
-  [
-   "in-bse-shp:NumberOfShares",
-   "ShareholdingPattern_ContextI",
-   "86715000"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageOfTotalNumberOfShares",
-   "ShareholdingPattern_ContextI",
-   "1"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRightsHeldBySameClassOfSecurities",
-   "ShareholdingPattern_ContextI",
-   "86715000"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRights",
-   "ShareholdingPattern_ContextI",
-   "86715000"
-  ],
-  [
-   "in-bse-shp:PercentageOfTotalVotingRights",
-   "ShareholdingPattern_ContextI",
-   "1"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesOnFullyDilutedBasisIncludingWarrantsESOPAndConvertibleSecurities",
-   "ShareholdingPattern_ContextI",
-   "86715000"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageAssumingFullConversionOfConvertibleSecuritiesWarrantsAndESOP",
-   "ShareholdingPattern_ContextI",
-   "1"
-  ],
-  [
-   "in-bse-shp:NumberOfTheLockedInShares",
-   "ShareholdingPattern_ContextI",
-   "17500000"
-  ],
-  [
-   "in-bse-shp:LockedInSharesAsAPercentageOfTotalNumberOfShares",
-   "ShareholdingPattern_ContextI",
-   "0.2018"
-  ],
-  [
-   "in-bse-shp:NumberOfEquitySharesHeldInDematerializedForm",
-   "ShareholdingPattern_ContextI",
-   "86715000"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesUnderSubCategoryOne",
-   "ShareholdingPattern_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesUnderSubCategoryTwo",
-   "ShareholdingPattern_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesUnderSubCategoryThree",
-   "ShareholdingPattern_ContextI",
-   "0"
-  ],
-  [
-   "in-bse-shp:PermanentAccountNumberOfShareholder",
-   "D_IndividualsOrHUF_Context15",
-   "******"
-  ],
-  [
-   "in-bse-shp:NumberOfFullyPaidUpEquityShares",
-   "IndividualsOrHUF_Context15",
-   "17597200"
-  ],
-  [
-   "in-bse-shp:NumberOfShares",
-   "IndividualsOrHUF_Context15",
-   "17597200"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageOfTotalNumberOfShares",
-   "IndividualsOrHUF_Context15",
-   "0.2029"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRightsHeldBySameClassOfSecurities",
-   "IndividualsOrHUF_Context15",
-   "17597200"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRights",
-   "IndividualsOrHUF_Context15",
-   "17597200"
-  ],
-  [
-   "in-bse-shp:PercentageOfTotalVotingRights",
-   "IndividualsOrHUF_Context15",
-   "0.2029"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesOnFullyDilutedBasisIncludingWarrantsESOPAndConvertibleSecurities",
-   "IndividualsOrHUF_Context15",
-   "17597200"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageAssumingFullConversionOfConvertibleSecuritiesWarrantsAndESOP",
-   "IndividualsOrHUF_Context15",
-   "0.2029"
-  ],
-  [
-   "in-bse-shp:NumberOfTheLockedInShares",
-   "IndividualsOrHUF_Context15",
-   "0"
-  ],
-  [
-   "in-bse-shp:LockedInSharesAsAPercentageOfTotalNumberOfShares",
-   "IndividualsOrHUF_Context15",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfEquitySharesHeldInDematerializedForm",
-   "IndividualsOrHUF_Context15",
-   "17597200"
-  ],
-  [
-   "in-bse-shp:NumberOfShareholders",
-   "IndividualsOrHUF_Context15",
-   "1"
-  ],
-  [
-   "in-bse-shp:PermanentAccountNumberOfShareholder",
-   "D_IndividualsOrHUF_Context16",
-   "******"
-  ],
-  [
-   "in-bse-shp:NumberOfFullyPaidUpEquityShares",
-   "IndividualsOrHUF_Context16",
-   "5798200"
-  ],
-  [
-   "in-bse-shp:NumberOfShares",
-   "IndividualsOrHUF_Context16",
-   "5798200"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageOfTotalNumberOfShares",
-   "IndividualsOrHUF_Context16",
-   "0.0669"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRightsHeldBySameClassOfSecurities",
-   "IndividualsOrHUF_Context16",
-   "5798200"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRights",
-   "IndividualsOrHUF_Context16",
-   "5798200"
-  ],
-  [
-   "in-bse-shp:PercentageOfTotalVotingRights",
-   "IndividualsOrHUF_Context16",
-   "0.0669"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesOnFullyDilutedBasisIncludingWarrantsESOPAndConvertibleSecurities",
-   "IndividualsOrHUF_Context16",
-   "5798200"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageAssumingFullConversionOfConvertibleSecuritiesWarrantsAndESOP",
-   "IndividualsOrHUF_Context16",
-   "0.0669"
-  ],
-  [
-   "in-bse-shp:NumberOfTheLockedInShares",
-   "IndividualsOrHUF_Context16",
-   "0"
-  ],
-  [
-   "in-bse-shp:LockedInSharesAsAPercentageOfTotalNumberOfShares",
-   "IndividualsOrHUF_Context16",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfEquitySharesHeldInDematerializedForm",
-   "IndividualsOrHUF_Context16",
-   "5798200"
-  ],
-  [
-   "in-bse-shp:NumberOfShareholders",
-   "IndividualsOrHUF_Context16",
-   "1"
-  ],
-  [
-   "in-bse-shp:PermanentAccountNumberOfShareholder",
-   "D_IndividualsOrHUF_Context17",
-   "******"
-  ],
-  [
-   "in-bse-shp:NumberOfFullyPaidUpEquityShares",
-   "IndividualsOrHUF_Context17",
-   "4464000"
-  ],
-  [
-   "in-bse-shp:NumberOfShares",
-   "IndividualsOrHUF_Context17",
-   "4464000"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageOfTotalNumberOfShares",
-   "IndividualsOrHUF_Context17",
-   "0.0515"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRightsHeldBySameClassOfSecurities",
-   "IndividualsOrHUF_Context17",
-   "4464000"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRights",
-   "IndividualsOrHUF_Context17",
-   "4464000"
-  ],
-  [
-   "in-bse-shp:PercentageOfTotalVotingRights",
-   "IndividualsOrHUF_Context17",
-   "0.0515"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesOnFullyDilutedBasisIncludingWarrantsESOPAndConvertibleSecurities",
-   "IndividualsOrHUF_Context17",
-   "4464000"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageAssumingFullConversionOfConvertibleSecuritiesWarrantsAndESOP",
-   "IndividualsOrHUF_Context17",
-   "0.0515"
-  ],
-  [
-   "in-bse-shp:NumberOfTheLockedInShares",
-   "IndividualsOrHUF_Context17",
-   "0"
-  ],
-  [
-   "in-bse-shp:LockedInSharesAsAPercentageOfTotalNumberOfShares",
-   "IndividualsOrHUF_Context17",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfEquitySharesHeldInDematerializedForm",
-   "IndividualsOrHUF_Context17",
-   "4464000"
-  ],
-  [
-   "in-bse-shp:NumberOfShareholders",
-   "IndividualsOrHUF_Context17",
-   "1"
-  ],
-  [
-   "in-bse-shp:PermanentAccountNumberOfShareholder",
-   "D_IndividualsOrHUF_Context18",
-   "******"
-  ],
-  [
-   "in-bse-shp:NumberOfFullyPaidUpEquityShares",
-   "IndividualsOrHUF_Context18",
-   "3966600"
-  ],
-  [
-   "in-bse-shp:NumberOfShares",
-   "IndividualsOrHUF_Context18",
-   "3966600"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageOfTotalNumberOfShares",
-   "IndividualsOrHUF_Context18",
-   "0.0457"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRightsHeldBySameClassOfSecurities",
-   "IndividualsOrHUF_Context18",
-   "3966600"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRights",
-   "IndividualsOrHUF_Context18",
-   "3966600"
-  ],
-  [
-   "in-bse-shp:PercentageOfTotalVotingRights",
-   "IndividualsOrHUF_Context18",
-   "0.0457"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesOnFullyDilutedBasisIncludingWarrantsESOPAndConvertibleSecurities",
-   "IndividualsOrHUF_Context18",
-   "3966600"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageAssumingFullConversionOfConvertibleSecuritiesWarrantsAndESOP",
-   "IndividualsOrHUF_Context18",
-   "0.0457"
-  ],
-  [
-   "in-bse-shp:NumberOfTheLockedInShares",
-   "IndividualsOrHUF_Context18",
-   "0"
-  ],
-  [
-   "in-bse-shp:LockedInSharesAsAPercentageOfTotalNumberOfShares",
-   "IndividualsOrHUF_Context18",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfEquitySharesHeldInDematerializedForm",
-   "IndividualsOrHUF_Context18",
-   "3966600"
-  ],
-  [
-   "in-bse-shp:NumberOfShareholders",
-   "IndividualsOrHUF_Context18",
-   "1"
-  ],
-  [
-   "in-bse-shp:PermanentAccountNumberOfShareholder",
-   "D_IndividualsOrHUF_Context19",
-   "******"
-  ],
-  [
-   "in-bse-shp:NumberOfFullyPaidUpEquityShares",
-   "IndividualsOrHUF_Context19",
-   "1137600"
-  ],
-  [
-   "in-bse-shp:NumberOfShares",
-   "IndividualsOrHUF_Context19",
-   "1137600"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageOfTotalNumberOfShares",
-   "IndividualsOrHUF_Context19",
-   "0.0131"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRightsHeldBySameClassOfSecurities",
-   "IndividualsOrHUF_Context19",
-   "1137600"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRights",
-   "IndividualsOrHUF_Context19",
-   "1137600"
-  ],
-  [
-   "in-bse-shp:PercentageOfTotalVotingRights",
-   "IndividualsOrHUF_Context19",
-   "0.0131"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesOnFullyDilutedBasisIncludingWarrantsESOPAndConvertibleSecurities",
-   "IndividualsOrHUF_Context19",
-   "1137600"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageAssumingFullConversionOfConvertibleSecuritiesWarrantsAndESOP",
-   "IndividualsOrHUF_Context19",
-   "0.0131"
-  ],
-  [
-   "in-bse-shp:NumberOfTheLockedInShares",
-   "IndividualsOrHUF_Context19",
-   "0"
-  ],
-  [
-   "in-bse-shp:LockedInSharesAsAPercentageOfTotalNumberOfShares",
-   "IndividualsOrHUF_Context19",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfEquitySharesHeldInDematerializedForm",
-   "IndividualsOrHUF_Context19",
-   "1137600"
-  ],
-  [
-   "in-bse-shp:NumberOfShareholders",
-   "IndividualsOrHUF_Context19",
-   "1"
-  ],
-  [
-   "in-bse-shp:PermanentAccountNumberOfShareholder",
-   "D_IndividualsOrHUF_Context20",
-   "******"
-  ],
-  [
-   "in-bse-shp:NumberOfFullyPaidUpEquityShares",
-   "IndividualsOrHUF_Context20",
-   "262800"
-  ],
-  [
-   "in-bse-shp:NumberOfShares",
-   "IndividualsOrHUF_Context20",
-   "262800"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageOfTotalNumberOfShares",
-   "IndividualsOrHUF_Context20",
-   "0.003"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRightsHeldBySameClassOfSecurities",
-   "IndividualsOrHUF_Context20",
-   "262800"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRights",
-   "IndividualsOrHUF_Context20",
-   "262800"
-  ],
-  [
-   "in-bse-shp:PercentageOfTotalVotingRights",
-   "IndividualsOrHUF_Context20",
-   "0.003"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesOnFullyDilutedBasisIncludingWarrantsESOPAndConvertibleSecurities",
-   "IndividualsOrHUF_Context20",
-   "262800"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageAssumingFullConversionOfConvertibleSecuritiesWarrantsAndESOP",
-   "IndividualsOrHUF_Context20",
-   "0.003"
-  ],
-  [
-   "in-bse-shp:NumberOfTheLockedInShares",
-   "IndividualsOrHUF_Context20",
-   "0"
-  ],
-  [
-   "in-bse-shp:LockedInSharesAsAPercentageOfTotalNumberOfShares",
-   "IndividualsOrHUF_Context20",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfEquitySharesHeldInDematerializedForm",
-   "IndividualsOrHUF_Context20",
-   "262800"
-  ],
-  [
-   "in-bse-shp:NumberOfShareholders",
-   "IndividualsOrHUF_Context20",
-   "1"
-  ],
-  [
-   "in-bse-shp:PermanentAccountNumberOfShareholder",
-   "D_IndividualsOrHUF_Context21",
-   "******"
-  ],
-  [
-   "in-bse-shp:NumberOfFullyPaidUpEquityShares",
-   "IndividualsOrHUF_Context21",
-   "171000"
-  ],
-  [
-   "in-bse-shp:NumberOfShares",
-   "IndividualsOrHUF_Context21",
-   "171000"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageOfTotalNumberOfShares",
-   "IndividualsOrHUF_Context21",
-   "0.002"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRightsHeldBySameClassOfSecurities",
-   "IndividualsOrHUF_Context21",
-   "171000"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRights",
-   "IndividualsOrHUF_Context21",
-   "171000"
-  ],
-  [
-   "in-bse-shp:PercentageOfTotalVotingRights",
-   "IndividualsOrHUF_Context21",
-   "0.002"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesOnFullyDilutedBasisIncludingWarrantsESOPAndConvertibleSecurities",
-   "IndividualsOrHUF_Context21",
-   "171000"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageAssumingFullConversionOfConvertibleSecuritiesWarrantsAndESOP",
-   "IndividualsOrHUF_Context21",
-   "0.002"
-  ],
-  [
-   "in-bse-shp:NumberOfTheLockedInShares",
-   "IndividualsOrHUF_Context21",
-   "0"
-  ],
-  [
-   "in-bse-shp:LockedInSharesAsAPercentageOfTotalNumberOfShares",
-   "IndividualsOrHUF_Context21",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfEquitySharesHeldInDematerializedForm",
-   "IndividualsOrHUF_Context21",
-   "171000"
-  ],
-  [
-   "in-bse-shp:NumberOfShareholders",
-   "IndividualsOrHUF_Context21",
-   "1"
-  ],
-  [
-   "in-bse-shp:PermanentAccountNumberOfShareholder",
-   "D_IndividualsOrHUF_Context22",
-   "******"
-  ],
-  [
-   "in-bse-shp:NumberOfFullyPaidUpEquityShares",
-   "IndividualsOrHUF_Context22",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfShares",
-   "IndividualsOrHUF_Context22",
-   "0"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageOfTotalNumberOfShares",
-   "IndividualsOrHUF_Context22",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRightsHeldBySameClassOfSecurities",
-   "IndividualsOrHUF_Context22",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRights",
-   "IndividualsOrHUF_Context22",
-   "0"
-  ],
-  [
-   "in-bse-shp:PercentageOfTotalVotingRights",
-   "IndividualsOrHUF_Context22",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesOnFullyDilutedBasisIncludingWarrantsESOPAndConvertibleSecurities",
-   "IndividualsOrHUF_Context22",
-   "0"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageAssumingFullConversionOfConvertibleSecuritiesWarrantsAndESOP",
-   "IndividualsOrHUF_Context22",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfTheLockedInShares",
-   "IndividualsOrHUF_Context22",
-   "0"
-  ],
-  [
-   "in-bse-shp:LockedInSharesAsAPercentageOfTotalNumberOfShares",
-   "IndividualsOrHUF_Context22",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfEquitySharesHeldInDematerializedForm",
-   "IndividualsOrHUF_Context22",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfShareholders",
-   "IndividualsOrHUF_Context22",
-   "0"
-  ],
-  [
-   "in-bse-shp:PermanentAccountNumberOfShareholder",
-   "D_IndividualsOrHUF_Context23",
-   "******"
-  ],
-  [
-   "in-bse-shp:NumberOfFullyPaidUpEquityShares",
-   "IndividualsOrHUF_Context23",
-   "526500"
-  ],
-  [
-   "in-bse-shp:NumberOfShares",
-   "IndividualsOrHUF_Context23",
-   "526500"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageOfTotalNumberOfShares",
-   "IndividualsOrHUF_Context23",
-   "0.0061"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRightsHeldBySameClassOfSecurities",
-   "IndividualsOrHUF_Context23",
-   "526500"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRights",
-   "IndividualsOrHUF_Context23",
-   "526500"
-  ],
-  [
-   "in-bse-shp:PercentageOfTotalVotingRights",
-   "IndividualsOrHUF_Context23",
-   "0.0061"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesOnFullyDilutedBasisIncludingWarrantsESOPAndConvertibleSecurities",
-   "IndividualsOrHUF_Context23",
-   "526500"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageAssumingFullConversionOfConvertibleSecuritiesWarrantsAndESOP",
-   "IndividualsOrHUF_Context23",
-   "0.0061"
-  ],
-  [
-   "in-bse-shp:NumberOfTheLockedInShares",
-   "IndividualsOrHUF_Context23",
-   "0"
-  ],
-  [
-   "in-bse-shp:LockedInSharesAsAPercentageOfTotalNumberOfShares",
-   "IndividualsOrHUF_Context23",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfEquitySharesHeldInDematerializedForm",
-   "IndividualsOrHUF_Context23",
-   "526500"
-  ],
-  [
-   "in-bse-shp:NumberOfShareholders",
-   "IndividualsOrHUF_Context23",
-   "1"
-  ],
-  [
-   "in-bse-shp:PermanentAccountNumberOfShareholder",
-   "D_IndividualsOrHUF_Context24",
-   "******"
-  ],
-  [
-   "in-bse-shp:NumberOfFullyPaidUpEquityShares",
-   "IndividualsOrHUF_Context24",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfShares",
-   "IndividualsOrHUF_Context24",
-   "0"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageOfTotalNumberOfShares",
-   "IndividualsOrHUF_Context24",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRightsHeldBySameClassOfSecurities",
-   "IndividualsOrHUF_Context24",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRights",
-   "IndividualsOrHUF_Context24",
-   "0"
-  ],
-  [
-   "in-bse-shp:PercentageOfTotalVotingRights",
-   "IndividualsOrHUF_Context24",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesOnFullyDilutedBasisIncludingWarrantsESOPAndConvertibleSecurities",
-   "IndividualsOrHUF_Context24",
-   "0"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageAssumingFullConversionOfConvertibleSecuritiesWarrantsAndESOP",
-   "IndividualsOrHUF_Context24",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfTheLockedInShares",
-   "IndividualsOrHUF_Context24",
-   "0"
-  ],
-  [
-   "in-bse-shp:LockedInSharesAsAPercentageOfTotalNumberOfShares",
-   "IndividualsOrHUF_Context24",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfEquitySharesHeldInDematerializedForm",
-   "IndividualsOrHUF_Context24",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfShareholders",
-   "IndividualsOrHUF_Context24",
-   "0"
-  ],
-  [
-   "in-bse-shp:PermanentAccountNumberOfShareholder",
-   "D_IndividualsOrHUF_Context25",
-   "******"
-  ],
-  [
-   "in-bse-shp:NumberOfFullyPaidUpEquityShares",
-   "IndividualsOrHUF_Context25",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfShares",
-   "IndividualsOrHUF_Context25",
-   "0"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageOfTotalNumberOfShares",
-   "IndividualsOrHUF_Context25",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRightsHeldBySameClassOfSecurities",
-   "IndividualsOrHUF_Context25",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRights",
-   "IndividualsOrHUF_Context25",
-   "0"
-  ],
-  [
-   "in-bse-shp:PercentageOfTotalVotingRights",
-   "IndividualsOrHUF_Context25",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesOnFullyDilutedBasisIncludingWarrantsESOPAndConvertibleSecurities",
-   "IndividualsOrHUF_Context25",
-   "0"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageAssumingFullConversionOfConvertibleSecuritiesWarrantsAndESOP",
-   "IndividualsOrHUF_Context25",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfTheLockedInShares",
-   "IndividualsOrHUF_Context25",
-   "0"
-  ],
-  [
-   "in-bse-shp:LockedInSharesAsAPercentageOfTotalNumberOfShares",
-   "IndividualsOrHUF_Context25",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfEquitySharesHeldInDematerializedForm",
-   "IndividualsOrHUF_Context25",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfShareholders",
-   "IndividualsOrHUF_Context25",
-   "0"
-  ],
-  [
-   "in-bse-shp:PermanentAccountNumberOfShareholder",
-   "D_IndividualsOrHUF_Context26",
-   "******"
-  ],
-  [
-   "in-bse-shp:NumberOfFullyPaidUpEquityShares",
-   "IndividualsOrHUF_Context26",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfShares",
-   "IndividualsOrHUF_Context26",
-   "0"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageOfTotalNumberOfShares",
-   "IndividualsOrHUF_Context26",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRightsHeldBySameClassOfSecurities",
-   "IndividualsOrHUF_Context26",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRights",
-   "IndividualsOrHUF_Context26",
-   "0"
-  ],
-  [
-   "in-bse-shp:PercentageOfTotalVotingRights",
-   "IndividualsOrHUF_Context26",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesOnFullyDilutedBasisIncludingWarrantsESOPAndConvertibleSecurities",
-   "IndividualsOrHUF_Context26",
-   "0"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageAssumingFullConversionOfConvertibleSecuritiesWarrantsAndESOP",
-   "IndividualsOrHUF_Context26",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfTheLockedInShares",
-   "IndividualsOrHUF_Context26",
-   "0"
-  ],
-  [
-   "in-bse-shp:LockedInSharesAsAPercentageOfTotalNumberOfShares",
-   "IndividualsOrHUF_Context26",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfEquitySharesHeldInDematerializedForm",
-   "IndividualsOrHUF_Context26",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfShareholders",
-   "IndividualsOrHUF_Context26",
-   "0"
-  ],
-  [
-   "in-bse-shp:PermanentAccountNumberOfShareholder",
-   "D_IndividualsOrHUF_Context27",
-   "******"
-  ],
-  [
-   "in-bse-shp:NumberOfFullyPaidUpEquityShares",
-   "IndividualsOrHUF_Context27",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfShares",
-   "IndividualsOrHUF_Context27",
-   "0"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageOfTotalNumberOfShares",
-   "IndividualsOrHUF_Context27",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRightsHeldBySameClassOfSecurities",
-   "IndividualsOrHUF_Context27",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfVotingRights",
-   "IndividualsOrHUF_Context27",
-   "0"
-  ],
-  [
-   "in-bse-shp:PercentageOfTotalVotingRights",
-   "IndividualsOrHUF_Context27",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfSharesOnFullyDilutedBasisIncludingWarrantsESOPAndConvertibleSecurities",
-   "IndividualsOrHUF_Context27",
-   "0"
-  ],
-  [
-   "in-bse-shp:ShareholdingAsAPercentageAssumingFullConversionOfConvertibleSecuritiesWarrantsAndESOP",
-   "IndividualsOrHUF_Context27",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfTheLockedInShares",
-   "IndividualsOrHUF_Context27",
-   "0"
-  ],
-  [
-   "in-bse-shp:LockedInSharesAsAPercentageOfTotalNumberOfShares",
-   "IndividualsOrHUF_Context27",
-   "0"
-  ],
-  [
-   "in-bse-shp:NumberOfEquitySharesHeldInDematerializedForm",
-   "IndividualsOrHUF_Context27",
-   "0"
-  ]
- ]
+ "bhav": "SYMBOL, SERIES, DATE1, PREV_CLOSE, OPEN_PRICE, HIGH_PRICE, LOW_PRICE, LAST_PRICE, CLOSE_PRICE, AVG_PRICE, TTL_TRD_QNTY, TURNOVER_LACS, NO_OF_TRADES, DELIV_QTY, DELIV_PER\n20MICRONS, EQ, 23-Oct-2026, 178.03, 178.25, 179.20, 170.05, 175.00, 174.94, 173.66, 184221, 319.91, 4966, 75379, 40.92\n21STCENMGM, EQ, 23-Oct-2026, 50.57, 48.24, 51.99, 48.05, 48.05, 48.05, 48.54, 11774, 5.72, 138, 10518, 89.33\n360ONE, EQ, 23-Oct-2026, 1047.00, 1040.00, 1045.50, 980.00, 997.10, 997.10, 1005.40, 2010539, 20213.88"
 }
