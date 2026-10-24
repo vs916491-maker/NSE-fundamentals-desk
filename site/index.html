@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NSE Fundamentals Desk</title>
+<meta name="description" content="Daily NSE results, orders, penalties, buybacks and holding changes">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%231f4fd1'/><path d='M7 22l6-7 5 4 7-9' stroke='white' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <div class="logo" aria-hidden="true"></div>
+    <div>
+      <h1>Fundamentals Desk</h1>
+      <p class="sub" id="updated">Loading…</p>
+    </div>
+  </div>
+  <div class="datebar">
+    <button class="icon" id="prevDay" aria-label="Previous day">‹</button>
+    <select id="dateSel" aria-label="Date"></select>
+    <button class="icon" id="nextDay" aria-label="Next day">›</button>
+    <button class="icon" id="themeBtn" aria-label="Toggle theme" title="Toggle theme">◐</button>
+  </div>
+</header>
+
+<nav class="tabs" role="tablist">
+  <a href="#today" data-tab="today">Today</a>
+  <a href="#results" data-tab="results">Results</a>
+  <a href="#holdings" data-tab="holdings">Holdings</a>
+  <a href="#deals" data-tab="deals">Deals</a>
+  <a href="#stock" data-tab="stock">Stock</a>
+</nav>
+
+<main>
+  <section id="tab-today" class="tab">
+    <div class="tiles" id="tiles"></div>
+    <div class="toolbar">
+      <input id="todayQ" type="search" placeholder="Filter by symbol or company" autocomplete="off">
+      <label class="chk"><input type="checkbox" id="showOther"> Show routine filings</label>
+    </div>
+    <div id="feed" class="feed"></div>
+  </section>
+
+  <section id="tab-results" class="tab" hidden>
+    <div class="toolbar">
+      <div class="seg" id="resScope"></div>
+      <select id="resCap" aria-label="Market cap">
+        <option value="0">All market caps</option>
+        <option value="500" selected>MCap ≥ ₹500 cr</option>
+        <option value="2000">MCap ≥ ₹2,000 cr</option>
+        <option value="10000">MCap ≥ ₹10,000 cr</option>
+      </select>
+      <select id="resVerdict" aria-label="Verdict">
+        <option value="">All verdicts</option>
+        <option>Strong</option><option>Turnaround</option><option>Mixed</option><option>Weak</option><option>Loss</option>
+      </select>
+      <input id="resQ" type="search" placeholder="Symbol / company" autocomplete="off">
+    </div>
+    <p class="note" id="resNote"></p>
+    <div class="tablewrap"><table id="resTable" class="grid"></table></div>
+  </section>
+
+  <section id="tab-holdings" class="tab" hidden>
+    <div class="toolbar">
+      <div class="seg" id="holdScope"></div>
+      <select id="holdMin" aria-label="Minimum change">
+        <option value="0">Any change</option>
+        <option value="0.5">Change ≥ 0.5 pp</option>
+        <option value="1" selected>Change ≥ 1 pp</option>
+        <option value="2">Change ≥ 2 pp</option>
+      </select>
+      <input id="holdQ" type="search" placeholder="Symbol / company" autocomplete="off">
+    </div>
+    <p class="note">Change is versus the previous quarter's shareholding filing, in percentage points (pp). Filter applies to FII, DII, MF or promoter.</p>
+    <div class="tablewrap"><table id="holdTable" class="grid"></table></div>
+  </section>
+
+  <section id="tab-deals" class="tab" hidden>
+    <div class="toolbar">
+      <label class="chk"><input type="checkbox" id="instOnly" checked> Institutions only</label>
+      <select id="dealSide" aria-label="Side"><option value="">Buy &amp; sell</option><option>BUY</option><option>SELL</option></select>
+      <input id="dealQ" type="search" placeholder="Symbol / client" autocomplete="off">
+    </div>
+    <p class="note">Bulk and block deals for the selected trading day. "Institutions" is a name-based guess (funds, insurers, FPIs, banks) and leaves out high-frequency prop desks.</p>
+    <div class="tablewrap"><table id="dealTable" class="grid"></table></div>
+  </section>
+
+  <section id="tab-stock" class="tab" hidden>
+    <div class="toolbar">
+      <input id="stockQ" type="search" list="symList" placeholder="Type a symbol, e.g. TCS" autocomplete="off" autocapitalize="characters">
+      <datalist id="symList"></datalist>
+    </div>
+    <div id="stockOut"></div>
+  </section>
+</main>
+
+<footer>
+  Data: NSE corporate filings, collected daily around 7 PM IST. Tags and order values are extracted automatically and can be wrong — open the filing before acting. Not investment advice.
+</footer>
+<script src="app.js"></script>
+</body>
+</html>

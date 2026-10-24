@@ -41,6 +41,7 @@ class NSE:
             try:
                 r = self.s.get(url, params=params, timeout=40)
                 if r.status_code == 200:
+                    time.sleep(0.2)  # be gentle with NSE
                     if raw:
                         return r.content
                     txt = r.text.strip()

@@ -1,0 +1,498 @@
+"""Daily NSE fundamentals collector.
+
+Usage:
+  python collector/run.py                       # today (IST)
+  python collector/run.py --date 2026-10-23     # one day
+  python collector/run.py --backfill 2026-10-01 2026-10-23
+  python collector/run.py --email               # also send the digest (once per day)
+"""
+import argparse, csv, io, json, logging, os, sys, time
+from datetime import date, datetime, timedelta
+from zoneinfo import ZoneInfo
+
+sys.path.insert(0, os.path.dirname(__file__))
+from nse import NSE
+import tagger, xbrl
+
+IST = ZoneInfo("Asia/Kolkata")
+ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+DATA = os.path.join(ROOT, "site", "data")
+CACHE = os.path.join(ROOT, "cache")
+KEEP_DAYS = 120
+IF_FIN = "Integrated Filing- Financials"
+
+log = logging.getLogger("run")
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+
+
+# ---------- small helpers ----------
+def jload(path, default):
+    try:
+        with open(path) as f:
+            return json.load(f)
+    except Exception:
+        return default
+
+
+def jsave(path, obj):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    tmp = path + ".tmp"
+    with open(tmp, "w") as f:
+        json.dump(obj, f, separators=(",", ":"), ensure_ascii=False, default=str)
+    os.replace(tmp, path)
+
+
+def nse_date(d: date) -> str:
+    return d.strftime("%d-%m-%Y")
+
+
+def parse_nse_date(s):
+    """'30-SEP-2026', '24-Oct-2026 12:57:34', '24-10-2026' or '2026-10-24' -> date."""
+    s = (s or "").strip()
+    try:
+        return datetime.strptime(s[:11].title(), "%d-%b-%Y").date()
+    except ValueError:
+        pass
+    for fmt in ("%d-%m-%Y", "%Y-%m-%d"):
+        try:
+            return datetime.strptime(s[:10], fmt).date()
+        except ValueError:
+            pass
+    return None
+
+
+def growth(cur, prev):
+    if cur is None or prev is None or prev == 0:
+        return None
+    return round((cur - prev) / abs(prev) * 100, 1)
+
+
+def prev_qe(qe: date) -> date:
+    m = qe.month - 3
+    y = qe.year
+    if m <= 0:
+        m += 12
+        y -= 1
+    last = {3: 31, 6: 30, 9: 30, 12: 31}[m]
+    return date(y, m, last)
+
+
+def year_ago(qe: date) -> date:
+    return date(qe.year - 1, qe.month, qe.day)
+
+
+class Budget:
+    def __init__(self, minutes):
+        self.end = time.time() + minutes * 60
+
+    def ok(self):
+        return time.time() < self.end
+
+
+# ---------- collector ----------
+class Collector:
+    def __init__(self, budget_min=40):
+        self.n = NSE()
+        self.budget = Budget(budget_min)
+        self.close = {}
+        self.close_date = None
+
+    # ----- prices (bhavcopy) -----
+    def load_close(self, d: date):
+        for i in range(0, 7):
+            dd = d - timedelta(days=i)
+            url = f"https://nsearchives.nseindia.com/products/content/sec_bhavdata_full_{dd.strftime('%d%m%Y')}.csv"
+            try:
+                raw = self.n.get(url, raw=True, tries=2).decode(errors="ignore")
+            except Exception:
+                continue
+            rows = csv.reader(io.StringIO(raw))
+            hdr = [h.strip() for h in next(rows)]
+            si, se, ci = hdr.index("SYMBOL"), hdr.index("SERIES"), hdr.index("CLOSE_PRICE")
+            for r in rows:
+                if len(r) > ci and r[se].strip() in ("EQ", "BE", "BZ", "SM", "ST"):
+                    try:
+                        self.close[r[si].strip()] = float(r[ci])
+                    except ValueError:
+                        pass
+            self.close_date = dd.isoformat()
+            log.info("bhavcopy %s: %d prices", dd, len(self.close))
+            return
+        log.warning("no bhavcopy found near %s", d)
+
+    # ----- shareholding cache -----
+    def shp_history(self, sym):
+        """{qe_iso: parsed shp} for the symbol, fetching missing quarters lazily (latest 2)."""
+        path = os.path.join(CACHE, "shp", f"{sym}.json")
+        cache = jload(path, {})
+        return cache, path
+
+    def shp_for(self, sym, qe: date = None, listing=None):
+        cache, path = self.shp_history(sym)
+        key = qe.isoformat() if qe else None
+        if key and key in cache:
+            return cache[key]
+        if not self.budget.ok():
+            return None
+        try:
+            if listing is None:
+                listing = self.n.get("/api/corporate-share-holdings-master", {"index": "equities", "symbol": sym}) or []
+        except Exception as e:
+            log.warning("shp list %s: %s", sym, e)
+            return None
+        rows = [r for r in listing if r.get("xbrl")]
+        if not rows:
+            return None
+        if qe:
+            rows = [r for r in rows if parse_nse_date(r.get("date", "")) == qe]
+            if not rows:
+                return None
+        r = rows[0]
+        rqe = parse_nse_date(r.get("date", ""))
+        try:
+            doc = self.n.get(r["xbrl"], raw=True).decode(errors="ignore")
+            parsed = xbrl.parse_shp(doc)
+        except Exception as e:
+            log.warning("shp xbrl %s: %s", sym, e)
+            return None
+        if rqe:
+            cache[rqe.isoformat()] = parsed
+            jsave(path, cache)
+        return parsed
+
+    def shares(self, sym):
+        cache, _ = self.shp_history(sym)
+        for k in sorted(cache, reverse=True):
+            if cache[k] and cache[k].get("shares"):
+                return cache[k]["shares"]
+        p = self.shp_for(sym)
+        return p.get("shares") if p else None
+
+    def mcap(self, sym):
+        px = self.close.get(sym)
+        if px is None:
+            return None
+        sh = self.shares(sym)
+        return round(sh * px / 1e7, 0) if sh else None
+
+    # ----- announcements -----
+    def announcements(self, d: date):
+        raw = self.n.get("/api/corporate-announcements",
+                         {"index": "equities", "from_date": nse_date(d), "to_date": nse_date(d)}) or []
+        out = []
+        for a in raw:
+            subj = a.get("desc") or ""
+            text = (a.get("attchmntText") or "").strip()
+            t = tagger.tag(subj, text)
+            item = {
+                "id": a.get("seq_id"), "sym": a.get("symbol"), "name": a.get("sm_name"),
+                "time": a.get("sort_date") or a.get("an_dt"), "subj": subj, "text": text[:500],
+                "pdf": a.get("attchmntFile"), "ind": a.get("smIndustry"), "tag": t,
+            }
+            if t in ("Order", "Buyback", "Penalty"):
+                v, rawv = tagger.amount(text)
+                item["value_cr"], item["value_raw"] = v, rawv
+            if t == "Rating":
+                item["dir"] = tagger.rating_direction(text)
+            out.append(item)
+        # market cap for orders & buybacks
+        for it in out:
+            if it["tag"] in ("Order", "Buyback") and self.budget.ok():
+                mc = self.mcap(it["sym"])
+                it["mcap"] = mc
+                if mc and it.get("value_cr"):
+                    it["pct_mcap"] = round(it["value_cr"] / mc * 100, 2)
+        out.sort(key=lambda x: x.get("time") or "", reverse=True)
+        log.info("announcements %s: %d", d, len(out))
+        return out
+
+    # ----- results -----
+    def fin_listing(self, sym):
+        try:
+            r = self.n.get("/api/integrated-filing-results",
+                           {"index": "equities", "symbol": sym, "type": IF_FIN, "size": 100}) or {}
+            return r.get("data") or []
+        except Exception as e:
+            log.warning("fin list %s: %s", sym, e)
+            return []
+
+    def fin_metrics(self, sym, nature, qe: date, url, cache):
+        key = f"{nature}|{qe.isoformat()}"
+        if key in cache:
+            return cache[key]
+        try:
+            doc = self.n.get(url, raw=True).decode(errors="ignore")
+            m = xbrl.parse_results(doc, qe)
+        except Exception as e:
+            log.warning("fin xbrl %s %s: %s", sym, key, e)
+            return None
+        cache[key] = m
+        return m
+
+    def results(self, d: date):
+        rows, page, seen = [], 1, set()
+        while True:
+            r = self.n.get("/api/integrated-filing-results",
+                           {"index": "equities", "type": IF_FIN, "from_date": nse_date(d),
+                            "to_date": nse_date(d), "size": 100, "page": page}) or {}
+            data = r.get("data") or []
+            new = [x for x in data if x.get("seq_Id") not in seen]
+            for x in new:
+                seen.add(x.get("seq_Id"))
+            rows += new
+            total = r.get("totalCount") or 0
+            if not new or len(rows) >= total or page > 30:
+                break
+            page += 1
+        log.info("results filings %s: %d", d, len(rows))
+
+        # group by symbol, keep current quarter only
+        by_sym = {}
+        for x in rows:
+            qe = parse_nse_date(x.get("qe_Date") or "")
+            if not qe or (d - qe).days > 75 or (d - qe).days < 0:
+                continue
+            by_sym.setdefault(x["symbol"], []).append((qe, x))
+
+        out = []
+        for sym, items in by_sym.items():
+            qe = max(q for q, _ in items)
+            items = [x for q, x in items if q == qe]
+            name = items[0].get("smName") or items[0].get("cmName")
+            cache_path = os.path.join(CACHE, "fin", f"{sym}.json")
+            cache = jload(cache_path, {})
+            listing = None
+            best = None
+            natures = sorted({(x.get("consolidated") or "Standalone") for x in items},
+                             key=lambda n: 0 if n.startswith("Cons") else 1)
+            for nature in natures:
+                cand = sorted([x for x in items if (x.get("consolidated") or "Standalone") == nature],
+                              key=lambda x: x.get("creation_Date") or "", reverse=True)[0]
+                cur = self.fin_metrics(sym, nature, qe, cand["xbrl"], cache)
+                if not cur:
+                    continue
+                row = {"sym": sym, "name": name, "qe": qe.isoformat(), "nature": nature,
+                       "filed": cand.get("creation_Date"), "audited": cand.get("audited"),
+                       "revision": cand.get("type_Sub") == "Revision", "xbrl": cand.get("ixbrl") or cand.get("xbrl"),
+                       **{k: cur.get(k) for k in ("rev", "pat", "pbt", "eps")}}
+                # comparatives
+                if self.budget.ok():
+                    if listing is None:
+                        listing = self.fin_listing(sym)
+                    hist = {}
+                    for h in sorted(listing, key=lambda x: x.get("creation_Date") or ""):
+                        hq = parse_nse_date(h.get("qe_Date") or "")
+                        hn = h.get("consolidated") or "Standalone"
+                        if hq and h.get("xbrl"):
+                            hist[(hn, hq)] = h["xbrl"]  # later filings (revisions) overwrite
+                    for label, pq in (("py", year_ago(qe)), ("pq", prev_qe(qe))):
+                        url = hist.get((nature, pq))
+                        if url and self.budget.ok():
+                            pm = self.fin_metrics(sym, nature, pq, url, cache)
+                            if pm:
+                                row[f"rev_{label}"] = pm.get("rev")
+                                row[f"pat_{label}"] = pm.get("pat")
+                row["rev_yoy"] = growth(row["rev"], row.get("rev_py"))
+                row["pat_yoy"] = growth(row["pat"], row.get("pat_py"))
+                row["rev_qoq"] = growth(row["rev"], row.get("rev_pq"))
+                row["pat_qoq"] = growth(row["pat"], row.get("pat_pq"))
+                row["verdict"] = verdict(row)
+                if best is None or (best.get("pat_yoy") is None and best.get("rev_yoy") is None
+                                    and (row.get("pat_yoy") is not None or row.get("rev_yoy") is not None)):
+                    best = row
+            jsave(cache_path, cache)
+            if best:
+                if self.budget.ok():
+                    best["mcap"] = self.mcap(sym)
+                out.append(best)
+        log.info("results parsed %s: %d companies", d, len(out))
+        return out
+
+    # ----- shareholding -----
+    def holdings(self, d: date):
+        raw = self.n.get("/api/corporate-share-holdings-master",
+                         {"index": "equities", "from_date": nse_date(d), "to_date": nse_date(d)}) or []
+        out = []
+        for r in raw:
+            sym = r.get("symbol")
+            qe = parse_nse_date(r.get("date", ""))
+            if not sym or not qe or not r.get("xbrl"):
+                continue
+            cache, path = self.shp_history(sym)
+            cur = cache.get(qe.isoformat())
+            if cur is None and not self.budget.ok():
+                # out of time: keep the headline numbers NSE gives in the list itself
+                def f(x):
+                    try:
+                        return float(x)
+                    except (TypeError, ValueError):
+                        return None
+                out.append({"sym": sym, "name": r.get("name"), "qe": qe.isoformat(), "filed": r.get("broadcastDate"),
+                            "xbrl": r.get("xbrl"), "promoter": f(r.get("pr_and_prgrp")), "public": f(r.get("public_val"))})
+                continue
+            if cur is None:
+                try:
+                    cur = xbrl.parse_shp(self.n.get(r["xbrl"], raw=True).decode(errors="ignore"))
+                    cache[qe.isoformat()] = cur
+                    jsave(path, cache)
+                except Exception as e:
+                    log.warning("shp %s: %s", sym, e)
+                    continue
+            prev = self.shp_for(sym, prev_qe(qe))
+            row = {"sym": sym, "name": r.get("name"), "qe": qe.isoformat(), "filed": r.get("broadcastDate"),
+                   "xbrl": r.get("xbrl")}
+            for k in ("promoter", "fii", "dii", "mf", "public"):
+                row[k] = cur.get(k)
+                if prev and cur.get(k) is not None and prev.get(k) is not None:
+                    row[k + "_chg"] = round(cur[k] - prev[k], 2)
+            out.append(row)
+        log.info("holdings %s: %d", d, len(out))
+        return out
+
+    # ----- bulk / block deals -----
+    def deals(self, d: date):
+        out = []
+        for kind in ("bulk", "block"):
+            try:
+                raw = self.n.get(f"https://nsearchives.nseindia.com/content/equities/{kind}.csv", raw=True).decode(errors="ignore")
+            except Exception as e:
+                log.warning("%s csv: %s", kind, e)
+                continue
+            for row in csv.DictReader(io.StringIO(raw)):
+                row = {k.strip(): (v or "").strip() for k, v in row.items() if k}
+                dd = parse_nse_date(row.get("Date", ""))
+                if dd != d:
+                    continue
+                try:
+                    qty = float(row.get("Quantity Traded", "0").replace(",", ""))
+                    px = float(row.get("Trade Price / Wght. Avg. Price", "0").replace(",", ""))
+                except ValueError:
+                    continue
+                client = row.get("Client Name", "")
+                out.append({"kind": kind, "sym": row.get("Symbol"), "name": row.get("Security Name"),
+                            "client": client, "side": row.get("Buy/Sell", "").upper(), "qty": qty, "price": px,
+                            "value_cr": round(qty * px / 1e7, 2), "inst": tagger.is_institution(client)})
+        out.sort(key=lambda x: -x["value_cr"])
+        log.info("deals %s: %d", d, len(out))
+        return out
+
+
+def verdict(r):
+    py, ry = r.get("pat_yoy"), r.get("rev_yoy")
+    pat, pat_py = r.get("pat"), r.get("pat_py")
+    if pat is not None and pat_py is not None and pat_py < 0 < pat:
+        return "Turnaround"
+    if pat is not None and pat < 0:
+        return "Loss"
+    if py is None and ry is None:
+        return None
+    if (py or 0) >= 15 and (ry or 0) >= 10:
+        return "Strong"
+    if (py is not None and py < 0) or (ry is not None and ry < 0):
+        return "Weak"
+    return "Mixed"
+
+
+# ---------- site files ----------
+def write_day(d: date, payload):
+    jsave(os.path.join(DATA, "days", f"{d.isoformat()}.json"), payload)
+
+
+def merge_season(kind, rows, key="sym"):
+    by_qe = {}
+    for r in rows:
+        by_qe.setdefault(r["qe"], []).append(r)
+    for qe, rs in by_qe.items():
+        path = os.path.join(DATA, kind, f"{qe}.json")
+        cur = jload(path, {"qe": qe, "rows": {}})
+        for r in rs:
+            cur["rows"][r[key]] = r
+        jsave(path, cur)
+
+
+def rebuild_index():
+    days_dir = os.path.join(DATA, "days")
+    os.makedirs(days_dir, exist_ok=True)
+    files = sorted((f for f in os.listdir(days_dir) if f.endswith(".json")), reverse=True)
+    cutoff = (datetime.now(IST).date() - timedelta(days=KEEP_DAYS)).isoformat()
+    for f in files:
+        if f[:10] < cutoff:
+            os.remove(os.path.join(days_dir, f))
+    files = [f for f in files if f[:10] >= cutoff]
+    seasons = {k: sorted((f[:10] for f in os.listdir(os.path.join(DATA, k)) if f.endswith(".json")), reverse=True)
+               if os.path.isdir(os.path.join(DATA, k)) else [] for k in ("results", "holdings")}
+    # search index: events (non-Other) + latest results / holdings per symbol
+    search = {}
+    for f in files:
+        day = jload(os.path.join(days_dir, f), {})
+        for a in day.get("announcements", []):
+            if a.get("tag") == "Other" or not a.get("sym"):
+                continue
+            s = search.setdefault(a["sym"], {"n": a.get("name"), "e": []})
+            s["e"].append([a.get("time"), a["tag"], a.get("subj"), (a.get("text") or "")[:220], a.get("pdf"), a.get("value_cr")])
+    jsave(os.path.join(DATA, "search.json"), search)
+    jsave(os.path.join(DATA, "index.json"), {
+        "updated": datetime.now(IST).isoformat(timespec="minutes"),
+        "dates": [f[:10] for f in files],
+        "results_qe": seasons["results"], "holdings_qe": seasons["holdings"],
+    })
+
+
+def collect_day(c: Collector, d: date, with_deals=True):
+    out = {"date": d.isoformat(), "generated": datetime.now(IST).isoformat(timespec="minutes")}
+    for name, fn in (("announcements", c.announcements), ("results", c.results),
+                     ("holdings", c.holdings), ("deals", c.deals if with_deals else None)):
+        if fn is None:
+            out[name] = []
+            continue
+        try:
+            out[name] = fn(d)
+        except Exception as e:
+            log.exception("%s failed", name)
+            out[name] = []
+            out.setdefault("errors", []).append(f"{name}: {e}")
+    out["close_date"] = c.close_date
+    write_day(d, out)
+    merge_season("results", out["results"])
+    merge_season("holdings", out["holdings"])
+    return out
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--date")
+    ap.add_argument("--backfill", nargs=2, metavar=("FROM", "TO"))
+    ap.add_argument("--email", action="store_true")
+    ap.add_argument("--force-email", action="store_true")
+    ap.add_argument("--budget", type=float, default=40, help="minutes for slow enrichment")
+    a = ap.parse_args()
+
+    c = Collector(budget_min=a.budget)
+    today = datetime.now(IST).date()
+    if a.backfill:
+        d0, d1 = date.fromisoformat(a.backfill[0]), date.fromisoformat(a.backfill[1])
+        c.budget = Budget(a.budget)
+        c.load_close(d1)
+        d = d1
+        while d >= d0:  # newest first so the important days finish first
+            log.info("=== backfill %s", d)
+            collect_day(c, d, with_deals=(d == today or d == d1))
+            rebuild_index()
+            d -= timedelta(days=1)
+        return
+    d = date.fromisoformat(a.date) if a.date else today
+    c.load_close(d)
+    day = collect_day(c, d)
+    rebuild_index()
+    if a.email or a.force_email:
+        import mailer
+        state_path = os.path.join(CACHE, "state.json")
+        state = jload(state_path, {"emailed": []})
+        if a.force_email or d.isoformat() not in state["emailed"]:
+            if mailer.send(day):
+                state["emailed"] = (state["emailed"] + [d.isoformat()])[-60:]
+                jsave(state_path, state)
+
+
+if __name__ == "__main__":
+    main()
