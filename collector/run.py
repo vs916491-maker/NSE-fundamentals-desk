@@ -441,7 +441,7 @@ def rebuild_index():
 def collect_day(c: Collector, d: date, with_deals=True):
     out = {"date": d.isoformat(), "generated": datetime.now(IST).isoformat(timespec="minutes")}
     for name, fn in (("announcements", c.announcements), ("results", c.results),
-                     ("holdings", c.holdings), ("deals", c.deals if with_deals else None)):
+                     ("holdings", c.holdings), ("deals", c.deals)):
         if fn is None:
             out[name] = []
             continue
@@ -449,8 +449,10 @@ def collect_day(c: Collector, d: date, with_deals=True):
             out[name] = fn(d)
         except Exception as e:
             log.exception("%s failed", name)
+            import traceback
+            tb = traceback.extract_tb(e.__traceback__)[-1]
             out[name] = []
-            out.setdefault("errors", []).append(f"{name}: {e}")
+            out.setdefault("errors", []).append(f"{name}: {type(e).__name__} {e!r} at line {tb.lineno}: {tb.line}")
     out["close_date"] = c.close_date
     write_day(d, out)
     merge_season("results", out["results"])
