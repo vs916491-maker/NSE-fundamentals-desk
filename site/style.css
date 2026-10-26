@@ -249,3 +249,31 @@ details.method ul { padding-left: 18px; }
 .fflag.warn { color: var(--t-Rating); border-color: color-mix(in srgb, var(--t-Rating) 50%, var(--line)); background: color-mix(in srgb, var(--t-Rating) 10%, var(--panel)); }
 .fund-note { color: var(--muted); font-size: 12px; margin-top: 8px; line-height: 1.45; }
 .fund-empty { padding: 14px; }
+
+/* ---------- sign-in, watchlist ---------- */
+.out { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; height: 36px; padding: 0 12px; cursor: pointer; color: var(--muted); font-size: 13px; }
+.out:hover { color: var(--ink); }
+.wcount:not(:empty) { display: inline-block; min-width: 18px; padding: 0 5px; margin-left: 3px; border-radius: 9px; background: var(--accent); color: #fff; font-size: 11px; line-height: 18px; text-align: center; }
+.signin { padding: 40px 16px; }
+.signin-card { max-width: 400px; margin: 0 auto; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 24px; display: grid; gap: 12px; }
+.signin-card h2 { margin: 0; font-size: 21px; }
+.signin-card label, .wdlg label { display: grid; gap: 4px; font-size: 13px; color: var(--muted); }
+.signin-card label.chk { display: flex; align-items: center; gap: 6px; }
+.signin-card input[type=email], .signin-card input[type=password], .signin-card input[type=text], .wdlg textarea {
+  background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 9px 10px; font: inherit; color: var(--ink); width: 100%; }
+.btn { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 8px 16px; cursor: pointer; font-weight: 500; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn:disabled { opacity: .6; cursor: default; }
+.btn-row { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; }
+.err { color: var(--down); font-size: 13px; margin: 0; min-height: 1em; }
+.wdlg { border: 1px solid var(--line); border-radius: 14px; background: var(--panel); color: var(--ink); width: min(440px, calc(100vw - 32px)); padding: 20px; }
+.wdlg::backdrop { background: rgba(0,0,0,.35); }
+.wdlg h2 { margin: 0 0 6px; font-size: 18px; }
+.wdlg .note { margin: 0 0 12px; }
+.wbtn { margin-left: auto; align-self: center; background: var(--panel); border: 1px solid var(--accent); color: var(--accent); border-radius: 999px; padding: 5px 14px; cursor: pointer; font-size: 13.5px; font-weight: 500; }
+.wbtn:hover { background: color-mix(in srgb, var(--accent) 8%, var(--panel)); }
+.wbtn.on { background: var(--accent); color: #fff; }
+.wtag { display: inline-block; font-family: var(--sans); font-size: 11.5px; padding: 1px 7px; margin: 1px 4px 1px 0; border-radius: 999px; color: var(--c); border: 1px solid color-mix(in srgb, var(--c) 45%, var(--line)); }
+.wnote { font-family: var(--sans); white-space: normal; display: inline-block; min-width: 140px; max-width: 280px; color: var(--ink); font-size: 12.5px; }
+.wact { background: none; border: 1px solid var(--line); border-radius: 6px; padding: 3px 8px; margin-left: 4px; cursor: pointer; color: var(--muted); font-size: 12px; }
+.wact.del:hover, .wact.del[data-sure] { color: var(--down); border-color: var(--down); }

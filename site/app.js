@@ -569,12 +569,13 @@ async function renderStock(sym) {
   const name = S.search[sym]?.n || res[0]?.name || hold[0]?.name || "";
   const label = Object.fromEntries(TAGS);
   const fund = await loadFund(sym).catch(() => null);
-  let h = `<div class="stockhead"><h2>${esc(sym)}</h2>${chartLink(sym)}<span class="co">${esc(name)}</span>
-    <a href="https://www.nseindia.com/get-quotes/equity?symbol=${encodeURIComponent(sym)}" target="_blank" rel="noopener">NSE page ↗</a></div>`;
+  const fname = name || fund?.n || "";
+  let h = `<div class="stockhead"><h2>${esc(sym)}</h2>${chartLink(sym)}<span class="co">${esc(fname)}</span>
+    <a href="https://www.nseindia.com/get-quotes/equity?symbol=${encodeURIComponent(sym)}" target="_blank" rel="noopener">NSE page ↗</a>${await watchButton(sym, fname)}</div>`;
   const inst = await loadInst();
   const sd = inst ? inst.rows.filter((r) => r[2] === sym).map(([date, kind, , client, side, qty, price, value_cr, type]) =>
     ({ date, kind, client, side, qty, price, value_cr, type })) : [];
-  if (!fund && !res.length && !hold.length && !ev.length && !sd.length) { out.innerHTML = h + '<div class="empty">Nothing recorded for this symbol yet.</div>'; return; }
+  if (!fund && !res.length && !hold.length && !ev.length && !sd.length) { out.innerHTML = h + '<div class="empty">Nothing recorded for this symbol yet.</div>'; wireWatchButton(sym, fname); return; }
   h += fundSection(sym, fund);
   if (res.length) h += `<h3>Quarterly results</h3><div class="tablewrap"><table class="grid" id="stRes"></table></div>`;
   if (sd.length) h += `<h3>Institutional bulk/block deals (last 90 days)</h3><div class="tablewrap"><table class="grid" id="stDeals"></table></div>`;
@@ -584,6 +585,7 @@ async function renderStock(sym) {
      ${e[3] ? `<div class="txt">${esc(e[3])}</div>` : ""}<div class="chips">${e[5] ? `<span class="chip">₹${cr(e[5])} cr</span>` : ""}${e[4] ? `<a class="pdf" href="${esc(e[4])}" target="_blank" rel="noopener">Filing ↗</a>` : ""}</div></article>`).join("")
     : '<div class="empty">No tagged filings in the last 120 days.</div>') + "</div>";
   out.innerHTML = h;
+  wireWatchButton(sym, fname);
   if (res.length) table($("#stRes"), "stres", [{ key: "qe", label: "Quarter", l: 1, f: (r) => qLabel(r.qe) }, ...RES_COLS.slice(1, 11)], res, ["qe", false]);
   if (hold.length) table($("#stHold"), "sthold", H_COLS.slice(1), hold, ["qe", false]);
   if (sd.length) table($("#stDeals"), "stdeals", [
@@ -594,6 +596,160 @@ async function renderStock(sym) {
     { key: "qty", label: "Qty", f: (r) => inr(r.qty) },
     { key: "price", label: "Price ₹", f: (r) => inr(r.price, 2) },
     { key: "kind", label: "Type", l: 1, f: (r) => esc(r.kind) }], sd, ["date", false]);
+}
+
+// ---------- sign-in (same email/password as the F&O Desk) ----------
+const CFG = window.FD_CONFIG || {};
+const sb = (CFG.supabaseUrl && window.supabase) ? window.supabase.createClient(CFG.supabaseUrl, CFG.supabaseAnonKey, {
+  auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false },
+}) : null;
+async function session() {
+  if (!sb) return null;
+  const { data } = await sb.auth.getSession();
+  const ses = data.session;
+  if (ses && CFG.email && ses.user.email.toLowerCase() !== CFG.email.toLowerCase()) return null;
+  return ses;
+}
+function showSignIn(message) {
+  document.querySelector("main").style.display = "none";
+  document.querySelector(".tabs").style.display = "none";
+  document.querySelector(".datebar").style.visibility = "hidden";
+  $("#updated").textContent = "Private site";
+  $("#signin").hidden = false;
+  $("#siEmail").value = CFG.email || "";
+  $("#siMsg").textContent = message || "";
+  $("#siShow").onchange = (e) => { $("#siPass").type = e.target.checked ? "text" : "password"; };
+  $("#signinForm").onsubmit = async (e) => {
+    e.preventDefault();
+    $("#siBtn").disabled = true; $("#siMsg").textContent = "";
+    const { error } = await sb.auth.signInWithPassword({ email: $("#siEmail").value.trim(), password: $("#siPass").value });
+    $("#siBtn").disabled = false;
+    if (error) { $("#siMsg").textContent = /invalid/i.test(error.message) ? "Email or password is wrong." : `Could not sign in: ${error.message}`; return; }
+    if (!(await session())) { $("#siMsg").textContent = "This email does not have access."; await sb.auth.signOut(); return; }
+    location.reload();
+  };
+}
+
+// ---------- watchlist (private, Supabase) ----------
+const WATCH_DAYS = 90;
+S.watch = null;
+async function loadWatch(force = false) {
+  if (S.watch && !force) return S.watch;
+  const { data, error } = await sb.from("fd_watchlist").select("*").order("added_at", { ascending: false });
+  if (error) throw new Error(/fd_watchlist/i.test(error.message)
+    ? "the watchlist table is not set up yet (run supabase/001_watchlist.sql in Supabase → SQL Editor)" : error.message);
+  S.watch = data;
+  $("#wCount").textContent = data.length ? data.length : "";
+  return data;
+}
+async function ensurePrices() {
+  if (!S.prices) S.prices = await getJSON("data/fund/prices.json").catch(() => ({ p: {} }));
+  return S.prices;
+}
+const istToday = () => new Date(Date.now() + 5.5 * 3600e3).toISOString().slice(0, 10);
+const addedDay = (w) => new Date(new Date(w.added_at).getTime() + 5.5 * 3600e3).toISOString().slice(0, 10);
+const removeDay = (w) => new Date(new Date(w.added_at).getTime() + WATCH_DAYS * 864e5 + 5.5 * 3600e3).toISOString().slice(0, 10);
+
+function watchDialog({ sym, name, entry }) {
+  const dlg = $("#wDlg");
+  $("#wTitle").textContent = entry ? `Edit note: ${sym}` : `Add ${sym} to watchlist`;
+  const px = S.prices?.p?.[sym];
+  $("#wSub").textContent = entry ? `Added ${shortDate(addedDay(entry))}; removed automatically on ${shortDate(removeDay(entry))} unless you delete it first.`
+    : `${name ? name + ". " : ""}${px ? `Price noted: ₹${inr(px, 2)} (close ${shortDate(S.prices.d)}). ` : ""}Stays for ${WATCH_DAYS} days or until you delete it.`;
+  $("#wNote").value = entry?.note || "";
+  $("#wErr").textContent = "";
+  $("#wCancel").onclick = () => dlg.close();
+  $("#wForm").onsubmit = async (e) => {
+    e.preventDefault();
+    $("#wSave").disabled = true;
+    const note = $("#wNote").value.trim() || null;
+    const q = entry ? sb.from("fd_watchlist").update({ note }).eq("id", entry.id)
+      : sb.from("fd_watchlist").insert({ symbol: sym, name: name || null, note, price_added: px ?? null, price_date: px ? S.prices.d : null });
+    const { error } = await q;
+    $("#wSave").disabled = false;
+    if (error) { $("#wErr").textContent = /duplicate|unique/i.test(error.message) ? `${sym} is already in the watchlist.` : /fd_watchlist/i.test(error.message) ? "The watchlist table is not set up yet (run supabase/001_watchlist.sql)." : error.message; return; }
+    dlg.close();
+    await loadWatch(true).catch(() => null);
+    render();
+  };
+  dlg.showModal();
+}
+async function removeWatch(entry) {
+  const { error } = await sb.from("fd_watchlist").delete().eq("id", entry.id);
+  if (error) { alertBox(error.message); return; }
+  await loadWatch(true).catch(() => null);
+  render();
+}
+function alertBox(msg) {
+  const out = $("#tab-" + currentTab());
+  out.insertAdjacentHTML("afterbegin", `<div class="empty">${esc(msg)}</div>`);
+}
+async function watchButton(sym, name) {
+  const list = await loadWatch().catch(() => null);
+  if (!list) return "";
+  const w = list.find((x) => x.symbol === sym);
+  return w ? `<button class="wbtn on" id="wBtn" title="Open the Watchlist tab">★ In watchlist</button>`
+    : `<button class="wbtn" id="wBtn" data-name="${esc(name)}">☆ Add to watchlist</button>`;
+}
+function wireWatchButton(sym, name) {
+  const b = $("#wBtn"); if (!b) return;
+  b.onclick = async () => {
+    if (b.classList.contains("on")) { location.hash = "#watch"; return; }
+    await ensurePrices();
+    watchDialog({ sym, name });
+  };
+}
+
+async function renderWatch() {
+  const out = $("#watchOut");
+  out.innerHTML = '<div class="empty">Loading…</div>';
+  let list;
+  try { list = await loadWatch(true); } catch (e) { out.innerHTML = `<div class="empty">Could not load the watchlist: ${esc(e.message)}</div>`; return; }
+  if (!list.length) { out.innerHTML = '<div class="empty">Nothing here yet. Open a stock (tap its name anywhere) and press <b>☆ Add to watchlist</b>.</div>'; return; }
+  await ensurePrices();
+  if (!S.search) S.search = await getJSON("data/search.json").catch(() => ({}));
+  const funds = Object.fromEntries(await Promise.all(list.map(async (w) => [w.symbol, await loadFund(w.symbol).catch(() => null)])));
+  const label = Object.fromEntries(TAGS);
+  const rows = list.map((w) => {
+    const f = funds[w.symbol] || {}, q = f.q || {}, py = f.py || {}, t = f.ttm || {};
+    const px = S.prices?.p?.[w.symbol] ?? null;
+    const mcap = f.sh && px ? f.sh * px / 1e7 : null;
+    const pe = mcap && t.pat > 0 ? mcap / t.pat : (!mcap && px && t.eps > 0 ? px / t.eps : null);
+    const since = addedDay(w);
+    const ev = (S.search[w.symbol]?.e || []).filter((e) => String(e[0]).slice(0, 10) >= since);
+    const byTag = {}; ev.forEach((e) => byTag[e[1]] = (byTag[e[1]] || 0) + 1);
+    const daysLeft = Math.max(0, Math.ceil((new Date(removeDay(w)) - new Date(istToday())) / 864e5));
+    return {
+      w, sym: w.symbol, name: w.name || f.n || S.search[w.symbol]?.n || "", added: w.added_at, since, daysLeft,
+      p0: w.price_added, px, chg: grow(px, w.price_added), pe: t.pat != null && t.pat <= 0 ? -1 : pe,
+      opm: f.finco || q.op == null || !q.rev ? null : q.op / q.rev * 100,
+      salesYoy: grow(q.rev, py.rev), patYoy: grow(q.pat, py.pat), qe: f.qe, ev: ev.length, byTag,
+    };
+  });
+  const cols = [
+    { key: "sym", label: "Stock", l: 1, f: (r) => `${symLink(r.sym)}<span class="name">${esc(r.name)}</span>`, sv: (r) => r.sym },
+    { key: "added", label: "Added", l: 1, f: (r) => `${esc(shortDate(r.since))}<span class="name">${r.daysLeft} days left</span>`, sv: (r) => r.added },
+    { key: "p0", label: "Price added ₹", f: (r) => num1(r.p0, 2) },
+    { key: "px", label: "Last close ₹", f: (r) => num1(r.px, 2) },
+    { key: "chg", label: "Change", f: (r) => pct(r.chg == null ? null : Math.round(r.chg * 10) / 10) },
+    { key: "pe", label: "P/E", f: (r) => r.pe === -1 ? '<span class="down">Loss</span>' : num1(r.pe) },
+    { key: "opm", label: "OPM", f: (r) => r.opm == null ? '<span class="dim">–</span>' : inr(r.opm, 1) + "%" },
+    { key: "salesYoy", label: "Sales YoY", f: (r) => pct(r.salesYoy == null ? null : Math.round(r.salesYoy * 10) / 10) },
+    { key: "patYoy", label: "Profit YoY", f: (r) => pct(r.patYoy == null ? null : Math.round(r.patYoy * 10) / 10) },
+    { key: "qe", label: "Quarter", l: 1, f: (r) => r.qe ? `<span class="dim">${qLabel(r.qe)}</span>` : '<span class="dim">–</span>' },
+    { key: "ev", label: "New filings", l: 1, f: (r) => r.ev ? Object.entries(r.byTag).map(([t, n]) =>
+        `<span class="wtag" style="--c:var(--t-${t})">${esc(label[t] || t)}${n > 1 ? " ×" + n : ""}</span>`).join("") : '<span class="dim">none</span>' },
+    { key: "note", label: "Note", l: 1, f: (r) => `<span class="wnote">${esc(r.w.note || "")}</span>`, sv: (r) => r.w.note || "" },
+    { key: "act", label: "", l: 1, f: (r) => `<button class="wact" data-edit="${r.w.id}" title="Edit note">✎</button><button class="wact del" data-del="${r.w.id}" title="Delete from watchlist">Delete</button>`, sv: () => 0 },
+  ];
+  out.innerHTML = '<div class="tablewrap"><table class="grid" id="watchTable"></table></div><p class="note">New filings: tagged NSE filings (results, orders, ratings, red flags…) since the day you added the stock; routine filings are left out. P/E, OPM and YoY growth are from the latest results (Fundamentals section of the Stock page).</p>';
+  table($("#watchTable"), "watch", cols, rows, ["added", false]);
+  out.querySelectorAll("[data-edit]").forEach((b) => b.onclick = () => { const w = list.find((x) => x.id == b.dataset.edit); watchDialog({ sym: w.symbol, name: w.name, entry: w }); });
+  out.querySelectorAll("[data-del]").forEach((b) => b.onclick = () => {
+    const w = list.find((x) => x.id == b.dataset.del);
+    if (b.dataset.sure) removeWatch(w);
+    else { b.dataset.sure = 1; b.textContent = "Sure?"; setTimeout(() => { if (b.isConnected) { delete b.dataset.sure; b.textContent = "Delete"; } }, 3000); }
+  });
 }
 
 // ---------- router ----------
@@ -616,6 +772,7 @@ async function render() {
     else if (tab === "results") await renderResults(day);
     else if (tab === "holdings") await renderHoldings(day);
     else if (tab === "deals") renderDeals(day);
+    else if (tab === "watch") await renderWatch();
     else if (tab === "stock") await renderStock(decodeURIComponent(location.hash.split("/")[1] || "").toUpperCase());
   } catch (e) {
     console.error(e);
@@ -624,6 +781,13 @@ async function render() {
 }
 
 async function init() {
+  if (sb) {
+    const ses = await session();
+    if (!ses) { showSignIn(); return; }
+    $("#signOut").hidden = false;
+    $("#signOut").onclick = async () => { await sb.auth.signOut(); location.reload(); };
+    loadWatch().catch(() => null);
+  }
   try { S.index = await getJSON("data/index.json?" + Date.now()); }
   catch (e) { $("#updated").textContent = "No data yet — the first collection has not run."; S.index = { dates: [] }; }
   const dates = S.index.dates || [];

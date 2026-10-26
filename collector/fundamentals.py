@@ -238,7 +238,7 @@ class Fund:
             shards.setdefault(shard(sym), {})[sym] = r
         for k, rows in shards.items():
             self.jsave(os.path.join(self.dir, f"{k}.json"), dict(sorted(rows.items())))
-        prices = {s: self.c.close[s] for s in self.rows if s in self.c.close}
+        prices = dict(self.c.close)  # every traded stock (the watchlist uses them too)
         if prices:
             self.jsave(os.path.join(self.dir, "prices.json"), {"d": self.c.close_date, "p": dict(sorted(prices.items()))})
         self.jsave(self.state_path, self.state)

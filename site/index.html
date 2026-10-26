@@ -24,6 +24,7 @@
     <select id="dateSel" aria-label="Date"></select>
     <button class="icon" id="nextDay" aria-label="Next day">›</button>
     <button class="icon" id="themeBtn" aria-label="Toggle theme" title="Toggle theme">◐</button>
+    <button class="out" id="signOut" hidden>Sign out</button>
   </div>
 </header>
 
@@ -35,6 +36,7 @@
   <a href="#holdings" data-tab="holdings">Holdings</a>
   <a href="#deals" data-tab="deals">Deals</a>
   <a href="#stock" data-tab="stock">Stock</a>
+  <a href="#watch" data-tab="watch">Watchlist <span class="wcount" id="wCount"></span></a>
 </nav>
 
 <main>
@@ -141,11 +143,43 @@
     </div>
     <div id="stockOut"></div>
   </section>
+
+  <section id="tab-watch" class="tab" hidden>
+    <p class="note">Stocks you are watching. Each one stays until you delete it or for 90 days after you added it. Price change is from the close on the day you added it to the latest close.</p>
+    <div id="watchOut"></div>
+  </section>
 </main>
+
+<section id="signin" class="signin" hidden>
+  <form id="signinForm" class="signin-card">
+    <h2>Fundamentals Desk</h2>
+    <p class="note">This site is private. Sign in with the same email and password as the F&amp;O Desk; you stay signed in on this device.</p>
+    <label>Email <input id="siEmail" type="email" required autocomplete="username"></label>
+    <label>Password <input id="siPass" type="password" required autocomplete="current-password"></label>
+    <label class="chk"><input type="checkbox" id="siShow"> Show password</label>
+    <button class="btn primary" type="submit" id="siBtn">Sign in</button>
+    <p class="err" id="siMsg" role="status"></p>
+  </form>
+</section>
+
+<dialog id="wDlg" class="wdlg">
+  <form method="dialog" id="wForm">
+    <h2 id="wTitle">Add to watchlist</h2>
+    <p class="note" id="wSub"></p>
+    <label>Note (optional) <textarea id="wNote" rows="3" placeholder="Why are you watching it? e.g. waiting for Q3 margins, breakout above 1,200"></textarea></label>
+    <div class="btn-row">
+      <button class="btn" value="cancel" type="button" id="wCancel">Cancel</button>
+      <button class="btn primary" value="ok" id="wSave">Save</button>
+    </div>
+    <p class="err" id="wErr" role="alert"></p>
+  </form>
+</dialog>
 
 <footer>
   Data: NSE corporate filings, collected daily around 7 PM IST. Tags and order values are extracted automatically and can be wrong — open the filing before acting. Not investment advice.
 </footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="config.js?v=__V__"></script>
 <script src="app.js?v=__V__"></script>
 </body>
 </html>
