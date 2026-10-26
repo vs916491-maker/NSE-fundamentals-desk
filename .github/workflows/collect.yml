@@ -2,8 +2,12 @@ name: collect
 
 on:
   schedule:
-    - cron: "20 13 * * *"   # 18:50 IST - main run, sends the email
-    - cron: "55 13 * * *"   # 19:25 IST - backup run, emails only if the first run didn't
+    # GitHub often starts scheduled runs 2-3 hours late, so there are several slots.
+    # Each run collects; the first one that actually starts after 7 PM IST sends the email.
+    - cron: "30 12 * * *"   # 18:00 IST
+    - cron: "0 13 * * *"    # 18:30 IST
+    - cron: "20 13 * * *"   # 18:50 IST
+    - cron: "55 13 * * *"   # 19:25 IST
     - cron: "0 18 * * *"    # 23:30 IST - catch-up for late filers, no email
   workflow_dispatch:
     inputs:

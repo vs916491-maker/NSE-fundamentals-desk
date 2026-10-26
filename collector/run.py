@@ -579,6 +579,9 @@ def main():
     day = collect_day(c, d)
     update_market(c, d, [d - timedelta(days=i) for i in range(7)])
     rebuild_index()
+    if a.email and not a.force_email and datetime.now(IST).hour < 19:
+        log.info("before 7 PM IST: collected, email left for a later run")
+        a.email = False
     if a.email or a.force_email:
         import mailer
         fl = jload(os.path.join(DATA, "flows.json"), {})
