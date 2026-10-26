@@ -212,6 +212,8 @@ class Fund:
                 return 1
             age = (today - date.fromisoformat(st["checked"])).days
             if st.get("qe") is None:
+                if "why" not in st:  # marked by the first version, which could not tell a download error from no data
+                    return 1
                 return 3 if age >= EMPTY_RECHECK else None
             return 2 if age >= RECHECK_DAYS else None
 
