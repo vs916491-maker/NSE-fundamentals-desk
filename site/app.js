@@ -648,7 +648,7 @@ async function ensurePrices() {
 }
 const istToday = () => new Date(Date.now() + 5.5 * 3600e3).toISOString().slice(0, 10);
 const addedDay = (w) => new Date(new Date(w.added_at).getTime() + 5.5 * 3600e3).toISOString().slice(0, 10);
-const removeDay = (w) => new Date(new Date(w.added_at).getTime() + WATCH_DAYS * 864e5 + 5.5 * 3600e3).toISOString().slice(0, 10);
+const removeDay = (w) => new Date(new Date(w.added_at).getTime() + (w.keep_days || WATCH_DAYS) * 864e5 + 5.5 * 3600e3).toISOString().slice(0, 10);
 
 function watchDialog({ sym, name, entry }) {
   const dlg = $("#wDlg");
@@ -739,7 +739,7 @@ async function renderWatch() {
     { key: "qe", label: "Quarter", l: 1, f: (r) => r.qe ? `<span class="dim">${qLabel(r.qe)}</span>` : '<span class="dim">–</span>' },
     { key: "ev", label: "New filings", l: 1, f: (r) => r.ev ? Object.entries(r.byTag).map(([t, n]) =>
         `<span class="wtag" style="--c:var(--t-${t})">${esc(label[t] || t)}${n > 1 ? " ×" + n : ""}</span>`).join("") : '<span class="dim">none</span>' },
-    { key: "note", label: "Note", l: 1, f: (r) => `<span class="wnote">${esc(r.w.note || "")}</span>`, sv: (r) => r.w.note || "" },
+    { key: "note", label: "Note", l: 1, f: (r) => `<span class="wnote">${r.w.setup ? `<span class="dim">Sector Strength: ${esc(r.w.setup)}${r.w.buy ? `, buy ${r.w.buy_is_trigger ? "above " : ""}${inr(r.w.buy, 2)}, stop ${inr(r.w.stop, 2)}` : ""}</span><br>` : ""}${esc(r.w.note || "")}</span>`, sv: (r) => r.w.note || "" },
     { key: "act", label: "", l: 1, f: (r) => `<button class="wact" data-edit="${r.w.id}" title="Edit note">✎</button><button class="wact del" data-del="${r.w.id}" title="Delete from watchlist">Delete</button>`, sv: () => 0 },
   ];
   out.innerHTML = '<div class="tablewrap"><table class="grid" id="watchTable"></table></div><p class="note">New filings: tagged NSE filings (results, orders, ratings, red flags…) since the day you added the stock; routine filings are left out. P/E, OPM and YoY growth are from the latest results (Fundamentals section of the Stock page).</p>';
