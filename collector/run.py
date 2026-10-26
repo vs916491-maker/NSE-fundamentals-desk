@@ -12,7 +12,7 @@ from zoneinfo import ZoneInfo
 
 sys.path.insert(0, os.path.dirname(__file__))
 from nse import NSE
-import tagger, xbrl, flows, clients
+import tagger, xbrl, flows, clients, fundamentals
 
 IST = ZoneInfo("Asia/Kolkata")
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -99,7 +99,9 @@ class Collector:
         self.n = NSE()
         self.budget = Budget(budget_min)
         self.close = {}
+        self.turnover = {}
         self.close_date = None
+        self.cache_dir = CACHE
 
     # ----- prices (bhavcopy) -----
     def load_close(self, d: date):
@@ -113,10 +115,13 @@ class Collector:
             rows = csv.reader(io.StringIO(raw))
             hdr = [h.strip() for h in next(rows)]
             si, se, ci = hdr.index("SYMBOL"), hdr.index("SERIES"), hdr.index("CLOSE_PRICE")
+            ti = hdr.index("TURNOVER_LACS") if "TURNOVER_LACS" in hdr else None
             for r in rows:
                 if len(r) > ci and r[se].strip() in ("EQ", "BE", "BZ", "SM", "ST"):
                     try:
                         self.close[r[si].strip()] = float(r[ci])
+                        if ti is not None:
+                            self.turnover[r[si].strip()] = float(r[ti] or 0)
                     except ValueError:
                         pass
             self.close_date = dd.isoformat()
@@ -234,9 +239,12 @@ class Collector:
             log.warning("fin list %s: %s", sym, e)
             return []
 
-    def fin_metrics(self, sym, nature, qe: date, url, cache):
+    def fin_metrics(self, sym, nature, qe: date, url, cache, accept_old=False):
+        """Parsed results for one filing (cached). accept_old: an older cached parse is fine
+        (enough for the sales/profit comparison columns)."""
         key = f"{nature}|{qe.isoformat()}"
-        if key in cache and (cache[key] or {}).get("_v") == xbrl.VERSION:
+        v = (cache.get(key) or {}).get("_v")
+        if key in cache and (v == xbrl.FIN_VERSION or (accept_old and v is not None)):
             return cache[key]
         try:
             doc = self.n.get(url, raw=True).decode(errors="ignore")
@@ -293,8 +301,13 @@ class Collector:
                        "filed": cand.get("creation_Date"), "audited": cand.get("audited"),
                        "revision": cand.get("type_Sub") == "Revision", "xbrl": cand.get("ixbrl") or cand.get("xbrl"),
                        **{k: cur.get(k) for k in ("rev", "pat", "pbt", "eps")}}
-                # comparatives
-                if self.budget.ok():
+                # comparatives: the filing itself carries last quarter and the same quarter last year
+                per = cur.get("periods") or {}
+                for label in ("py", "pq"):
+                    if per.get(label):
+                        row[f"rev_{label}"] = per[label].get("rev")
+                        row[f"pat_{label}"] = per[label].get("pat")
+                if self.budget.ok() and not (per.get("py") and per.get("pq")):
                     if listing is None:
                         listing = self.fin_listing(sym)
                     hist = {}
@@ -305,8 +318,8 @@ class Collector:
                             hist[(hn, hq)] = h["xbrl"]  # later filings (revisions) overwrite
                     for label, pq in (("py", year_ago(qe)), ("pq", prev_qe(qe))):
                         url = hist.get((nature, pq))
-                        if url and self.budget.ok():
-                            pm = self.fin_metrics(sym, nature, pq, url, cache)
+                        if url and self.budget.ok() and row.get(f"rev_{label}") is None:
+                            pm = self.fin_metrics(sym, nature, pq, url, cache, accept_old=True)
                             if pm:
                                 row[f"rev_{label}"] = pm.get("rev")
                                 row[f"pat_{label}"] = pm.get("pat")
@@ -535,6 +548,17 @@ def update_market(c: Collector, d: date, flow_days):
         log.exception("inst deals failed")
 
 
+def run_fund(c: Collector, results_rows, minutes):
+    try:
+        f = fundamentals.Fund(c, DATA, CACHE, jload, jsave, parse_nse_date)
+        f.from_results(results_rows)
+        if c.close:
+            f.backfill(minutes)
+        f.save()
+    except Exception:
+        log.exception("fundamentals failed")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--date")
@@ -544,6 +568,9 @@ def main():
     ap.add_argument("--budget", type=float, default=40, help="minutes for slow enrichment")
     ap.add_argument("--market-only", action="store_true", help="only refresh FII/DII flows and deal history")
     ap.add_argument("--flow-days", type=int, default=7, help="days of derivatives data to (re)check")
+    ap.add_argument("--fund-minutes", type=float, default=30, help="minutes for filling stock fundamentals")
+    ap.add_argument("--fund-only", action="store_true", help="only fill stock fundamentals (and prices)")
+    ap.add_argument("--fund-probe", help="comma-separated symbols: parse their latest filing and print it (testing)")
     a = ap.parse_args()
 
     c = Collector(budget_min=a.budget)
@@ -562,6 +589,38 @@ def main():
                     jsave(p, day)
         rebuild_index()
         return
+    if a.fund_probe:
+        import json as _json
+        c.load_close(today)
+        f = fundamentals.Fund(c, DATA, CACHE, jload, jsave, parse_nse_date)
+        for sym in a.fund_probe.split(","):
+            f.rows.pop(sym, None)
+            cache_path = os.path.join(CACHE, "fin", f"{sym}.json")
+            cache = jload(cache_path, {})
+            for k in list(cache):
+                if cache[k] and cache[k].get("_v") == xbrl.FIN_VERSION:
+                    cache.pop(k)
+            jsave(cache_path, cache)
+            f.refresh(sym)
+            r = f.rows.get(sym) or {}
+            doc = ""
+            for h in c.fin_listing(sym):
+                if parse_nse_date(h.get("qe_Date") or "") and parse_nse_date(h.get("qe_Date")).isoformat() == r.get("qe") \
+                        and (h.get("consolidated") or "Standalone") == r.get("nat") and h.get("xbrl"):
+                    doc = c.n.get(h["xbrl"], raw=True).decode(errors="ignore")
+                    break
+            import re as _re
+            names = sorted(set(_re.findall(r"<[\w-]+:(\w+)\b[^>]*contextRef", doc)))
+            print(f"::notice title={sym} record::" + _json.dumps({k: r.get(k) for k in ("qe", "nat", "finco", "q", "pq", "py", "ttm", "sh")})[:1900])
+            print(f"::notice title={sym} elements::" + " ".join(n for n in names if not n.startswith(("Description", "Whether", "Name", "Details")))[:1900])
+        return
+    if a.fund_only:
+        d = date.fromisoformat(a.date) if a.date else today
+        c.budget = Budget(a.fund_minutes + 5)
+        c.load_close(d)
+        run_fund(c, [], a.fund_minutes)
+        rebuild_index()
+        return
     if a.backfill:
         d0, d1 = date.fromisoformat(a.backfill[0]), date.fromisoformat(a.backfill[1])
         c.budget = Budget(a.budget)
@@ -578,6 +637,8 @@ def main():
     c.load_close(d)
     day = collect_day(c, d)
     update_market(c, d, [d - timedelta(days=i) for i in range(7)])
+    c.budget = Budget(a.fund_minutes + 5)
+    run_fund(c, day.get("results") or [], a.fund_minutes)
     rebuild_index()
     if a.email and not a.force_email and datetime.now(IST).hour < 19:
         log.info("before 7 PM IST: collected, email left for a later run")
