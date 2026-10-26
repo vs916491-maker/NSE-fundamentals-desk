@@ -219,6 +219,7 @@ class Fund:
 
         todo = sorted((d, rank.get(s, 10 ** 6), s) for s in set(order) | fresh if (d := due(s)) is not None)
         done = new = 0
+        errors = []
         for _, _, sym in todo:
             if time.time() > end:
                 break
@@ -226,10 +227,13 @@ class Fund:
                 new += bool(self.refresh(sym))
             except Exception as e:  # noqa: BLE001
                 log.warning("fund %s: %s", sym, e)
+                errors.append(f"{sym}: {str(e)[:120]}")
             done += 1
             if done % 100 == 0:
                 log.info("fundamentals: %d checked, %d updated, %d left", done, new, len(todo) - done)
                 self.save()
+        if errors:
+            print(f"::warning title=Fundamentals errors::{len(errors)} stocks could not be downloaded (retried next run), e.g. " + " | ".join(errors[:6]))
         never = sum(1 for s in order if s not in self.state)
         print(f"::notice title=Fundamentals::{done} stocks checked, {new} updated, {len(self.rows)} with data; "
               f"{never} of {len(order)} traded stocks not read yet")

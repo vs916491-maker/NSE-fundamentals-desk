@@ -604,7 +604,10 @@ def main():
                 if cache[k] and cache[k].get("_v") == xbrl.FIN_VERSION:
                     cache.pop(k)
             jsave(cache_path, cache)
-            f.refresh(sym, force=True)
+            try:
+                f.refresh(sym, force=True)
+            except Exception as e:
+                print(f"::notice title={sym} error::{type(e).__name__}: {e}"[:900])
             r = f.rows.get(sym) or {}
             print(f"::notice title={sym}::state {f.state.get(sym)} " + _json.dumps(r)[:1700])
         return
