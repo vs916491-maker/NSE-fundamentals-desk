@@ -1,28 +1,26 @@
-import json, sys, os, io, csv, traceback
+import json, sys, os, io
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "collector"))
 from nse import NSE
+import xlrd
 n = NSE(); out = {}
-def tryget(name, path, params=None, raw=False, cut=3000):
+for d in ("23-Oct-2026", "22-Oct-2026"):
     try:
-        r = n.get(path, params, raw=raw)
-        if raw:
-            r = r[:cut].decode(errors="ignore") if isinstance(r, (bytes, bytearray)) else str(r)[:cut]
-            out[name] = {"ok": True, "data": r}
-        else:
-            out[name] = {"ok": True, "data": json.dumps(r, default=str)[:cut]}
+        raw = n.get(f"https://nsearchives.nseindia.com/content/fo/fii_stats_{d}.xls", raw=True)
+        wb = xlrd.open_workbook(file_contents=raw)
+        sh = wb.sheet_by_index(0)
+        out[d] = [[str(c) for c in sh.row_values(i)] for i in range(min(sh.nrows, 30))]
     except Exception as e:
-        out[name] = {"ok": False, "err": repr(e)[:300]}
-    print(name, out[name]["ok"])
-
-tryget("fiidii", "/api/fiidiiTradeReact")
-tryget("fiidii_nse", "/api/fiidiiTradeNse")
-for d in ("23102026", "22102026"):
-    tryget(f"part_oi_{d}", f"https://nsearchives.nseindia.com/content/nsccl/fao_participant_oi_{d}.csv", raw=True)
-    tryget(f"part_vol_{d}", f"https://nsearchives.nseindia.com/content/nsccl/fao_participant_vol_{d}.csv", raw=True)
-tryget("fii_stats_xls", "https://nsearchives.nseindia.com/content/fo/fii_stats_23-Oct-2026.xls", raw=True, cut=400)
-F, T = "01-10-2026", "23-10-2026"
-tryget("hist_bulk1", "/api/historicalOR/bulk-block-short-deals", {"optionType": "bulk_deals", "from": F, "to": T})
-tryget("hist_block1", "/api/historicalOR/bulk-block-short-deals", {"optionType": "block_deals", "from": F, "to": T})
-tryget("hist_bulk2", "/api/historical/bulk-deals", {"from": F, "to": T, "csv": "true"}, raw=True)
-tryget("snap", "/api/snapshot-capital-market-largedeal")
+        out[d] = repr(e)
+for opt, F, T in (("bulk_deals", "01-07-2026", "23-10-2026"), ("block_deals", "01-07-2026", "23-10-2026"), ("bulk_deals", "01-01-2026", "30-06-2026")):
+    try:
+        r = n.get("/api/historicalOR/bulk-block-short-deals", {"optionType": opt, "from": F, "to": T})
+        d = r.get("data") or []
+        out[f"{opt}_{F}"] = {"n": len(d), "keys": list(r.keys()), "first": d[0]["BD_DT_DATE"] if d else None, "last": d[-1]["BD_DT_DATE"] if d else None}
+    except Exception as e:
+        out[f"{opt}_{F}"] = repr(e)[:200]
+for p in ({"date": "22-10-2026"}, {"from": "20-10-2026", "to": "23-10-2026"}):
+    try:
+        out["fiidii_" + json.dumps(p)] = json.dumps(n.get("/api/fiidiiTradeReact", p))[:400]
+    except Exception as e:
+        out["fiidii_" + json.dumps(p)] = repr(e)[:200]
 json.dump(out, open("probe/out.json", "w"), indent=1)
