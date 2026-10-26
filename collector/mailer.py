@@ -68,6 +68,14 @@ def flows_block(day):
             chg = f' (<span style="color:{GREEN if d >= 0 else RED}">{d:+.1f} pp</span> vs previous day)'
         html_ += (f'<p style="margin:8px 0 0;font-size:13px">FII index futures positions: {l:,.0f} long / {s_:,.0f} short contracts '
                   f'→ <b>{lp:.0f}% long</b>{chg}</p>')
+    v = f.get("view") or {}
+    if v.get("short") or v.get("swing"):
+        col = lambda lab: GREEN if "ullish" in lab else RED if "earish" in lab else GREY
+        bits = [f'{t}: <b style="color:{col(v[k]["label"])}">{v[k]["label"]}</b>' for k, t in (("short", "Short term (1–3 days)"), ("swing", "Swing (2–4 weeks)")) if v.get(k)]
+        pos = (v.get("ctx") or {}).get("positioning")
+        if pos:
+            bits.append(f"FII positioning: <b>{pos}</b>")
+        html_ = f'<p style="margin:0 0 8px;font-size:14px">{" · ".join(bits)}</p>' + html_
     return section("🌐 FII / DII activity", html_)
 
 

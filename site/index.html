@@ -29,6 +29,7 @@
 
 <nav class="tabs" role="tablist">
   <a href="#today" data-tab="today">Today</a>
+  <a href="#fii" data-tab="fii">FII/DII Activity</a>
   <a href="#adding" data-tab="adding">FII/DII Adding</a>
   <a href="#results" data-tab="results">Results</a>
   <a href="#holdings" data-tab="holdings">Holdings</a>
@@ -45,6 +46,28 @@
       <label class="chk"><input type="checkbox" id="showOther"> Show routine filings</label>
     </div>
     <div id="feed" class="feed"></div>
+  </section>
+
+  <section id="tab-fii" class="tab" hidden>
+    <div class="toolbar"><div class="seg" id="fiiRange"></div><span class="co" id="fiiDate"></span></div>
+    <div id="fiiTop"></div>
+    <h3>The day in numbers</h3>
+    <div id="fiiCards"></div>
+    <h3>Trends</h3>
+    <div id="fiiCharts" class="cgrid"></div>
+    <div id="fiiTables"></div>
+    <details class="more method"><summary>How the verdicts are worked out</summary>
+      <p>Each verdict adds up points from what FIIs <b>changed</b> over the period (3 sessions for short term, 10 for swing). Each change is compared with how much that same measure normally moves, so only unusual moves score:</p>
+      <ul>
+        <li><b>Index futures positioning</b> (weight 1.5): change in the share of FII index-futures contracts that are long.</li>
+        <li><b>Index futures buying</b> (1): net ₹ cr bought or sold over the period.</li>
+        <li><b>Index options</b> (1): change in net calls minus net puts. More call buying or put writing is bullish.</li>
+        <li><b>Stock futures</b> (0.5): change in the long share of FII stock-futures positions.</li>
+        <li><b>Cash market</b> (1): FII net buying in shares. Short term: ±₹1,500 cr = 1 point, ±₹5,000 cr = 2. Swing: ±₹4,000 / ±₹12,000 cr.</li>
+      </ul>
+      <p>Each item scores −2 to +2, times its weight. Total ≥ +3 = Bullish, +1 to +3 = Mildly bullish, −1 to +1 = Neutral, −3 to −1 = Mildly bearish, ≤ −3 = Bearish.</p>
+      <p>FIIs also use index futures and puts to hedge the shares they own, so short positions are not always a bet on a fall. Treat the verdict as one input alongside price action, not a trade signal.</p>
+    </details>
   </section>
 
   <section id="tab-adding" class="tab" hidden>

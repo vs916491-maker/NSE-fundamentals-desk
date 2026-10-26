@@ -7,7 +7,7 @@ const TAGS = [
 const S = {
   index: null, date: null, days: {}, seasons: { results: {}, holdings: {} }, search: null,
   tag: null, resScope: "day", holdScope: "day", sort: {},
-  flows: null, inst: null, addWin: 30, addType: "",
+  flows: null, inst: null, addWin: 30, addType: "", fiiRange: 130,
 };
 const TYPE_LABEL = { FII: "FII", DII: "DII", Fund: "AIF/PMS" };
 const badge = (t) => t ? `<span class="badge b-${t}">${TYPE_LABEL[t] || t}</span>` : "";
@@ -64,18 +64,23 @@ async function loadInst() {
   return S.inst;
 }
 
-// ---------- FII / DII strip (Today) ----------
+// ---------- FII / DII activity ----------
 const netv = (v) => v == null ? '<span class="dim">–</span>' : `<span class="${v >= 0 ? "up" : "down"}">${v > 0 ? "+" : ""}${inr(v)}</span>`;
 const longPct = (o, l, s) => o && o[l] != null && (o[l] + o[s]) ? o[l] / (o[l] + o[s]) * 100 : null;
-async function renderFlows() {
-  const box = $("#flows");
-  const fl = await loadFlows();
+const shortDay = (x) => new Date(x + "T00:00:00").toLocaleDateString("en-IN", { day: "numeric", month: "short" });
+const VERDICT = {
+  "Bullish": ["vb2", "▲▲"], "Mildly bullish": ["vb1", "▲"], "Neutral": ["vn", "●"],
+  "Mildly bearish": ["vr1", "▼"], "Bearish": ["vr2", "▼▼"],
+};
+const vTag = (lab) => lab ? `<span class="vtag ${VERDICT[lab][0]}">${VERDICT[lab][1]} ${lab}</span>` : '<span class="dim">–</span>';
+
+function flowDay(fl) {
   const dates = Object.keys(fl).sort();
-  if (!dates.length) { box.innerHTML = ""; return; }
-  // the selected day, or the latest flows day on or before it
   const upto = dates.filter((d) => d <= (S.date || dates[dates.length - 1]));
-  const d = upto[upto.length - 1];
-  if (!d) { box.innerHTML = ""; return; }
+  return { dates, d: upto[upto.length - 1] };
+}
+
+function flowCards(fl, dates, d) {
   const f = fl[d] || {};
   const prevD = dates.filter((x) => x < d && fl[x].poi).pop();
   const pf = prevD ? fl[prevD] : {};
@@ -108,25 +113,155 @@ async function renderFlows() {
   if (fo.stk_fut || fii) cards.push(card("FII stock futures",
     `<div class="frow"><span class="who">Net ₹ cr</span><span class="big">${netv(fo.stk_fut?.net)}</span></div>
      ${lsBlock(fii, pfii, "fs_l", "fs_s", "Positions")}`));
-  if (!cards.length) { box.innerHTML = ""; return; }
-  // history table
-  const last = dates.filter((x) => x <= d).slice(-10).reverse();
-  const hist = last.map((x) => { const g = fl[x] || {}, gp = (g.poi || {}).FII;
-    return `<tr><td class="l">${new Date(x + "T00:00:00").toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short" })}</td><td>${netv(g.cash?.fii?.net)}</td><td>${netv(g.cash?.dii?.net)}</td>
-      <td>${netv(g.fo?.idx_fut?.net)}</td><td>${longPct(gp, "fi_l", "fi_s") == null ? "–" : longPct(gp, "fi_l", "fi_s").toFixed(0) + "%"}</td>
-      <td>${netv(g.fo?.idx_opt?.net)}</td><td>${netv(g.fo?.stk_fut?.net)}</td></tr>`; }).join("");
   const who = ["FII", "DII", "Pro", "Client"].filter((k) => poi[k]).map((k) => {
     const p = longPct(poi[k], "fi_l", "fi_s"), q = longPct((pf.poi || {})[k], "fi_l", "fi_s");
-    return `<tr><td class="l">${k}</td><td>${inr(poi[k].fi_l)}</td><td>${inr(poi[k].fi_s)}</td><td>${p == null ? "–" : p.toFixed(1) + "%"}</td>
+    return `<tr><td class="l">${k === "Client" ? "Client (retail)" : k === "Pro" ? "Pro (brokers' own)" : k}</td><td>${inr(poi[k].fi_l)}</td><td>${inr(poi[k].fi_s)}</td><td>${p == null ? "–" : p.toFixed(1) + "%"}</td>
       <td>${p == null || q == null ? "–" : pp(+(p - q).toFixed(2))}</td></tr>`; }).join("");
-  box.innerHTML = `<div class="flowhead"><h2>FII / DII activity</h2><span class="co">${niceDate(d)}${d !== S.date ? " (latest available)" : ""}</span></div>
-    <div class="flowgrid">${cards.join("")}</div>
-    <details class="more"><summary>Last 10 days and who is long index futures</summary>
-      <div class="tablewrap"><table class="grid"><thead><tr><th class="l">Day</th><th>FII cash</th><th>DII cash</th><th>FII idx fut</th><th>FII idx fut long</th><th>FII idx opt</th><th>FII stk fut</th></tr></thead><tbody>${hist}</tbody></table></div>
-      ${who ? `<div class="tablewrap" style="margin-top:8px"><table class="grid"><thead><tr><th class="l">Index futures</th><th>Long</th><th>Short</th><th>Long %</th><th>Δ pp</th></tr></thead><tbody>${who}</tbody></table></div>` : ""}
-      <p class="note" style="margin-top:8px">Net ₹ cr = buy − sell. Option values are notional (strike × quantity), so read the option net as direction, not size. Cash figures are NSE provisional data (all exchanges); NSE publishes them for the latest day only, so history starts from 26 Oct 2026.</p>
-    </details>`;
+  return { cards: cards.join(""), who };
 }
+
+// Today: one compact line
+async function renderFlowsCompact() {
+  const box = $("#flows");
+  const fl = await loadFlows();
+  const { d } = flowDay(fl);
+  if (!d) { box.innerHTML = ""; return; }
+  const f = fl[d], v = f.view || {}, fii = (f.poi || {}).FII, lp = longPct(fii, "fi_l", "fi_s");
+  const bits = [];
+  if (f.cash) bits.push(`FII cash <b>${netv(f.cash.fii?.net)}</b>`, `DII cash <b>${netv(f.cash.dii?.net)}</b>`);
+  if (lp != null) bits.push(`FII index futures <b>${lp.toFixed(0)}% long</b>`);
+  if (v.short) bits.push(`Short term ${vTag(v.short.label)}`);
+  if (v.swing) bits.push(`Swing ${vTag(v.swing.label)}`);
+  box.innerHTML = `<a class="flowline" href="#fii"><span class="fl-title">FII / DII · ${shortDay(d)}</span>${bits.map((b) => `<span>${b}</span>`).join("")}<span class="fl-more">Details →</span></a>`;
+}
+
+// tiny SVG chart: one y-axis, crosshair tooltip
+const compact = (v) => Math.abs(v) >= 1e7 ? inr(v / 1e7, 1) + " Cr" : Math.abs(v) >= 1e5 ? inr(v / 1e5, Math.abs(v) >= 1e6 ? 0 : 1) + " L" : inr(v);
+function svgChart(el, { dates, series, kind = "line", fmt = (v) => inr(v), zero = false, yMin = null, yMax = null }) {
+  const W = Math.max(280, el.clientWidth || 560), H = 190, m = { l: 52, r: 14, t: 10, b: 24 };
+  const iw = W - m.l - m.r, ih = H - m.t - m.b, n = dates.length;
+  let vals = series.flatMap((s) => s.values.filter((v) => v != null));
+  if (!vals.length) { el.innerHTML = '<div class="empty" style="padding:40px 0">No data for this range yet.</div>'; return; }
+  let lo = Math.min(...vals), hi = Math.max(...vals);
+  if (zero || kind === "bar") { lo = Math.min(lo, 0); hi = Math.max(hi, 0); }
+  if (yMin != null) lo = Math.min(lo, yMin); if (yMax != null) hi = Math.max(hi, yMax);
+  if (hi === lo) { hi += 1; lo -= 1; }
+  const span = hi - lo, step0 = span / 4, mag = Math.pow(10, Math.floor(Math.log10(step0)));
+  const step = [1, 2, 2.5, 5, 10].map((k) => k * mag).find((s) => s >= step0);
+  lo = Math.floor(lo / step) * step; hi = Math.ceil(hi / step) * step;
+  const y = (v) => m.t + ih - (v - lo) / (hi - lo) * ih;
+  const bw = iw / n, x = (i) => m.l + bw * i + bw / 2;
+  let g = "";
+  for (let t = lo; t <= hi + step / 2; t += step) {
+    g += `<line x1="${m.l}" x2="${W - m.r}" y1="${y(t)}" y2="${y(t)}" class="${Math.abs(t) < step / 1e6 && lo < 0 ? "zl" : "gl"}"/>`;
+    g += `<text x="${m.l - 6}" y="${y(t) + 4}" class="yt">${fmt(Math.abs(t) < step / 1e6 ? 0 : t)}</text>`;
+  }
+  const ticks = Math.max(2, Math.min(6, n, Math.floor(iw / 75) + 1));
+  for (let k = 0; k < ticks; k++) {
+    const i = Math.round(k * (n - 1) / Math.max(1, ticks - 1));
+    g += `<text x="${x(i)}" y="${H - 6}" class="xt" text-anchor="${k === 0 ? "start" : k === ticks - 1 ? "end" : "middle"}">${shortDay(dates[i])}</text>`;
+  }
+  let marks = "";
+  series.forEach((s, si) => {
+    if (kind === "bar") {
+      const w = Math.max(1, bw - 2);
+      s.values.forEach((v, i) => {
+        if (v == null) return;
+        const y0 = y(0), y1 = y(v), h = Math.max(1, Math.abs(y1 - y0));
+        marks += `<rect x="${x(i) - w / 2}" y="${Math.min(y0, y1)}" width="${w}" height="${h}" rx="${Math.min(2, w / 2)}" class="${v >= 0 ? "bu" : "bd"}"/>`;
+      });
+    } else {
+      let d = "", pen = false;
+      s.values.forEach((v, i) => { if (v == null) { pen = false; return; } d += `${pen ? "L" : "M"}${x(i).toFixed(1)},${y(v).toFixed(1)}`; pen = true; });
+      marks += `<path d="${d}" class="ln" style="stroke:var(${s.color || "--c1"})"/>`;
+      const li = s.values.map((v, i) => v == null ? -1 : i).filter((i) => i >= 0).pop();
+      if (li != null && li >= 0) marks += `<circle cx="${x(li)}" cy="${y(s.values[li])}" r="3.5" style="fill:var(${s.color || "--c1"})" class="endpt"/>`;
+    }
+  });
+  el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img">${g}${marks}
+    <line class="xh" x1="0" x2="0" y1="${m.t}" y2="${m.t + ih}" style="display:none"/>
+    <rect x="${m.l}" y="${m.t}" width="${iw}" height="${ih}" fill="transparent" class="hit"/></svg><div class="tip" hidden></div>`;
+  const svg = el.querySelector("svg"), xh = svg.querySelector(".xh"), tip = el.querySelector(".tip");
+  const show = (cx) => {
+    const r = svg.getBoundingClientRect(), px = (cx - r.left) * (W / r.width);
+    const i = Math.max(0, Math.min(n - 1, Math.floor((px - m.l) / bw)));
+    xh.setAttribute("x1", x(i)); xh.setAttribute("x2", x(i)); xh.style.display = "";
+    tip.innerHTML = `<div class="tdate">${niceDate(dates[i])}</div>` + series.map((s) =>
+      `<div class="trow">${series.length > 1 || kind === "line" ? `<i style="background:var(${s.color || "--c1"})"></i>` : ""}<b>${s.values[i] == null ? "–" : fmt(s.values[i])}</b>${s.name ? `<span>${esc(s.name)}</span>` : ""}</div>`).join("");
+    tip.hidden = false;
+    const left = x(i) / W * r.width;
+    tip.style.left = Math.min(Math.max(0, left + 12), r.width - tip.offsetWidth - 4) + "px";
+  };
+  const hit = svg.querySelector(".hit");
+  hit.addEventListener("pointermove", (e) => show(e.clientX));
+  hit.addEventListener("pointerdown", (e) => show(e.clientX));
+  hit.addEventListener("pointerleave", () => { xh.style.display = "none"; tip.hidden = true; });
+}
+
+const RANGES = [["1M", 22], ["3M", 66], ["6M", 130]];
+async function renderFii() {
+  const fl = await loadFlows();
+  const { dates, d } = flowDay(fl);
+  if (!d) { $("#fiiTop").innerHTML = '<div class="empty">No FII/DII data yet.</div>'; return; }
+  const f = fl[d], v = f.view || {}, ctx = v.ctx || {};
+  $("#fiiRange").innerHTML = RANGES.map(([l, k]) => `<button data-k="${k}" class="${S.fiiRange === k ? "on" : ""}">${l}</button>`).join("");
+  $("#fiiRange").querySelectorAll("button").forEach((b) => b.onclick = () => { S.fiiRange = +b.dataset.k; render(); });
+  $("#fiiDate").textContent = niceDate(d) + (d !== S.date ? " (latest available)" : "");
+
+  const vcard = (title, h) => {
+    if (!h) return `<div class="vcard"><h4>${title}</h4><div class="dim">Not enough history yet.</div></div>`;
+    const pts = (p) => `<span class="pts ${p > 0 ? "up" : p < 0 ? "down" : "dim"}">${p > 0 ? "+" : ""}${p}</span>`;
+    return `<div class="vcard"><h4>${title}</h4><div class="vhead">${vTag(h.label)}<span class="vscore">score ${h.score > 0 ? "+" : ""}${h.score}</span></div>
+      <ul class="vparts">${h.parts.map((c) => `<li>${pts(c.pts)}<div><b>${esc(c.name)}</b> ${esc(c.text)}</div></li>`).join("")}</ul></div>`;
+  };
+  const posCard = `<div class="vcard"><h4>Where FIIs stand (index futures)</h4>
+    <div class="vhead"><span class="vtag vn">${esc(ctx.positioning || "–")}</span><span class="vscore">${ctx.long_pct == null ? "" : ctx.long_pct + "% long"}</span></div>
+    ${ctx.pctile != null ? `<p class="small-p">More bearish than on ${100 - ctx.pctile}% of days in the last 6 months.</p>` : ""}
+    ${ctx.note ? `<p class="small-p">${esc(ctx.note)}</p>` : ""}
+    <p class="small-p dim">The verdicts show which way FIIs are <i>moving</i>; this shows where they <i>stand</i>. Both matter: heavy shorts that start covering are a classic bullish setup.</p></div>`;
+  $("#fiiTop").innerHTML = `<div class="vgrid">${vcard("Short term · next 1–3 days", v.short)}${vcard("Swing · next 2–4 weeks", v.swing)}${posCard}</div>`;
+
+  const { cards, who } = flowCards(fl, dates, d);
+  $("#fiiCards").innerHTML = `<div class="flowgrid">${cards}</div>`;
+
+  // charts
+  const keys = dates.filter((x) => x <= d && (fl[x].poi || fl[x].fo || fl[x].cash)).slice(-S.fiiRange);
+  const pick = (fn) => keys.map((k) => { try { const r = fn(fl[k]); return r == null || isNaN(r) ? null : r; } catch (e) { return null; } });
+  const F = (g) => (g.poi || {}).FII || {};
+  const charts = [
+    ["FII sentiment score", "Above 0 = FII activity leaning bullish. Swing ≥ +3 is a bullish read, ≤ −3 bearish.", { kind: "line", zero: true, yMin: -4, yMax: 4,
+      fmt: (v) => (v > 0 ? "+" : "") + inr(v, Math.abs(v) < 10 && v % 1 ? 1 : 0),
+      series: [{ name: "Swing", color: "--c1", values: pick((g) => g.view?.swing?.score) }, { name: "Short term", color: "--c2", values: pick((g) => g.view?.short?.score) }] }],
+    ["NIFTY 50", "Closing level, for context.", { kind: "line", series: [{ name: "NIFTY 50", values: pick((g) => g.idx?.nifty) }] }],
+    ["FII index futures · % of positions long", "Rising = short covering or fresh longs (bullish). Falling = fresh shorts (bearish).", { kind: "line",
+      fmt: (v) => inr(v, 1) + "%", series: [{ name: "Long %", values: pick((g) => longPct(F(g), "fi_l", "fi_s")) }] }],
+    ["FII index futures · net buy / sell, ₹ cr", "Daily buy minus sell value.", { kind: "bar", series: [{ name: "", values: pick((g) => g.fo?.idx_fut?.net) }] }],
+    ["FII index options · net position, contracts", "Net calls rising or net puts falling = bullish tilt. L = lakh contracts.", { kind: "line", zero: true, fmt: compact,
+      series: [{ name: "Net calls (long − short)", color: "--c1", values: pick((g) => F(g).ic_l - F(g).ic_s) },
+               { name: "Net puts (long − short)", color: "--c2", values: pick((g) => F(g).ip_l - F(g).ip_s) }] }],
+    ["FII stock futures · % of positions long", "Noisier: many shorts here are cash-futures arbitrage.", { kind: "line",
+      fmt: (v) => inr(v, 1) + "%", series: [{ name: "Long %", values: pick((g) => longPct(F(g), "fs_l", "fs_s")) }] }],
+    ["FII stock futures · net buy / sell, ₹ cr", "Daily buy minus sell value.", { kind: "bar", series: [{ name: "", values: pick((g) => g.fo?.stk_fut?.net) }] }],
+    ["FII cash market · net ₹ cr", "NSE provisional figures; history starts 23 Oct 2026.", { kind: "bar", series: [{ name: "", values: pick((g) => g.cash?.fii?.net) }] }],
+    ["DII cash market · net ₹ cr", "NSE provisional figures; history starts 23 Oct 2026.", { kind: "bar", series: [{ name: "", values: pick((g) => g.cash?.dii?.net) }] }],
+  ];
+  $("#fiiCharts").innerHTML = charts.map(([t, sub, o], i) => `<div class="ccard"><div class="chead"><h4>${t}</h4>
+      ${o.series.length > 1 ? `<div class="legend">${o.series.map((s) => `<span><i style="background:var(${s.color})"></i>${esc(s.name)}</span>`).join("")}</div>` : ""}</div>
+      <p class="csub">${sub}</p><div class="chart" id="ch${i}"></div></div>`).join("");
+  charts.forEach(([, , o], i) => svgChart($("#ch" + i), { dates: keys, ...o }));
+
+  const last = dates.filter((x) => x <= d).slice(-10).reverse();
+  const hist = last.map((x) => { const g = fl[x] || {}, gp = (g.poi || {}).FII, lp = longPct(gp, "fi_l", "fi_s");
+    return `<tr><td class="l">${new Date(x + "T00:00:00").toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short" })}</td>
+      <td class="l">${vTag(g.view?.short?.label)}</td><td class="l">${vTag(g.view?.swing?.label)}</td>
+      <td>${netv(g.cash?.fii?.net)}</td><td>${netv(g.cash?.dii?.net)}</td>
+      <td>${netv(g.fo?.idx_fut?.net)}</td><td>${lp == null ? "–" : lp.toFixed(1) + "%"}</td>
+      <td>${netv(g.fo?.idx_opt?.net)}</td><td>${netv(g.fo?.stk_fut?.net)}</td><td>${g.idx?.nifty ? inr(g.idx.nifty) : "–"}</td></tr>`; }).join("");
+  $("#fiiTables").innerHTML = `<h3>Last 10 sessions</h3><div class="tablewrap"><table class="grid"><thead><tr><th class="l">Day</th><th class="l">Short term</th><th class="l">Swing</th><th>FII cash</th><th>DII cash</th><th>FII idx fut</th><th>Idx fut long</th><th>FII idx opt</th><th>FII stk fut</th><th>NIFTY</th></tr></thead><tbody>${hist}</tbody></table></div>
+    ${who ? `<h3>Who is long index futures</h3><div class="tablewrap"><table class="grid"><thead><tr><th class="l">Participant</th><th>Long</th><th>Short</th><th>Long %</th><th>Δ pp vs prev day</th></tr></thead><tbody>${who}</tbody></table></div>` : ""}`;
+}
+let fiiResize;
+window.addEventListener("resize", () => { clearTimeout(fiiResize); fiiResize = setTimeout(() => { if (currentTab() === "fii") render(); }, 200); });
 
 // ---------- FII/DII Adding ----------
 const ADD_COLS = [
@@ -372,7 +507,8 @@ async function render() {
   try {
     const day = S.date ? await loadDay(S.date) : { announcements: [], results: [], holdings: [], deals: [] };
     if (my !== rendering) return;
-    if (tab === "today") { renderToday(day); renderFlows().catch(console.error); }
+    if (tab === "today") { renderToday(day); renderFlowsCompact().catch(console.error); }
+    else if (tab === "fii") await renderFii();
     else if (tab === "adding") await renderAdding();
     else if (tab === "results") await renderResults(day);
     else if (tab === "holdings") await renderHoldings(day);
