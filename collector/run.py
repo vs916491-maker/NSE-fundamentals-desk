@@ -612,7 +612,11 @@ def main():
             import re as _re
             names = sorted(set(_re.findall(r"<[\w-]+:(\w+)\b[^>]*contextRef", doc)))
             print(f"::notice title={sym} record::" + _json.dumps({k: r.get(k) for k in ("qe", "nat", "finco", "q", "pq", "py", "ttm", "sh")})[:1900])
-            print(f"::notice title={sym} elements::" + " ".join(n for n in names if not n.startswith(("Description", "Whether", "Name", "Details")))[:1900])
+            ctxs = xbrl._contexts(doc)
+            print(f"::notice title={sym} contexts::" + " | ".join(f"{k}:{v['start']}>{v['end'] or v['instant']}{'*' if v['dims'] else ''}" for k, v in list(ctxs.items())[:60])[:1900])
+            print(f"::notice title={sym} profit names::" + " ".join(n for n in names if any(w in n for w in ("Profit", "Premium", "Revenue", "Income", "Expense")))[:1900])
+            lst = c.fin_listing(sym)
+            print(f"::notice title={sym} listing::{len(lst)} " + " ".join(sorted({str(h.get('qe_Date')) for h in lst}))[:600])
         return
     if a.fund_only:
         d = date.fromisoformat(a.date) if a.date else today
