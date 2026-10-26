@@ -29,6 +29,7 @@
 
 <nav class="tabs" role="tablist">
   <a href="#today" data-tab="today">Today</a>
+  <a href="#adding" data-tab="adding">FII/DII Adding</a>
   <a href="#results" data-tab="results">Results</a>
   <a href="#holdings" data-tab="holdings">Holdings</a>
   <a href="#deals" data-tab="deals">Deals</a>
@@ -37,12 +38,33 @@
 
 <main>
   <section id="tab-today" class="tab">
+    <div id="flows" class="flows"></div>
     <div class="tiles" id="tiles"></div>
     <div class="toolbar">
       <input id="todayQ" type="search" placeholder="Filter by symbol or company" autocomplete="off">
       <label class="chk"><input type="checkbox" id="showOther"> Show routine filings</label>
     </div>
     <div id="feed" class="feed"></div>
+  </section>
+
+  <section id="tab-adding" class="tab" hidden>
+    <div class="toolbar">
+      <div class="seg" id="addWin"></div>
+      <div class="seg" id="addType"></div>
+      <select id="addSide" aria-label="Direction">
+        <option value="buy">Net buyers</option>
+        <option value="sell">Net sellers</option>
+      </select>
+      <select id="addMin" aria-label="Minimum net value">
+        <option value="0">Any size</option>
+        <option value="5" selected>Net ≥ ₹5 cr</option>
+        <option value="25">Net ≥ ₹25 cr</option>
+        <option value="100">Net ≥ ₹100 cr</option>
+      </select>
+      <input id="addQ" type="search" placeholder="Symbol / company / institution" autocomplete="off">
+    </div>
+    <p class="note" id="addNote"></p>
+    <div class="tablewrap"><table id="addTable" class="grid"></table></div>
   </section>
 
   <section id="tab-results" class="tab" hidden>
@@ -85,7 +107,7 @@
       <select id="dealSide" aria-label="Side"><option value="">Buy &amp; sell</option><option>BUY</option><option>SELL</option></select>
       <input id="dealQ" type="search" placeholder="Symbol / client" autocomplete="off">
     </div>
-    <p class="note">Bulk and block deals for the selected trading day. "Institutions" is a name-based guess (funds, insurers, FPIs, banks) and leaves out high-frequency prop desks.</p>
+    <p class="note">Bulk and block deals for the selected trading day. Institution type is a name-based guess: <b>FII</b> = foreign funds/FPIs, <b>DII</b> = Indian mutual funds, insurers, pension funds and banks, <b>AIF/PMS</b> = other Indian funds. High-frequency prop desks are left out.</p>
     <div class="tablewrap"><table id="dealTable" class="grid"></table></div>
   </section>
 

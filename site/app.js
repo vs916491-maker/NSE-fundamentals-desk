@@ -7,7 +7,10 @@ const TAGS = [
 const S = {
   index: null, date: null, days: {}, seasons: { results: {}, holdings: {} }, search: null,
   tag: null, resScope: "day", holdScope: "day", sort: {},
+  flows: null, inst: null, addWin: 30, addType: "",
 };
+const TYPE_LABEL = { FII: "FII", DII: "DII", Fund: "AIF/PMS" };
+const badge = (t) => t ? `<span class="badge b-${t}">${TYPE_LABEL[t] || t}</span>` : "";
 
 // ---------- utils ----------
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -50,6 +53,131 @@ async function loadDay(d) {
 async function loadSeason(kind, qe) {
   if (!S.seasons[kind][qe]) S.seasons[kind][qe] = await getJSON(`data/${kind}/${qe}.json`);
   return S.seasons[kind][qe];
+}
+
+async function loadFlows() {
+  if (!S.flows) S.flows = await getJSON("data/flows.json").catch(() => ({}));
+  return S.flows;
+}
+async function loadInst() {
+  if (!S.inst) S.inst = await getJSON("data/inst_deals.json").catch(() => null);
+  return S.inst;
+}
+
+// ---------- FII / DII strip (Today) ----------
+const netv = (v) => v == null ? '<span class="dim">–</span>' : `<span class="${v >= 0 ? "up" : "down"}">${v > 0 ? "+" : ""}${inr(v)}</span>`;
+const longPct = (o, l, s) => o && o[l] != null && (o[l] + o[s]) ? o[l] / (o[l] + o[s]) * 100 : null;
+async function renderFlows() {
+  const box = $("#flows");
+  const fl = await loadFlows();
+  const dates = Object.keys(fl).sort();
+  if (!dates.length) { box.innerHTML = ""; return; }
+  // the selected day, or the latest flows day on or before it
+  const upto = dates.filter((d) => d <= (S.date || dates[dates.length - 1]));
+  const d = upto[upto.length - 1];
+  if (!d) { box.innerHTML = ""; return; }
+  const f = fl[d] || {};
+  const prevD = dates.filter((x) => x < d && fl[x].poi).pop();
+  const pf = prevD ? fl[prevD] : {};
+  const cash = f.cash || {}, fo = f.fo || {}, poi = f.poi || {};
+  const fii = poi.FII, pfii = (pf.poi || {}).FII;
+  const card = (title, body) => `<div class="fcard"><h4>${title}</h4>${body}</div>`;
+  const lsBlock = (o, po, l, s, label) => {
+    const p = longPct(o, l, s); if (p == null) return "";
+    const pp_ = longPct(po, l, s);
+    const ch = pp_ == null ? "" : ` · <span class="${p - pp_ >= 0 ? "up" : "down"}">${p - pp_ >= 0 ? "+" : ""}${(p - pp_).toFixed(1)} pp</span>`;
+    return `<div class="lsbar" title="${inr(o[l])} long vs ${inr(o[s])} short"><span style="width:${p.toFixed(1)}%"></span></div>
+      <div class="lsnote">${label}: <b>${p.toFixed(0)}% long</b> (${inr(o[l])} L / ${inr(o[s])} S)${ch}</div>`;
+  };
+  const cards = [];
+  if (cash.fii || cash.dii) cards.push(card("Cash market · net ₹ cr",
+    `<div class="frow"><span class="who">FII</span><span class="big">${netv(cash.fii?.net)}</span></div>
+     <div class="frow"><span class="small">buy ${inr(cash.fii?.buy)} · sell ${inr(cash.fii?.sell)}</span></div>
+     <div class="frow"><span class="who">DII</span><span class="big">${netv(cash.dii?.net)}</span></div>
+     <div class="frow"><span class="small">buy ${inr(cash.dii?.buy)} · sell ${inr(cash.dii?.sell)}</span></div>`));
+  if (fo.idx_fut || fii) cards.push(card("FII index futures",
+    `<div class="frow"><span class="who">Net ₹ cr</span><span class="big">${netv(fo.idx_fut?.net)}</span></div>
+     ${lsBlock(fii, pfii, "fi_l", "fi_s", "Positions")}`));
+  if (fo.idx_opt || fii) {
+    const nc = fii && fii.ic_l != null ? fii.ic_l - fii.ic_s : null, np = fii && fii.ip_l != null ? fii.ip_l - fii.ip_s : null;
+    cards.push(card("FII index options",
+      `<div class="frow"><span class="who">Net ₹ cr</span><span class="big">${netv(fo.idx_opt?.net)}</span></div>
+       <div class="frow"><span class="small">Calls long − short</span><span class="small">${netv(nc)}</span></div>
+       <div class="frow"><span class="small">Puts long − short</span><span class="small">${netv(np)}</span></div>`));
+  }
+  if (fo.stk_fut || fii) cards.push(card("FII stock futures",
+    `<div class="frow"><span class="who">Net ₹ cr</span><span class="big">${netv(fo.stk_fut?.net)}</span></div>
+     ${lsBlock(fii, pfii, "fs_l", "fs_s", "Positions")}`));
+  if (!cards.length) { box.innerHTML = ""; return; }
+  // history table
+  const last = dates.filter((x) => x <= d).slice(-10).reverse();
+  const hist = last.map((x) => { const g = fl[x] || {}, gp = (g.poi || {}).FII;
+    return `<tr><td class="l">${new Date(x + "T00:00:00").toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short" })}</td><td>${netv(g.cash?.fii?.net)}</td><td>${netv(g.cash?.dii?.net)}</td>
+      <td>${netv(g.fo?.idx_fut?.net)}</td><td>${longPct(gp, "fi_l", "fi_s") == null ? "–" : longPct(gp, "fi_l", "fi_s").toFixed(0) + "%"}</td>
+      <td>${netv(g.fo?.idx_opt?.net)}</td><td>${netv(g.fo?.stk_fut?.net)}</td></tr>`; }).join("");
+  const who = ["FII", "DII", "Pro", "Client"].filter((k) => poi[k]).map((k) => {
+    const p = longPct(poi[k], "fi_l", "fi_s"), q = longPct((pf.poi || {})[k], "fi_l", "fi_s");
+    return `<tr><td class="l">${k}</td><td>${inr(poi[k].fi_l)}</td><td>${inr(poi[k].fi_s)}</td><td>${p == null ? "–" : p.toFixed(1) + "%"}</td>
+      <td>${p == null || q == null ? "–" : pp(+(p - q).toFixed(2))}</td></tr>`; }).join("");
+  box.innerHTML = `<div class="flowhead"><h2>FII / DII activity</h2><span class="co">${niceDate(d)}${d !== S.date ? " (latest available)" : ""}</span></div>
+    <div class="flowgrid">${cards.join("")}</div>
+    <details class="more"><summary>Last 10 days and who is long index futures</summary>
+      <div class="tablewrap"><table class="grid"><thead><tr><th class="l">Day</th><th>FII cash</th><th>DII cash</th><th>FII idx fut</th><th>FII idx fut long</th><th>FII idx opt</th><th>FII stk fut</th></tr></thead><tbody>${hist}</tbody></table></div>
+      ${who ? `<div class="tablewrap" style="margin-top:8px"><table class="grid"><thead><tr><th class="l">Index futures</th><th>Long</th><th>Short</th><th>Long %</th><th>Δ pp</th></tr></thead><tbody>${who}</tbody></table></div>` : ""}
+      <p class="note" style="margin-top:8px">Net ₹ cr = buy − sell. Option values are notional (strike × quantity), so read the option net as direction, not size. Cash figures are NSE provisional data (all exchanges); NSE publishes them for the latest day only, so history starts from 26 Oct 2026.</p>
+    </details>`;
+}
+
+// ---------- FII/DII Adding ----------
+const ADD_COLS = [
+  { key: "sym", label: "Stock", l: 1, f: (r) => `${symLink(r.sym)}<span class="name">${esc(r.name)}</span>`, sv: (r) => r.sym },
+  { key: "mcap", label: "MCap ₹cr", f: (r) => cr(r.mcap) },
+  { key: "net", label: "Net ₹cr", f: (r) => netv(r.net), sv: (r) => r.net },
+  { key: "buy", label: "Bought ₹cr", f: (r) => cr(r.buy) },
+  { key: "sell", label: "Sold ₹cr", f: (r) => r.sell ? cr(r.sell) : '<span class="dim">–</span>' },
+  { key: "pct", label: "Net % equity", f: (r) => r.pct == null ? '<span class="dim">–</span>' : `<span class="${r.pct >= 0 ? "up" : "down"}">${r.pct > 0 ? "+" : ""}${r.pct.toFixed(2)}%</span>` },
+  { key: "nb", label: "Buyers", f: (r) => r.nb },
+  { key: "days", label: "Deal days", f: (r) => r.days },
+  { key: "last", label: "Last deal", l: 1, f: (r) => `<span class="dim">${esc(r.last.slice(8, 10) + "-" + r.last.slice(5, 7))}</span>` },
+  { key: "who", label: "Institutions", l: 1, f: (r) => `<div class="who-list">${r.who}</div>`, sv: (r) => r.nb },
+];
+async function renderAdding() {
+  const data = await loadInst();
+  $("#addWin").innerHTML = [7, 30, 90].map((w) => `<button data-w="${w}" class="${S.addWin === w ? "on" : ""}">${w}D</button>`).join("");
+  $("#addType").innerHTML = [["", "All"], ["FII", "FII"], ["DII", "DII"], ["Fund", "AIF/PMS"]]
+    .map(([v, l]) => `<button data-t="${v}" class="${S.addType === v ? "on" : ""}">${l}</button>`).join("");
+  $("#addWin").querySelectorAll("button").forEach((b) => b.onclick = () => { S.addWin = +b.dataset.w; render(); });
+  $("#addType").querySelectorAll("button").forEach((b) => b.onclick = () => { S.addType = b.dataset.t; render(); });
+  if (!data) { $("#addTable").innerHTML = '<tbody><tr><td class="empty">No deal history yet.</td></tr></tbody>'; return; }
+  const to = new Date(data.to + "T00:00:00");
+  const from = new Date(to - (S.addWin - 1) * 864e5).toISOString().slice(0, 10);
+  const side = $("#addSide").value, min = +$("#addMin").value, q = $("#addQ").value.trim().toLowerCase();
+  const agg = {};
+  for (const [dt, kind, sym, client, sd, qty, price, val, type] of data.rows) {
+    if (dt < from || (S.addType && type !== S.addType)) continue;
+    const a = agg[sym] || (agg[sym] = { sym, name: data.names[sym] || "", buy: 0, sell: 0, nq: 0, buyers: {}, sellers: {}, d: new Set(), last: "", hit: false });
+    const sign = sd === "BUY" ? 1 : -1;
+    if (sign > 0) { a.buy += val; a.buyers[client] = [(a.buyers[client]?.[0] || 0) + val, type]; }
+    else { a.sell += val; a.sellers[client] = [(a.sellers[client]?.[0] || 0) + val, type]; }
+    a.nq += sign * qty; a.d.add(dt); if (dt > a.last) a.last = dt;
+    if (q && client.toLowerCase().includes(q)) a.hit = true;
+  }
+  let rows = Object.values(agg).map((a) => {
+    const net = +(a.buy - a.sell).toFixed(2), sh = data.shares[a.sym];
+    const list = Object.entries(side === "buy" ? a.buyers : a.sellers).sort((x, y) => y[1][0] - x[1][0]);
+    const who = list.slice(0, 3).map(([c, [v, t]]) => `${esc(c.length > 34 ? c.slice(0, 33) + "…" : c)}${badge(t)} <span class="dim">₹${cr(v)}</span>`).join("<br>") +
+      (list.length > 3 ? `<br><span class="dim">+${list.length - 3} more</span>` : "");
+    return { sym: a.sym, name: a.name, mcap: data.mcap[a.sym], buy: +a.buy.toFixed(2), sell: +a.sell.toFixed(2), net,
+      pct: sh ? a.nq / sh * 100 : null, nb: Object.keys(a.buyers).length, days: a.d.size, last: a.last, who, hit: a.hit };
+  });
+  rows = rows.filter((r) => (side === "buy" ? r.net > 0 : r.net < 0) && Math.abs(r.net) >= min &&
+    (!q || r.sym.toLowerCase().includes(q) || r.name.toLowerCase().includes(q) || r.hit));
+  $("#addNote").innerHTML = `${rows.length} stocks with institutional net ${side === "buy" ? "buying" : "selling"} in bulk/block deals, ${niceDate(from)} to ${niceDate(data.to)}. ` +
+    `Only large trades are reported as bulk/block deals (over 0.5% of a company's shares in a day, or ₹10 cr+ block trades), so most institutional buying in large caps never shows up here. ` +
+    `Institution type is guessed from the client name; HFT/prop desks are excluded.`;
+  if (side === "sell") { const st = S.sort.add; if (!st || st.key === "net") S.sort.add = { key: "net", asc: true }; }
+  else if (S.sort.add && S.sort.add.key === "net" && S.sort.add.asc) S.sort.add = { key: "net", asc: false };
+  table($("#addTable"), "add", ADD_COLS, rows, ["net", false]);
 }
 
 // ---------- sortable table ----------
@@ -174,7 +302,7 @@ async function renderHoldings(day) {
 // ---------- Deals ----------
 const D_COLS = [
   { key: "sym", label: "Stock", l: 1, f: (r) => `${symLink(r.sym)}<span class="name">${esc(r.name)}</span>`, sv: (r) => r.sym },
-  { key: "client", label: "Client", l: 1, f: (r) => esc(r.client) },
+  { key: "client", label: "Client", l: 1, f: (r) => esc(r.client) + badge(r.itype) },
   { key: "side", label: "Side", l: 1, f: (r) => `<span class="${r.side === "BUY" ? "up" : "down"}">${esc(r.side)}</span>` },
   { key: "value_cr", label: "Value ₹cr", f: (r) => cr(r.value_cr) },
   { key: "qty", label: "Qty", f: (r) => inr(r.qty) },
@@ -206,8 +334,12 @@ async function renderStock(sym) {
   const label = Object.fromEntries(TAGS);
   let h = `<div class="stockhead"><h2>${esc(sym)}</h2><span class="co">${esc(name)}</span>
     <a href="https://www.nseindia.com/get-quotes/equity?symbol=${encodeURIComponent(sym)}" target="_blank" rel="noopener">NSE page ↗</a></div>`;
-  if (!res.length && !hold.length && !ev.length) { out.innerHTML = h + '<div class="empty">Nothing recorded for this symbol yet.</div>'; return; }
+  if (!res.length && !hold.length && !ev.length && !sd.length) { out.innerHTML = h + '<div class="empty">Nothing recorded for this symbol yet.</div>'; return; }
+  const inst = await loadInst();
+  const sd = inst ? inst.rows.filter((r) => r[2] === sym).map(([date, kind, , client, side, qty, price, value_cr, type]) =>
+    ({ date, kind, client, side, qty, price, value_cr, type })) : [];
   if (res.length) h += `<h3>Quarterly results</h3><div class="tablewrap"><table class="grid" id="stRes"></table></div>`;
+  if (sd.length) h += `<h3>Institutional bulk/block deals (last 90 days)</h3><div class="tablewrap"><table class="grid" id="stDeals"></table></div>`;
   if (hold.length) h += `<h3>Shareholding</h3><div class="tablewrap"><table class="grid" id="stHold"></table></div>`;
   h += `<h3>Filings (${ev.length})</h3><div class="timeline">` + (ev.length ? ev.map((e) =>
     `<article class="card" style="--c:var(--t-${e[1]})"><div class="head"><span class="pill">${label[e[1]] || e[1]}</span><span class="co">${esc(e[2])}</span><span class="time">${esc(String(e[0]).slice(0, 16))}</span></div>
@@ -216,6 +348,14 @@ async function renderStock(sym) {
   out.innerHTML = h;
   if (res.length) table($("#stRes"), "stres", [{ key: "qe", label: "Quarter", l: 1, f: (r) => qLabel(r.qe) }, ...RES_COLS.slice(1, 11)], res, ["qe", false]);
   if (hold.length) table($("#stHold"), "sthold", H_COLS.slice(1), hold, ["qe", false]);
+  if (sd.length) table($("#stDeals"), "stdeals", [
+    { key: "date", label: "Date", l: 1, f: (r) => esc(r.date) },
+    { key: "client", label: "Institution", l: 1, f: (r) => esc(r.client) + badge(r.type) },
+    { key: "side", label: "Side", l: 1, f: (r) => `<span class="${r.side === "BUY" ? "up" : "down"}">${esc(r.side)}</span>` },
+    { key: "value_cr", label: "Value ₹cr", f: (r) => cr(r.value_cr) },
+    { key: "qty", label: "Qty", f: (r) => inr(r.qty) },
+    { key: "price", label: "Price ₹", f: (r) => inr(r.price, 2) },
+    { key: "kind", label: "Type", l: 1, f: (r) => esc(r.kind) }], sd, ["date", false]);
 }
 
 // ---------- router ----------
@@ -232,7 +372,8 @@ async function render() {
   try {
     const day = S.date ? await loadDay(S.date) : { announcements: [], results: [], holdings: [], deals: [] };
     if (my !== rendering) return;
-    if (tab === "today") renderToday(day);
+    if (tab === "today") { renderToday(day); renderFlows().catch(console.error); }
+    else if (tab === "adding") await renderAdding();
     else if (tab === "results") await renderResults(day);
     else if (tab === "holdings") await renderHoldings(day);
     else if (tab === "deals") renderDeals(day);
@@ -253,8 +394,8 @@ async function init() {
   $("#dateSel").onchange = () => { S.date = $("#dateSel").value; S.tag = null; render(); };
   $("#prevDay").onclick = () => { const i = dates.indexOf(S.date); if (i < dates.length - 1) { S.date = dates[i + 1]; $("#dateSel").value = S.date; render(); } };
   $("#nextDay").onclick = () => { const i = dates.indexOf(S.date); if (i > 0) { S.date = dates[i - 1]; $("#dateSel").value = S.date; render(); } };
-  ["#todayQ", "#resQ", "#holdQ", "#dealQ"].forEach((s) => $(s).addEventListener("input", render));
-  ["#showOther", "#resCap", "#resVerdict", "#holdMin", "#instOnly", "#dealSide"].forEach((s) => $(s).addEventListener("change", render));
+  ["#todayQ", "#resQ", "#holdQ", "#dealQ", "#addQ"].forEach((s) => $(s).addEventListener("input", render));
+  ["#showOther", "#resCap", "#resVerdict", "#holdMin", "#instOnly", "#dealSide", "#addSide", "#addMin"].forEach((s) => $(s).addEventListener("change", render));
   $("#stockQ").addEventListener("change", () => { const v = $("#stockQ").value.trim().toUpperCase(); if (v) location.hash = "#stock/" + encodeURIComponent(v); });
   document.addEventListener("click", (e) => { const s = e.target.closest(".sym"); if (s) location.hash = "#stock/" + encodeURIComponent(s.dataset.sym); });
   window.addEventListener("hashchange", render);

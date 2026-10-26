@@ -1,0 +1,45 @@
+{
+  "_note": "Fix a misclassified bulk/block deal client by adding part of its name (case-insensitive) to the right list. Checked before any automatic rule.",
+  "FII": [
+    "BELGRAVE INVESTMENT FUND",
+    "COHESION MK BEST IDEAS",
+    "SIXTEENTH STREET",
+    "CA HULL INVESTMENTS",
+    "CA HARBOR INVESTMENTS",
+    "PEAK XV PARTNERS",
+    "ELEVATION CAPITAL",
+    "SAIF PARTNERS",
+    "ALPHA WAVE",
+    "ACTIS ",
+    "THE PRUDENTIAL ASSURANCE",
+    "FRANKLIN TEMPLETON INVESTMENT FUNDS",
+    "DSP INDIA FUND",
+    "KOTAK FUNDS",
+    "AMERICAN FDS",
+    "AMERICAN FUNDS",
+    "ROBECO CAPITAL",
+    "OMAN INDIA JOINT",
+    "VALIANT INDIA OPPORTUNITIES",
+    "LIGHTSPEED",
+    "ACCEL ",
+    "SEQUOIA"
+  ],
+  "DII": [
+    "NATIONAL PENSION SYSTEM",
+    "EMPLOYEES PROVIDENT FUND ORGANISATION",
+    "360 ONE",
+    "ABAKKUS",
+    "SAGEONE",
+    "SBI FUNDS MANAGEMENT"
+  ],
+  "Fund": [],
+  "Exclude": [
+    "EMPLOYEE WELFARE TRUST",
+    "EMPLOYEES WELFARE",
+    "WELFARE COMPANY",
+    "FAMILY TRUST",
+    "FAMILY PRIVATE TRUST",
+    "MASTER TRUST",
+    "FOUNDATION"
+  ]
+}

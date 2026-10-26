@@ -37,6 +37,40 @@ def section(title, body):
     return f'<h3 style="margin:22px 0 6px;font-size:16px">{title}</h3>{body}'
 
 
+def flows_block(day):
+    f = day.get("flows") or {}
+    prev = day.get("flows_prev") or {}
+    cash, fo, poi = f.get("cash") or {}, f.get("fo") or {}, f.get("poi") or {}
+    if not (cash or fo or poi):
+        return f'<p style="color:{GREY};font-size:13px">FII/DII figures for today were not published yet at collection time.</p>'
+    def net(v):
+        if v is None:
+            return "–"
+        return f'<b style="color:{GREEN if v >= 0 else RED}">{v:+,.0f}</b>'
+    rows = []
+    if cash:
+        rows.append(["Cash market (stocks)", net((cash.get("fii") or {}).get("net")), net((cash.get("dii") or {}).get("net"))])
+    if fo.get("idx_fut"):
+        rows.append(["Index futures", net(fo["idx_fut"].get("net")), "–"])
+    if fo.get("idx_opt"):
+        rows.append(["Index options", net(fo["idx_opt"].get("net")), "–"])
+    if fo.get("stk_fut"):
+        rows.append(["Stock futures", net(fo["stk_fut"].get("net")), "–"])
+    html_ = table(["Net buy / sell, ₹ cr", "FII", "DII"], rows) if rows else ""
+    fii = poi.get("FII")
+    if fii and fii.get("fi_l") is not None:
+        l, s_ = fii["fi_l"], fii["fi_s"]
+        lp = l / (l + s_) * 100 if (l + s_) else None
+        pf = (prev.get("poi") or {}).get("FII")
+        chg = ""
+        if pf and pf.get("fi_l") is not None and (pf["fi_l"] + pf["fi_s"]):
+            d = lp - pf["fi_l"] / (pf["fi_l"] + pf["fi_s"]) * 100
+            chg = f' (<span style="color:{GREEN if d >= 0 else RED}">{d:+.1f} pp</span> vs previous day)'
+        html_ += (f'<p style="margin:8px 0 0;font-size:13px">FII index futures positions: {l:,.0f} long / {s_:,.0f} short contracts '
+                  f'→ <b>{lp:.0f}% long</b>{chg}</p>')
+    return section("🌐 FII / DII activity", html_)
+
+
 def build(day):
     d = day["date"]
     ann = day.get("announcements", [])
@@ -96,11 +130,13 @@ def build(day):
 
     inst = [x for x in deals if x.get("inst") and x["value_cr"] >= 5]
     if inst:
-        rows = [[f'<b>{e(x["sym"])}</b>', e(x["client"][:40]), f'<span style="color:{GREEN if x["side"] == "BUY" else RED}">{e(x["side"])}</span>',
-                 cr(x["value_cr"]), x["kind"]] for x in inst[:12]]
-        parts.append(section(f"💼 Institutional bulk/block deals ({len(inst)})", table(["Stock", "Client", "Side", "₹cr", "Type"], rows)))
+        rows = [[f'<b>{e(x["sym"])}</b>', e(x["client"][:40]), e(x.get("itype") or ""),
+                 f'<span style="color:{GREEN if x["side"] == "BUY" else RED}">{e(x["side"])}</span>',
+                 cr(x["value_cr"])] for x in inst[:12]]
+        parts.append(section(f"💼 Institutional bulk/block deals ({len(inst)})", table(["Stock", "Client", "Type", "Side", "₹cr"], rows)))
 
-    if not parts:
+    parts.insert(0, flows_block(day))
+    if len(parts) == 1:
         parts.append("<p>No tagged events today.</p>")
 
     counts = " · ".join(f"{k}: {len(by(k))}" for k in ("Order", "Penalty", "Buyback", "RedFlag"))

@@ -12,7 +12,7 @@ from zoneinfo import ZoneInfo
 
 sys.path.insert(0, os.path.dirname(__file__))
 from nse import NSE
-import tagger, xbrl
+import tagger, xbrl, flows, clients
 
 IST = ZoneInfo("Asia/Kolkata")
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -384,28 +384,41 @@ class Collector:
         return out
 
     # ----- bulk / block deals -----
+    def deal_rows(self, d_to: date):
+        """Bulk/block deals for the ~95 days up to d_to (fetched once per run)."""
+        if getattr(self, "_deals", None) is None or self._deals_to < d_to:
+            self._deals = flows.deal_history(self.n, d_to - timedelta(days=flows.DEAL_DAYS), d_to)
+            self._deals_to = d_to
+        return self._deals
+
     def deals(self, d: date):
-        out = []
-        for kind in ("bulk", "block"):
-            try:
-                raw = self.n.get(f"https://nsearchives.nseindia.com/content/equities/{kind}.csv", raw=True).decode(errors="ignore")
-            except Exception as e:
-                log.warning("%s csv: %s", kind, e)
-                continue
-            for row in csv.DictReader(io.StringIO(raw)):
-                row = {k.strip(): (v or "").strip() for k, v in row.items() if k}
-                dd = parse_nse_date(row.get("Date", ""))
-                if dd != d:
-                    continue
+        out = [dict(r) for r in self.deal_rows(max(d, getattr(self, "_deals_to", d))) if r["date"] == d.isoformat()]
+        if not out:  # history API not updated yet: fall back to the latest-day archive file
+            for kind in ("bulk", "block"):
                 try:
-                    qty = float(row.get("Quantity Traded", "0").replace(",", ""))
-                    px = float(row.get("Trade Price / Wght. Avg. Price", "0").replace(",", ""))
-                except ValueError:
+                    raw = self.n.get(f"https://nsearchives.nseindia.com/content/equities/{kind}.csv", raw=True).decode(errors="ignore")
+                except Exception as e:
+                    log.warning("%s csv: %s", kind, e)
                     continue
-                client = row.get("Client Name", "")
-                out.append({"kind": kind, "sym": row.get("Symbol"), "name": row.get("Security Name"),
-                            "client": client, "side": row.get("Buy/Sell", "").upper(), "qty": qty, "price": px,
-                            "value_cr": round(qty * px / 1e7, 2), "inst": tagger.is_institution(client)})
+                for row in csv.DictReader(io.StringIO(raw)):
+                    row = {k.strip(): (v or "").strip() for k, v in row.items() if k}
+                    if parse_nse_date(row.get("Date", "")) != d:
+                        continue
+                    try:
+                        qty = float(row.get("Quantity Traded", "0").replace(",", ""))
+                        px = float(row.get("Trade Price / Wght. Avg. Price", "0").replace(",", ""))
+                    except ValueError:
+                        continue
+                    client = row.get("Client Name", "")
+                    t = clients.classify(client)
+                    rec = {"date": d.isoformat(), "kind": kind, "sym": row.get("Symbol"), "name": row.get("Security Name"),
+                           "client": client, "side": row.get("Buy/Sell", "").upper(), "qty": qty, "price": px,
+                           "value_cr": round(qty * px / 1e7, 2), "itype": t, "inst": t is not None}
+                    out.append(rec)
+                    if getattr(self, "_deals", None) is not None:
+                        self._deals.append(dict(rec))  # so the 30-day view includes today too
+        for r in out:
+            r.pop("date", None)
         out.sort(key=lambda x: -x["value_cr"])
         log.info("deals %s: %d", d, len(out))
         return out
@@ -509,6 +522,19 @@ def collect_day(c: Collector, d: date, with_deals=True):
     return out
 
 
+def update_market(c: Collector, d: date, flow_days):
+    """FII/DII flows and the institutional deal file (once per run, not per day)."""
+    try:
+        flows.update_flows(c.n, os.path.join(DATA, "flows.json"), flow_days, jload, jsave)
+    except Exception:
+        log.exception("flows failed")
+    try:
+        rows = c.deal_rows(d)
+        flows.write_inst_deals(os.path.join(DATA, "inst_deals.json"), rows, d, c.shares, c.mcap, jsave)
+    except Exception:
+        log.exception("inst deals failed")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--date")
@@ -516,10 +542,26 @@ def main():
     ap.add_argument("--email", action="store_true")
     ap.add_argument("--force-email", action="store_true")
     ap.add_argument("--budget", type=float, default=40, help="minutes for slow enrichment")
+    ap.add_argument("--market-only", action="store_true", help="only refresh FII/DII flows and deal history")
+    ap.add_argument("--flow-days", type=int, default=7, help="days of derivatives data to (re)check")
     a = ap.parse_args()
 
     c = Collector(budget_min=a.budget)
     today = datetime.now(IST).date()
+    if a.market_only:
+        d = date.fromisoformat(a.date) if a.date else today
+        c.load_close(d)
+        update_market(c, d, [d - timedelta(days=i) for i in range(a.flow_days)])
+        for k in range(flows.DEAL_DAYS):  # refresh the deals in day files too
+            dd = d - timedelta(days=k)
+            p = os.path.join(DATA, "days", f"{dd.isoformat()}.json")
+            if os.path.exists(p):
+                day = jload(p, None)
+                if day is not None:
+                    day["deals"] = c.deals(dd)
+                    jsave(p, day)
+        rebuild_index()
+        return
     if a.backfill:
         d0, d1 = date.fromisoformat(a.backfill[0]), date.fromisoformat(a.backfill[1])
         c.budget = Budget(a.budget)
@@ -527,16 +569,22 @@ def main():
         d = d1
         while d >= d0:  # newest first so the important days finish first
             log.info("=== backfill %s", d)
-            collect_day(c, d, with_deals=(d == today or d == d1))
+            collect_day(c, d)
             rebuild_index()
             d -= timedelta(days=1)
+        update_market(c, d1, [d1 - timedelta(days=i) for i in range((d1 - d0).days + 1)])
         return
     d = date.fromisoformat(a.date) if a.date else today
     c.load_close(d)
     day = collect_day(c, d)
+    update_market(c, d, [d - timedelta(days=i) for i in range(7)])
     rebuild_index()
     if a.email or a.force_email:
         import mailer
+        fl = jload(os.path.join(DATA, "flows.json"), {})
+        day["flows"] = fl.get(d.isoformat())
+        prev = [k for k in sorted(fl) if k < d.isoformat() and fl[k].get("poi")]
+        day["flows_prev"] = fl[prev[-1]] if prev else None
         state_path = os.path.join(CACHE, "state.json")
         state = jload(state_path, {"emailed": []})
         if a.force_email or d.isoformat() not in state["emailed"]:
