@@ -230,3 +230,22 @@ details.method ul { padding-left: 18px; }
 .chart-link { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 20px; margin: 0 6px 0 5px;
   border: 1px solid var(--line); border-radius: 5px; color: var(--muted); vertical-align: -3px; background: var(--panel); }
 .chart-link:hover { color: var(--ink); border-color: var(--muted); }
+
+/* ---------- stock fundamentals ---------- */
+.fund-meta { color: var(--muted); font-size: 12.5px; margin: -2px 0 10px; }
+.ftiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; margin-bottom: 12px; }
+.ftile { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+.ftile .fl { color: var(--muted); font-size: 12px; }
+.ftile .fv { font-family: var(--mono); font-size: 19px; font-weight: 600; margin-top: 2px; }
+.ftile .fn { color: var(--muted); font-size: 11.5px; margin-top: 2px; }
+.fund-q { background: var(--panel); }
+.fund-q th { cursor: default; }
+.fund-q td:first-child { font-weight: 500; }
+.fund-lines { margin: 10px 0 0; font-size: 13.5px; display: grid; gap: 4px; }
+.fund-lines b { font-weight: 600; }
+.fflags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.fflag { font-size: 12.5px; padding: 3px 9px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); cursor: help; }
+.fflag.ok { color: var(--up); border-color: color-mix(in srgb, var(--up) 40%, var(--line)); }
+.fflag.warn { color: var(--t-Rating); border-color: color-mix(in srgb, var(--t-Rating) 50%, var(--line)); background: color-mix(in srgb, var(--t-Rating) 10%, var(--panel)); }
+.fund-note { color: var(--muted); font-size: 12px; margin-top: 8px; line-height: 1.45; }
+.fund-empty { padding: 14px; }

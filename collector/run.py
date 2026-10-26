@@ -551,9 +551,7 @@ def update_market(c: Collector, d: date, flow_days):
 def run_fund(c: Collector, results_rows, minutes):
     try:
         f = fundamentals.Fund(c, DATA, CACHE, jload, jsave, parse_nse_date)
-        f.from_results(results_rows)
-        if c.close:
-            f.backfill(minutes)
+        f.run([r["sym"] for r in results_rows if r.get("sym")], minutes)
         f.save()
     except Exception:
         log.exception("fundamentals failed")
@@ -601,22 +599,9 @@ def main():
                 if cache[k] and cache[k].get("_v") == xbrl.FIN_VERSION:
                     cache.pop(k)
             jsave(cache_path, cache)
-            f.refresh(sym)
+            f.refresh(sym, force=True)
             r = f.rows.get(sym) or {}
-            doc = ""
-            for h in c.fin_listing(sym):
-                if parse_nse_date(h.get("qe_Date") or "") and parse_nse_date(h.get("qe_Date")).isoformat() == r.get("qe") \
-                        and (h.get("consolidated") or "Standalone") == r.get("nat") and h.get("xbrl"):
-                    doc = c.n.get(h["xbrl"], raw=True).decode(errors="ignore")
-                    break
-            import re as _re
-            names = sorted(set(_re.findall(r"<[\w-]+:(\w+)\b[^>]*contextRef", doc)))
-            print(f"::notice title={sym} record::" + _json.dumps({k: r.get(k) for k in ("qe", "nat", "finco", "q", "pq", "py", "ttm", "sh")})[:1900])
-            ctxs = xbrl._contexts(doc)
-            print(f"::notice title={sym} contexts::" + " | ".join(f"{k}:{v['start']}>{v['end'] or v['instant']}{'*' if v['dims'] else ''}" for k, v in list(ctxs.items())[:60])[:1900])
-            print(f"::notice title={sym} profit names::" + " ".join(n for n in names if any(w in n for w in ("Profit", "Premium", "Revenue", "Income", "Expense")))[:1900])
-            lst = c.fin_listing(sym)
-            print(f"::notice title={sym} listing::{len(lst)} " + " ".join(sorted({str(h.get('qe_Date')) for h in lst}))[:600])
+            print(f"::notice title={sym}::" + _json.dumps(r)[:1900])
         return
     if a.fund_only:
         d = date.fromisoformat(a.date) if a.date else today

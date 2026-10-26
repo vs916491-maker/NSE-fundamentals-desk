@@ -455,6 +455,103 @@ function renderDeals(day) {
   table($("#dealTable"), "deal", D_COLS, rows, ["value_cr", false]);
 }
 
+// ---------- Stock fundamentals ----------
+S.fund = {}; S.prices = null;
+async function loadFund(sym) {
+  const c = /^[A-Z]/i.test(sym) ? sym[0].toUpperCase() : "0";
+  if (!(c in S.fund)) S.fund[c] = await getJSON(`data/fund/${c}.json`).catch(() => ({}));
+  if (!S.prices) S.prices = await getJSON("data/fund/prices.json").catch(() => ({ p: {} }));
+  return S.fund[c][sym] || null;
+}
+const ratio = (a, b) => (a == null || b == null || b === 0) ? null : a / b;
+const grow = (a, b) => (a == null || b == null || b === 0) ? null : (a - b) / Math.abs(b) * 100;
+const num1 = (v, d = 1) => v == null || !isFinite(v) ? '<span class="dim">–</span>' : inr(v, d);
+const ptsChg = (v) => v == null || !isFinite(v) ? '<span class="dim">–</span>' :
+  `<span class="${v > 0 ? "up" : v < 0 ? "down" : "dim"}">${v > 0 ? "+" : ""}${v.toFixed(1)} pts</span>`;
+const shortDate = (iso) => iso ? new Date(iso + "T00:00:00").toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "";
+function ytdLabel(p) {
+  if (!p?.s || !p?.e) return "";
+  const m = Math.round((new Date(p.e) - new Date(p.s)) / 864e5 / 30.44);
+  const e = new Date(p.e + "T00:00:00"); const fy = e.getMonth() + 1 >= 4 ? e.getFullYear() + 1 : e.getFullYear();
+  return `${m === 6 ? "H1" : m === 9 ? "9M" : m === 12 ? "FY" : m + "M"} FY${String(fy).slice(2)}`;
+}
+function fundSection(sym, f) {
+  if (!f) return `<h3>Fundamentals</h3><div class="empty fund-empty">Not collected yet for ${esc(sym)} — the desk is reading every company's latest results filing over the next few evenings.</div>`;
+  const px = S.prices?.p?.[sym], pxDate = S.prices?.d;
+  const q = f.q || {}, pq = f.pq || {}, py = f.py || {}, t = f.ttm || {};
+  const mcap = f.sh && px ? f.sh * px / 1e7 : null;
+  // P/E = market cap / 12-month net profit (falls back to price / 12-month EPS without a share count)
+  const pe = mcap && t.pat > 0 ? mcap / t.pat : (!mcap && px && t.eps > 0 ? px / t.eps : null);
+  const ps = mcap && t.rev > 0 ? mcap / t.rev : null;
+  const tile = (label, val, note = "") => `<div class="ftile"><div class="fl">${label}</div><div class="fv">${val}</div>${note ? `<div class="fn">${note}</div>` : ""}</div>`;
+  let peTxt = num1(pe), peNote = "last 4 quarters";
+  if (px && (mcap ? t.pat : t.eps) != null && (mcap ? t.pat : t.eps) <= 0) { peTxt = '<span class="down">Loss</span>'; peNote = "12-month loss"; }
+  else if (t.pat == null && t.eps == null) peNote = "needs 4 quarters";
+  let h = `<h3>Fundamentals</h3><div class="fund-meta">${qLabel(f.qe)} results, ${esc((f.nat || "").toLowerCase())}${f.filed ? ` · filed ${esc(String(f.filed).slice(0, 11))}` : ""}${f.x ? ` · <a href="${esc(f.x)}" target="_blank" rel="noopener">filing ↗</a>` : ""}</div>`;
+  h += `<div class="ftiles">` +
+    tile("Price ₹", num1(px, 2), pxDate ? `close ${shortDate(pxDate)}` : "") +
+    tile("Market cap ₹cr", mcap == null ? '<span class="dim">–</span>' : cr(Math.round(mcap))) +
+    tile("P/E", peTxt, peNote) +
+    tile("Mcap / Sales", num1(ps, 2), ps == null && t.rev == null ? "needs 4 quarters" : "last 4 quarters") +
+    tile("EPS ₹ (12 m)", num1(t.eps, 2)) +
+    tile("Sales ₹cr (12 m)", t.rev == null ? '<span class="dim">–</span>' : cr(t.rev)) + `</div>`;
+
+  // quarter table: latest, previous, year-ago, QoQ, YoY
+  const opm = (p) => f.finco ? null : ratio(p.op, p.rev) == null ? null : ratio(p.op, p.rev) * 100;
+  const npm = (p) => ratio(p.pat, p.rev) == null ? null : ratio(p.pat, p.rev) * 100;
+  const prevQ = pq.e ? qLabel(pq.e) : "Previous qtr", yaQ = py.e ? qLabel(py.e) : "Year ago";
+  const row = (label, get, fmt, chg) => {
+    const a = get(q), b = get(pq), c = get(py);
+    return `<tr><td>${label}</td><td>${fmt(a)}</td><td>${fmt(b)}</td><td>${fmt(c)}</td><td>${chg(a, b)}</td><td>${chg(a, c)}</td></tr>`;
+  };
+  const crf = (v) => v == null ? '<span class="dim">–</span>' : cr(v);
+  const pctf = (v) => v == null ? '<span class="dim">–</span>' : inr(v, 1) + "%";
+  const g = (a, b) => pct(grow(a, b) == null ? null : Math.round(grow(a, b) * 10) / 10);
+  const d = (a, b) => ptsChg(a == null || b == null ? null : a - b);
+  h += `<div class="tablewrap"><table class="grid fund-q"><thead><tr><th>₹ crore</th><th>${qLabel(f.qe)}</th><th>${prevQ}</th><th>${yaQ}</th><th>QoQ</th><th>YoY</th></tr></thead><tbody>` +
+    row("Sales", (p) => p.rev, crf, g) +
+    (f.finco ? "" : row("Operating profit", (p) => p.op, crf, g) + row("OPM", opm, pctf, d)) +
+    row("Net profit", (p) => p.pat, crf, g) +
+    row("NPM", npm, pctf, d) +
+    row("EPS ₹", (p) => p.eps, (v) => num1(v, 2), (a, b) => {
+      // a split or bonus issue changes EPS but not profit: hide EPS growth that disagrees with profit growth
+      const ge = grow(a, b), gp = grow(q.pat, a === q.eps && b === pq.eps ? pq.pat : py.pat);
+      return ge != null && gp != null && Math.abs(ge - gp) > 25 ? '<span class="dim" title="Share count changed (split, bonus or new shares)">n/c</span>' : g(a, b);
+    }) + `</tbody></table></div>`;
+  if (f.finco) h += `<div class="fund-note">Bank / lender / insurer format: operating profit and OPM are not meaningful here, so they are left out.</div>`;
+
+  // year to date and 12 months
+  const y = f.ytd, yp = f.ytd_py;
+  const bits = [];
+  if (y && yp) bits.push(`<b>${ytdLabel(y)}</b> vs ${ytdLabel(yp)}: sales ${g(y.rev, yp.rev)}, net profit ${g(y.pat, yp.pat)}`
+    + (!f.finco && y.op != null ? `, OPM ${pctf(opm(y))} (${d(opm(y), opm(yp))})` : ""));
+  if (t.pat != null) bits.push(`<b>Last 12 months</b>: sales ₹${cr(t.rev)} cr, net profit ₹${cr(t.pat)} cr, NPM ${pctf(ratio(t.pat, t.rev) * 100)}`);
+  if (bits.length) h += `<div class="fund-lines">${bits.map((b) => `<div>${b}</div>`).join("")}</div>`;
+
+  // quality checks on the latest quarter
+  const flags = [];
+  const flag = (warn, text, tip) => flags.push(`<span class="fflag ${warn ? "warn" : "ok"}" title="${esc(tip)}">${warn ? "⚠ " : ""}${text}</span>`);
+  if (q.pbt > 0 && q.oi != null && !f.finco) {
+    const s = q.oi / q.pbt * 100;
+    flag(s > 30, `Other income ${inr(s, 0)}% of profit before tax`, "Above 30% means a big part of profit is not from the core business (treasury income, one-offs).");
+  }
+  if (q.pbt > 0 && q.tax != null) {
+    const r = q.tax / q.pbt * 100;
+    flag(r < 15 || r > 40, `Tax rate ${inr(r, 0)}%`, "Normal is about 25%. Much lower or higher usually means one-off tax items that flatter or hurt the profit.");
+  } else if (q.pbt != null && q.pbt <= 0) flag(true, "Loss before tax", "The company made a loss before tax this quarter.");
+  if (!f.finco && q.fin != null && q.pbt != null) {
+    if (q.fin <= Math.max(0.5, (q.rev || 0) * 0.005)) flag(false, "Almost no interest cost", "Finance cost below 0.5% of sales: little or no debt.");
+    else { const ic = (q.pbt + q.fin) / q.fin; flag(ic < 2, `Interest cover ${inr(ic, 1)}×`, "(Profit before tax + interest) ÷ interest. Below 2× means debt is heavy for the profit."); }
+  }
+  if (q.exc && q.pbt) {
+    const s = Math.abs(q.exc) / Math.abs(q.pbt) * 100;
+    if (s >= 10) flag(true, `Exceptional items ₹${cr(q.exc)} cr (${inr(s, 0)}% of PBT)`, "One-off gains or losses: compare profit growth without them.");
+  }
+  if (flags.length) h += `<div class="fflags">${flags.join("")}</div>`;
+  h += `<div class="fund-note">From the company's results filing. Operating profit = sales − operating costs (before other income, interest and depreciation). P/E and Mcap/Sales use the last 4 quarters and the latest close; numbers are read automatically, so open the filing before acting.</div>`;
+  return h;
+}
+
 // ---------- Stock ----------
 async function renderStock(sym) {
   const out = $("#stockOut");
@@ -471,12 +568,14 @@ async function renderStock(sym) {
   const ev = (S.search[sym]?.e || []).slice().sort((a, b) => String(b[0]).localeCompare(String(a[0])));
   const name = S.search[sym]?.n || res[0]?.name || hold[0]?.name || "";
   const label = Object.fromEntries(TAGS);
+  const fund = await loadFund(sym).catch(() => null);
   let h = `<div class="stockhead"><h2>${esc(sym)}</h2>${chartLink(sym)}<span class="co">${esc(name)}</span>
     <a href="https://www.nseindia.com/get-quotes/equity?symbol=${encodeURIComponent(sym)}" target="_blank" rel="noopener">NSE page ↗</a></div>`;
-  if (!res.length && !hold.length && !ev.length && !sd.length) { out.innerHTML = h + '<div class="empty">Nothing recorded for this symbol yet.</div>'; return; }
   const inst = await loadInst();
   const sd = inst ? inst.rows.filter((r) => r[2] === sym).map(([date, kind, , client, side, qty, price, value_cr, type]) =>
     ({ date, kind, client, side, qty, price, value_cr, type })) : [];
+  if (!fund && !res.length && !hold.length && !ev.length && !sd.length) { out.innerHTML = h + '<div class="empty">Nothing recorded for this symbol yet.</div>'; return; }
+  h += fundSection(sym, fund);
   if (res.length) h += `<h3>Quarterly results</h3><div class="tablewrap"><table class="grid" id="stRes"></table></div>`;
   if (sd.length) h += `<h3>Institutional bulk/block deals (last 90 days)</h3><div class="tablewrap"><table class="grid" id="stDeals"></table></div>`;
   if (hold.length) h += `<h3>Shareholding</h3><div class="tablewrap"><table class="grid" id="stHold"></table></div>`;

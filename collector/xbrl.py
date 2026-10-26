@@ -43,14 +43,16 @@ def _num(v):
         return None
 
 
-REVENUE = ["RevenueFromOperations", "InterestEarned", "TotalRevenueFromOperations", "Income"]
+REVENUE = ["RevenueFromOperations", "InterestEarned", "TotalRevenueFromOperations", "NetPremiumIncome", "Income"]
 PAT = ["ProfitOrLossAttributableToOwnersOfParent", "ProfitLossForPeriod", "ProfitLossForThePeriod",
        "ProfitLossAfterTaxesMinorityInterestAndShareOfProfitLossOfAssociates",
-       "ProfitLossFromOrdinaryActivitiesAfterTax", "ProfitLossForPeriodFromContinuingOperations"]
-PBT = ["ProfitBeforeTax", "ProfitLossFromOrdinaryActivitiesBeforeTax", "ProfitBeforeExceptionalItemsAndTax"]
+       "ProfitLossFromOrdinaryActivitiesAfterTax", "ProfitLossForPeriodFromContinuingOperations",
+       "ProfitLossAfterTaxAndExtraordinaryItems", "ProfitLossAfterTaxBeforeExtraordinaryItems"]
+PBT = ["ProfitBeforeTax", "ProfitLossFromOrdinaryActivitiesBeforeTax", "ProfitBeforeExceptionalItemsAndTax", "ProfitLossBeforeTax"]
 EPS = ["BasicEarningsLossPerShareFromContinuingAndDiscontinuedOperations",
        "BasicEarningsPerShareAfterExtraordinaryItems", "BasicEarningsLossPerShareFromContinuingOperations",
-       "BasicEarningsPerShareBeforeExtraordinaryItems"]
+       "BasicEarningsPerShareBeforeExtraordinaryItems",
+       "BasicAndDilutedEPSAfterExtraordinaryItemsNetOfTaxExpenseForThePeriodNotToBeAnnualized"]
 
 
 FIN_VERSION = 3  # results parses (separate from shareholding so those caches stay valid)
@@ -62,30 +64,15 @@ EXCEPTIONAL = ["ExceptionalItemsBeforeTax", "ExceptionalItems"]
 TAX = ["TaxExpense", "TotalTaxExpense", "TaxExpenseIncome"]
 # element names that only appear in bank / lender / insurer formats (operating margin is not meaningful there)
 FINANCIAL_MARKERS = ["InterestEarned", "InterestExpended", "FeesAndCommissionIncome", "NetGainOnFairValueChanges",
-                     "NetPremiumEarned", "PremiumsEarnedNet", "InterestIncome"]
-
-
-def _qdate(d: date, years=0):
-    try:
-        return date(d.year - years, d.month, d.day)
-    except ValueError:
-        return date(d.year - years, d.month, 28)
-
-
-def _prev_qe(qe: date):
-    m, y = qe.month - 3, qe.year
-    if m <= 0:
-        m, y = m + 12, y - 1
-    last = {3: 31, 6: 30, 9: 30, 12: 31}.get(m)
-    return date(y, m, last) if last else None
+                     "NetPremiumEarned", "PremiumsEarnedNet", "InterestIncome", "NetPremiumIncome", "GrossPremiumIncome"]
 
 
 def parse_results(doc: str, qe: date):
     """Quarter metrics in Rs crore (EPS in Rs) for the 3-month period ending qe, or None.
 
-    Also reads the comparison columns every results filing carries (previous quarter,
-    same quarter last year, year-to-date, last full year) into "periods", so margins,
-    growth and trailing-12-month figures need only this one filing."""
+    NSE's integrated-filing XBRL carries only this quarter and the year to date
+    (no comparison columns), so "periods" has "q" and, from the second quarter
+    on, "ytd"; comparisons come from the earlier filings."""
     ctxs = _contexts(doc)
     facts = _facts(doc)
     plain = {cid: c for cid, c in ctxs.items() if not c["dims"] and c["start"] and c["end"]}
@@ -132,20 +119,7 @@ def parse_results(doc: str, qe: date):
         return m
 
     ytd = find(qe, 101, 380)
-    fy_prev = None  # latest full year that ended before this quarter
-    for cid, c in plain.items():
-        days = (c["end"] - c["start"]).days
-        if 350 <= days <= 380 and c["end"] < qe and (fy_prev is None or c["end"] > plain[fy_prev]["end"]):
-            fy_prev = cid
-    ytd_py = None
-    if ytd:
-        want = (plain[ytd]["end"] - plain[ytd]["start"]).days
-        for cid, c in plain.items():
-            if c["end"] == _qdate(qe, 1) and abs((c["end"] - c["start"]).days - want) <= 5:
-                ytd_py = cid
-    periods = {"q": metrics(qctx), "pq": metrics(find(_prev_qe(qe), 80, 100)),
-               "py": metrics(find(_qdate(qe, 1), 80, 100)), "ytd": metrics(ytd),
-               "ytd_py": metrics(ytd_py), "fy": metrics(fy_prev)}
+    periods = {"q": metrics(qctx), "ytd": metrics(ytd)}
     cur = periods["q"]
     nature = (facts.get("NatureOfReportStandaloneConsolidated", {}).get(qctx) or "").strip()
     return {
@@ -154,6 +128,7 @@ def parse_results(doc: str, qe: date):
         "nature": nature or None,
         "financial": financial,
         "periods": {k: v for k, v in periods.items() if v},
+        "fy_end": next((v.strip()[:10] for v in facts.get("DateOfEndOfFinancialYear", {}).values() if v.strip()), None),
     }
 
 
