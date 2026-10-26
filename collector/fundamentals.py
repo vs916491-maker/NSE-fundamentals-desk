@@ -106,12 +106,14 @@ class Fund:
         """Rebuild one stock's record if a newer quarter was filed. True when the record changed."""
         today = date.today().isoformat()
         hist = {}
-        for h in sorted(self.c.fin_listing(sym), key=lambda x: x.get("creation_Date") or ""):
+        listing = self.c.fin_listing(sym, strict=True)  # a download error leaves the stock to be retried
+        for h in sorted(listing, key=lambda x: x.get("creation_Date") or ""):
             qe = self.parse_date(h.get("qe_Date") or "")
             if qe and h.get("xbrl") and qe.isoformat()[5:] in QUARTER_ENDS:
                 hist[(h.get("consolidated") or "Standalone", qe)] = h  # later filings (revisions) overwrite
         if not hist:
-            self.state[sym] = {"qe": None, "checked": today}
+            self.state[sym] = {"qe": None, "checked": today,
+                               "why": f"{len(listing)} filings, none with XBRL for a quarter" if listing else "no results filings"}
             return False
         latest = max(q for _, q in hist)
         old = self.rows.get(sym)
@@ -127,7 +129,7 @@ class Fund:
             h = hist.get((nature, qe))
             if not h:
                 return None
-            m = self.c.fin_metrics(sym, nature, qe, h["xbrl"], cache)
+            m = self.c.fin_metrics(sym, nature, qe, h["xbrl"], cache, strict=True)
             return m if m and m.get("_v") == xbrl.FIN_VERSION else None
 
         rec = None
@@ -184,7 +186,7 @@ class Fund:
             break
         self.jsave(cache_path, cache)
         if rec is None:
-            self.state[sym] = {"qe": None, "checked": today}
+            self.state[sym] = {"qe": None, "checked": today, "why": f"latest filing ({latest}) could not be read"}
             return False
         rec["sh"] = (old or {}).get("sh") if old and old.get("qe") == rec["qe"] else None
         rec["sh"] = rec["sh"] or self._shares(sym)

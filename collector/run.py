@@ -230,16 +230,19 @@ class Collector:
         return out
 
     # ----- results -----
-    def fin_listing(self, sym):
+    def fin_listing(self, sym, strict=False):
+        """strict: raise on a download error (instead of returning an empty list)."""
         try:
             r = self.n.get("/api/integrated-filing-results",
                            {"index": "equities", "symbol": sym, "type": IF_FIN, "size": 100}) or {}
             return r.get("data") or []
         except Exception as e:
             log.warning("fin list %s: %s", sym, e)
+            if strict:
+                raise
             return []
 
-    def fin_metrics(self, sym, nature, qe: date, url, cache, accept_old=False):
+    def fin_metrics(self, sym, nature, qe: date, url, cache, accept_old=False, strict=False):
         """Parsed results for one filing (cached). accept_old: an older cached parse is fine
         (enough for the sales/profit comparison columns)."""
         key = f"{nature}|{qe.isoformat()}"
@@ -251,6 +254,8 @@ class Collector:
             m = xbrl.parse_results(doc, qe)
         except Exception as e:
             log.warning("fin xbrl %s %s: %s", sym, key, e)
+            if strict:
+                raise
             return None
         cache[key] = m
         return m
@@ -601,7 +606,7 @@ def main():
             jsave(cache_path, cache)
             f.refresh(sym, force=True)
             r = f.rows.get(sym) or {}
-            print(f"::notice title={sym}::" + _json.dumps(r)[:1900])
+            print(f"::notice title={sym}::state {f.state.get(sym)} " + _json.dumps(r)[:1700])
         return
     if a.fund_only:
         d = date.fromisoformat(a.date) if a.date else today
