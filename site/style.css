@@ -225,3 +225,8 @@ details.more .tablewrap { margin-top: 8px; }
 details.method { margin-top: 18px; font-size: 13.5px; line-height: 1.5; }
 details.method ul { padding-left: 18px; }
 @media (max-width: 640px) { .cgrid { grid-template-columns: 1fr; } .flowline .fl-more { margin-left: 0; } }
+
+/* TradingView chart link next to each symbol */
+.chart-link { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 20px; margin: 0 6px 0 5px;
+  border: 1px solid var(--line); border-radius: 5px; color: var(--muted); vertical-align: -3px; background: var(--panel); }
+.chart-link:hover { color: var(--ink); border-color: var(--muted); }

@@ -23,6 +23,8 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+      - name: Stamp file versions so browsers load the new code after each update
+        run: sed -i "s/__V__/${GITHUB_SHA::7}/g" site/index.html
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site

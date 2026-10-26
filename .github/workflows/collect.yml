@@ -70,6 +70,9 @@ jobs:
           git commit -qm "data $(TZ=Asia/Kolkata date +'%Y-%m-%d %H:%M') IST" || exit 0
           for i in 1 2 3; do git pull -q --rebase -X ours origin main && git push -q && break; sleep 5; done
 
+      - name: Stamp file versions
+        if: always()
+        run: sed -i "s/__V__/${GITHUB_SHA::7}/g" site/index.html
       - uses: actions/upload-pages-artifact@v3
         if: always()
         with:

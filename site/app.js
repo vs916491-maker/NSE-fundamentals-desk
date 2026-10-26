@@ -30,7 +30,11 @@ async function getJSON(path) {
   if (!r.ok) throw new Error(path + " " + r.status);
   return r.json();
 }
-const symLink = (s) => `<span class="sym" data-sym="${esc(s)}">${esc(s)}</span>`;
+/* TradingView daily chart for an NSE symbol (opens in a new tab, in your saved TradingView layout) */
+const tvHref = (s) => `https://www.tradingview.com/chart/?symbol=${encodeURIComponent("NSE:" + String(s).toUpperCase().replace(/[&-]/g, "_"))}&interval=D`;
+const CHART_SVG = '<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><line x1="4" y1="2" x2="4" y2="14" stroke="currentColor" stroke-width="1.4"/><rect x="2.2" y="5" width="3.6" height="6" rx=".6" fill="currentColor"/><line x1="11" y1="1.5" x2="11" y2="12.5" stroke="currentColor" stroke-width="1.4"/><rect x="9.2" y="3.5" width="3.6" height="6" rx=".6" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>';
+const chartLink = (s) => s ? `<a class="chart-link" href="${tvHref(s)}" target="_blank" rel="noopener" title="Open ${esc(s)} chart on TradingView" aria-label="Open ${esc(s)} chart on TradingView">${CHART_SVG}</a>` : "";
+const symLink = (s) => `<span class="sym" data-sym="${esc(s)}">${esc(s)}</span>${chartLink(s)}`;
 
 // ---------- theme ----------
 (function theme() {
@@ -467,7 +471,7 @@ async function renderStock(sym) {
   const ev = (S.search[sym]?.e || []).slice().sort((a, b) => String(b[0]).localeCompare(String(a[0])));
   const name = S.search[sym]?.n || res[0]?.name || hold[0]?.name || "";
   const label = Object.fromEntries(TAGS);
-  let h = `<div class="stockhead"><h2>${esc(sym)}</h2><span class="co">${esc(name)}</span>
+  let h = `<div class="stockhead"><h2>${esc(sym)}</h2>${chartLink(sym)}<span class="co">${esc(name)}</span>
     <a href="https://www.nseindia.com/get-quotes/equity?symbol=${encodeURIComponent(sym)}" target="_blank" rel="noopener">NSE page ↗</a></div>`;
   if (!res.length && !hold.length && !ev.length && !sd.length) { out.innerHTML = h + '<div class="empty">Nothing recorded for this symbol yet.</div>'; return; }
   const inst = await loadInst();
