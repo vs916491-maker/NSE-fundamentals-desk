@@ -11,9 +11,9 @@ on:
   workflow_dispatch:
     inputs:
       args:
-        description: "Arguments. --auto = the normal 2 PM / EOD refresh. Others: --date 2026-10-23 --force-email"
+        description: "Leave as is for a refresh now (before 6:30 PM = 2 PM-style partial refresh, after = end of day + email)"
         required: false
-        default: "--auto"
+        default: "--auto --again"
   push:
     branches: [main]
     paths: ["control/request.json"]

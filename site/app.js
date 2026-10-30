@@ -812,3 +812,77 @@ async function init() {
   render();
 }
 init();
+
+
+// ---------- manual refresh ----------
+const GH = { repo: "vs916491-maker/NSE-fundamentals-desk", wf: "collect.yml" };
+const GH_RUN_PAGE = `https://github.com/${GH.repo}/actions/workflows/${GH.wf}`;
+const ls = { get: (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } },
+             set: (k, v) => { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} } };
+let refreshTimer = null;
+const hhmm = (t) => new Date(t).toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" });
+
+async function gh(path, opts = {}) {
+  const tok = ls.get("ghToken");
+  const r = await fetch(`https://api.github.com/repos/${GH.repo}${path}`, {
+    ...opts, headers: { Accept: "application/vnd.github+json", ...(tok ? { Authorization: `Bearer ${tok}` } : {}), ...(opts.headers || {}) } });
+  if (!r.ok && r.status !== 204) throw new Error(r.status === 401 || r.status === 403 ? "GitHub refused the token (check it has Actions: Read and write on this repo, and hasn't expired)" : `GitHub error ${r.status}`);
+  return r.status === 204 ? null : r.json();
+}
+
+function panel(html) { const p = $("#refreshPanel"); p.innerHTML = `<button class="rclose" aria-label="Close">×</button>${html}`; p.hidden = false;
+  p.querySelector(".rclose").onclick = () => { p.hidden = true; }; }
+
+async function pollRun(since) {
+  clearTimeout(refreshTimer);
+  try {
+    const d = await gh(`/actions/workflows/${GH.wf}/runs?event=workflow_dispatch&per_page=3`);
+    const run = (d.workflow_runs || []).find((r) => new Date(r.created_at) >= new Date(since) - 60000);
+    const btn = $("#refreshBtn");
+    if (!run || run.status !== "completed") {
+      btn.textContent = "↻ Refreshing…"; btn.classList.add("busy");
+      btn.title = run ? `Running since ${hhmm(run.run_started_at || run.created_at)} · takes about 10 minutes` : "Starting…";
+      refreshTimer = setTimeout(() => pollRun(since), 20000);
+      return;
+    }
+    btn.classList.remove("busy"); btn.textContent = "↻ Refresh"; ls.set("refreshSince", null);
+    if (run.conclusion === "success") {
+      // the site is published by a second job right after; give it a moment
+      panel(`<b>Refresh finished at ${hhmm(run.updated_at)}.</b><p>The new data is live within a minute.</p><button class="rbtn" id="rReload">Reload now</button>`);
+      $("#rReload").onclick = () => location.reload();
+    } else {
+      panel(`<b>The refresh did not finish (${esc(run.conclusion)}).</b><p><a href="${esc(run.html_url)}" target="_blank" rel="noopener">See what happened on GitHub ↗</a></p>`);
+    }
+  } catch (e) {
+    $("#refreshBtn").classList.remove("busy"); $("#refreshBtn").textContent = "↻ Refresh";
+    panel(`<b>Could not check the refresh.</b><p>${esc(e.message)}</p>`);
+  }
+}
+
+async function startRefresh() {
+  const since = new Date().toISOString();
+  try {
+    await gh(`/actions/workflows/${GH.wf}/dispatches`, { method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ref: "main", inputs: { args: "--auto --again" } }) });
+  } catch (e) { panel(`<b>Refresh not started.</b><p>${esc(e.message)}</p><button class="rbtn ghost" id="rForget">Remove saved token</button>`);
+    $("#rForget").onclick = () => { ls.set("ghToken", null); $("#refreshPanel").hidden = true; }; return; }
+  ls.set("refreshSince", since);
+  panel(`<b>Refresh started.</b><p>It takes about 10 minutes. Before 6:30 PM it's the partial (2 PM-style) refresh; after that it's the end-of-day refresh with the email. The button shows progress.</p>`);
+  pollRun(since);
+}
+
+function refreshSetup() {
+  panel(`<b>Refresh now</b>
+    <p><a class="rbtn" href="${GH_RUN_PAGE}" target="_blank" rel="noopener">Open GitHub → Run workflow ↗</a></p>
+    <p class="dim">On that page press <i>Run workflow</i>, then the green <i>Run workflow</i> button.</p>
+    <hr><b>Or make this button one-click</b>
+    <p>Paste a GitHub fine-grained token with access to only this repository and <i>Actions: Read and write</i>. It is saved in this browser only.</p>
+    <input id="rTok" type="password" placeholder="github_pat_…" autocomplete="off"><button class="rbtn" id="rSave">Save and refresh</button>`);
+  $("#rSave").onclick = () => { const t = $("#rTok").value.trim(); if (!t) return; ls.set("ghToken", t); startRefresh(); };
+}
+
+$("#refreshBtn").onclick = () => {
+  if ($("#refreshBtn").classList.contains("busy")) { panel(`<b>Refresh in progress.</b><p>${esc($("#refreshBtn").title)}</p>`); return; }
+  ls.get("ghToken") ? startRefresh() : refreshSetup();
+};
+if (ls.get("refreshSince") && ls.get("ghToken")) pollRun(ls.get("refreshSince"));

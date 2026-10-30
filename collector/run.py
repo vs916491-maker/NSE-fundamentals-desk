@@ -603,7 +603,7 @@ def auto_refresh(c: Collector, a):
     state = jload(state_path, {})
     done = state.get("refreshes", [])
     key = f"{d.isoformat()}:{mode}"
-    if key in done:
+    if key in done and not getattr(a, "again", False):
         log.info("%s refresh for %s already done; nothing to do", mode, d)
         return
     log.info("=== %s refresh for %s", mode, d)
@@ -631,6 +631,7 @@ def main():
     ap.add_argument("--date")
     ap.add_argument("--backfill", nargs=2, metavar=("FROM", "TO"))
     ap.add_argument("--email", action="store_true")
+    ap.add_argument("--again", action="store_true", help="with --auto: refresh even if this refresh already ran today")
     ap.add_argument("--auto", action="store_true",
                     help="scheduled refresh: 2 PM (partial, no email) or EOD (full, email) decided from the IST clock")
     ap.add_argument("--force-email", action="store_true")
