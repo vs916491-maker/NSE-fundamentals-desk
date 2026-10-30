@@ -503,23 +503,31 @@ def rebuild_index():
                if os.path.isdir(os.path.join(DATA, k)) else [] for k in ("results", "holdings")}
     # search index: events (non-Other) + latest results / holdings per symbol
     search = {}
+    partial = []
     for f in files:
         day = jload(os.path.join(days_dir, f), {})
+        if day.get("refresh") == "mid":
+            partial.append(f[:10])
         for a in day.get("announcements", []):
             if a.get("tag") == "Other" or not a.get("sym"):
                 continue
             s = search.setdefault(a["sym"], {"n": a.get("name"), "e": []})
             s["e"].append([a.get("time"), a["tag"], a.get("subj"), (a.get("text") or "")[:220], a.get("pdf"), a.get("value_cr")])
     jsave(os.path.join(DATA, "search.json"), search)
+    state = jload(os.path.join(CACHE, "state.json"), {})
     jsave(os.path.join(DATA, "index.json"), {
         "updated": datetime.now(IST).isoformat(timespec="minutes"),
+        "partial": partial,
+        "last_refresh": state.get("last_refresh"),
         "dates": [f[:10] for f in files],
         "results_qe": seasons["results"], "holdings_qe": seasons["holdings"],
     })
 
 
-def collect_day(c: Collector, d: date, with_deals=True):
+def collect_day(c: Collector, d: date, with_deals=True, refresh=None):
     out = {"date": d.isoformat(), "generated": datetime.now(IST).isoformat(timespec="minutes")}
+    if refresh:
+        out["refresh"] = refresh
     for name, fn in (("announcements", c.announcements), ("results", c.results),
                      ("holdings", c.holdings), ("deals", c.deals)):
         if fn is None:
@@ -562,11 +570,69 @@ def run_fund(c: Collector, results_rows, minutes):
         log.exception("fundamentals failed")
 
 
+def send_email(d: date, day, force=False):
+    import mailer
+    fl = jload(os.path.join(DATA, "flows.json"), {})
+    day["flows"] = fl.get(d.isoformat())
+    prev = [k for k in sorted(fl) if k < d.isoformat() and fl[k].get("poi")]
+    day["flows_prev"] = fl[prev[-1]] if prev else None
+    state_path = os.path.join(CACHE, "state.json")
+    state = jload(state_path, {"emailed": []})
+    if force or d.isoformat() not in state.get("emailed", []):
+        if mailer.send(day):
+            state = jload(state_path, {"emailed": []})
+            state["emailed"] = (state.get("emailed", []) + [d.isoformat()])[-60:]
+            jsave(state_path, state)
+
+
+def auto_refresh(c: Collector, a):
+    """Two refreshes a day, decided from the IST clock so a late-starting run does the right job:
+         13:00-18:30  'mid'  2 PM refresh of today (partial day) + re-check of yesterday, no email
+         18:30-24:00  'eod'  end-of-day refresh of today, then the email
+         00:00-13:00  a delayed EOD for YESTERDAY if it hasn't happened yet, otherwise nothing
+       Each refresh runs once per day; extra triggers exit straight away."""
+    now = datetime.now(IST)
+    today, h = now.date(), now.hour + now.minute / 60
+    if h < 13:
+        d, mode = today - timedelta(days=1), "eod"
+    elif h < 18.5:
+        d, mode = today, "mid"
+    else:
+        d, mode = today, "eod"
+    state_path = os.path.join(CACHE, "state.json")
+    state = jload(state_path, {})
+    done = state.get("refreshes", [])
+    key = f"{d.isoformat()}:{mode}"
+    if key in done:
+        log.info("%s refresh for %s already done; nothing to do", mode, d)
+        return
+    log.info("=== %s refresh for %s", mode, d)
+    c.load_close(d)
+    if mode == "mid":
+        y = d - timedelta(days=1)
+        if os.path.exists(os.path.join(DATA, "days", f"{y.isoformat()}.json")):
+            collect_day(c, y, refresh=jload(os.path.join(DATA, "days", f"{y.isoformat()}.json"), {}).get("refresh"))
+    day = collect_day(c, d, refresh=mode)
+    update_market(c, d, [d - timedelta(days=i) for i in range(7)])
+    if "run_fund" in globals():
+        c.budget = Budget(a.fund_minutes + 5)
+        run_fund(c, day.get("results") or [], a.fund_minutes)
+    state = jload(state_path, {})
+    state["refreshes"] = (state.get("refreshes", []) + [key])[-60:]
+    state["last_refresh"] = {"date": d.isoformat(), "mode": mode, "at": datetime.now(IST).isoformat(timespec="minutes")}
+    jsave(state_path, state)
+    rebuild_index()
+    if mode == "eod":
+        send_email(d, day)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--date")
     ap.add_argument("--backfill", nargs=2, metavar=("FROM", "TO"))
     ap.add_argument("--email", action="store_true")
+    ap.add_argument("--auto", action="store_true",
+                    help="scheduled refresh: 2 PM (partial, no email) or EOD (full, email) decided from the IST clock")
     ap.add_argument("--force-email", action="store_true")
     ap.add_argument("--budget", type=float, default=40, help="minutes for slow enrichment")
     ap.add_argument("--market-only", action="store_true", help="only refresh FII/DII flows and deal history")
@@ -630,6 +696,8 @@ def main():
             d -= timedelta(days=1)
         update_market(c, d1, [d1 - timedelta(days=i) for i in range((d1 - d0).days + 1)])
         return
+    if a.auto:
+        return auto_refresh(c, a)
     d = date.fromisoformat(a.date) if a.date else today
     c.load_close(d)
     day = collect_day(c, d)

@@ -2,19 +2,18 @@ name: collect
 
 on:
   schedule:
-    # GitHub often starts scheduled runs 2-3 hours late, so there are several slots.
-    # Each run collects; the first one that actually starts after 7 PM IST sends the email.
-    - cron: "30 12 * * *"   # 18:00 IST
-    - cron: "0 13 * * *"    # 18:30 IST
-    - cron: "20 13 * * *"   # 18:50 IST
-    - cron: "55 13 * * *"   # 19:25 IST
-    - cron: "0 18 * * *"    # 23:30 IST - catch-up for late filers, no email
+    # Two refreshes a day: 2 PM (partial, no email) and end of day (full, with the email).
+    # Each run works out which one it is from the IST clock and skips if it was already done,
+    # so the extra slots only matter when GitHub starts runs late (it often does, by hours).
+    - cron: "30 8 * * *"    # 14:00 IST  - 2 PM refresh
+    - cron: "15 13 * * *"   # 18:45 IST  - EOD refresh + email
+    - cron: "30 14 * * *"   # 20:00 IST  - EOD fallback (skips if already done)
   workflow_dispatch:
     inputs:
       args:
-        description: "Extra arguments, e.g. --date 2026-10-23 --force-email"
+        description: "Arguments. --auto = the normal 2 PM / EOD refresh. Others: --date 2026-10-23 --force-email"
         required: false
-        default: ""
+        default: "--auto"
   push:
     branches: [main]
     paths: ["control/request.json"]
@@ -46,8 +45,7 @@ jobs:
         run: |
           case "${{ github.event_name }}" in
             schedule)
-              if [ "${{ github.event.schedule }}" = "0 18 * * *" ]; then echo "args=" >> "$GITHUB_OUTPUT";
-              else echo "args=--email" >> "$GITHUB_OUTPUT"; fi ;;
+              echo "args=--auto" >> "$GITHUB_OUTPUT" ;;
             push)
               echo "args=$(python -c 'import json;print(json.load(open("control/request.json")).get("args",""))')" >> "$GITHUB_OUTPUT" ;;
             *)

@@ -343,6 +343,9 @@ function table(el, id, cols, rows, defSort) {
 
 // ---------- Today ----------
 function renderToday(day) {
+  const pn = $("#partialNote");
+  if (pn) pn.innerHTML = (S.index.partial || []).includes(S.date)
+    ? `<div class="partial">Partial day: filings up to the 2 PM refresh. The full day, results filed after market hours and FII/DII figures arrive with the end-of-day refresh.</div>` : "";
   const ann = day.announcements || [];
   const counts = Object.fromEntries(TAGS.map(([t]) => [t, 0]));
   ann.forEach((a) => counts[a.tag] = (counts[a.tag] || 0) + 1);
@@ -792,8 +795,12 @@ async function init() {
   catch (e) { $("#updated").textContent = "No data yet — the first collection has not run."; S.index = { dates: [] }; }
   const dates = S.index.dates || [];
   S.date = dates[0] || null;
-  $("#dateSel").innerHTML = dates.map((d) => `<option value="${d}">${niceDate(d)}</option>`).join("");
-  if (S.index.updated) $("#updated").textContent = "Updated " + new Date(S.index.updated).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) + " IST";
+  const partial = new Set(S.index.partial || []);
+  $("#dateSel").innerHTML = dates.map((d) => `<option value="${d}">${niceDate(d)}${partial.has(d) ? " · partial" : ""}</option>`).join("");
+  const lr = S.index.last_refresh;
+  if (lr && lr.at) $("#updated").textContent = "Updated " + new Date(lr.at).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) +
+    " IST · " + (lr.mode === "mid" ? "2 PM refresh (partial day)" : "end-of-day refresh");
+  else if (S.index.updated) $("#updated").textContent = "Updated " + new Date(S.index.updated).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) + " IST";
   $("#dateSel").onchange = () => { S.date = $("#dateSel").value; S.tag = null; render(); };
   $("#prevDay").onclick = () => { const i = dates.indexOf(S.date); if (i < dates.length - 1) { S.date = dates[i + 1]; $("#dateSel").value = S.date; render(); } };
   $("#nextDay").onclick = () => { const i = dates.indexOf(S.date); if (i > 0) { S.date = dates[i - 1]; $("#dateSel").value = S.date; render(); } };
