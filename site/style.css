@@ -292,3 +292,6 @@ details.method ul { padding-left: 18px; }
 .rbtn { display: inline-block; background: var(--accent); color: #fff; border: 0; border-radius: 8px; padding: 8px 12px; cursor: pointer; text-decoration: none; font: inherit; }
 .rbtn.ghost { background: none; color: var(--accent); border: 1px solid var(--accent); }
 .rclose { position: absolute; top: 6px; right: 8px; background: none; border: 0; font-size: 20px; cursor: pointer; color: var(--muted); }
+
+.chart .bl { font: 11px var(--mono); fill: var(--muted); text-anchor: middle; }
+.qtrend { margin: 12px 0 4px; }

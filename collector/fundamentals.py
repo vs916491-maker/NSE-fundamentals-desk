@@ -83,6 +83,61 @@ def _odd(a, b):
     return bool(ra and rb and (ra / rb > 20 or ra / rb < 0.05))
 
 
+def _qkey(d: str) -> str:
+    return d[:10]
+
+
+def quarter_series(cache, nature, latest, n=6):
+    """Up to n consecutive quarters ending at `latest` (ISO date) from the parsed filings in this stock's cache.
+    A quarter that was never downloaded is worked out from totals the filings do carry:
+      Oct-Dec = full year - Jan-Mar quarter - Apr-Sep half year
+      any quarter = year-to-date - year-to-date one quarter earlier (same year)"""
+    Q, Y = {}, {}
+    for k, v in cache.items():
+        if not v or not k.startswith(nature + "|") or v.get("_v") != xbrl.FIN_VERSION:
+            continue
+        per = v.get("periods") or {}
+        if per.get("q") and per["q"].get("end"):
+            Q[_qkey(per["q"]["end"])] = dict(per["q"])
+        if per.get("ytd") and per["ytd"].get("end"):
+            Y[_qkey(per["ytd"]["end"])] = per["ytd"]
+
+    def sub(a, *bs):
+        out = {}
+        for f in ("rev", "pat", "op"):
+            vals = [a.get(f)] + [b.get(f) for b in bs]
+            out[f] = None if any(x is None for x in vals) else round(vals[0] - sum(vals[1:]), 2)
+        out["derived"] = True
+        return out
+
+    for _ in range(3):
+        for e, y in list(Y.items()):
+            pe = _prev_qe(date.fromisoformat(e)).isoformat()
+            if e not in Q and pe in Y and Y[pe].get("start") == y.get("start"):
+                Q[e] = sub(y, Y[pe])
+            if e.endswith("-03-31") and e in Q and (months(y) or 0) >= 12:
+                sep, dec = f"{int(e[:4]) - 1}-09-30", f"{int(e[:4]) - 1}-12-31"
+                if dec not in Q and sep in Y and Y[sep].get("start") == y.get("start"):
+                    Q[dec] = sub(y, Q[e], Y[sep])
+            if e.endswith("-09-30") and e in Q and (months(y) or 0) == 6:
+                jun = f"{e[:4]}-06-30"
+                if jun not in Q:
+                    Q[jun] = sub(y, Q[e])
+    out, e = [], latest
+    while e in Q and len(out) < n:
+        q = Q[e]
+        if q.get("rev") is None or q["rev"] <= 0:  # a calculated quarter that can't be right: stop the series here
+            break
+        row = {"e": e, "rev": q.get("rev"), "pat": q.get("pat")}
+        if q.get("op") is not None:
+            row["op"] = q["op"]
+        if q.get("derived"):
+            row["calc"] = 1
+        out.append(row)
+        e = _prev_qe(date.fromisoformat(e)).isoformat()
+    return out[::-1]
+
+
 class Fund:
     def __init__(self, collector, data_dir, cache_dir, jload, jsave, parse_date):
         self.c, self.jload, self.jsave, self.parse_date = collector, jload, jsave, parse_date
@@ -183,6 +238,9 @@ class Fund:
             t = ttm(p)
             if t:
                 rec["ttm"] = t
+            qs = quarter_series(cache, nature, latest.isoformat())
+            if len(qs) >= 2:
+                rec["qs"] = qs
             break
         self.jsave(cache_path, cache)
         if rec is None:
@@ -238,6 +296,19 @@ class Fund:
         print(f"::notice title=Fundamentals::{done} stocks checked, {new} updated, {len(self.rows)} with data; "
               f"{never} of {len(order)} traded stocks not read yet")
         return never
+
+    def fill_series(self):
+        """Add the quarter series to records that don't have it yet, from the local cache (no downloads)."""
+        added = 0
+        for sym, r in self.rows.items():
+            if r.get("qs") and r["qs"][-1]["e"] == r.get("qe"):
+                continue
+            cache = self.jload(os.path.join(self.c.cache_dir, "fin", f"{sym}.json"), {})
+            qs = quarter_series(cache, r.get("nat") or "Standalone", r.get("qe") or "")
+            if len(qs) >= 2:
+                r["qs"] = qs
+                added += 1
+        log.info("quarter series added for %d stocks", added)
 
     def save(self):
         os.makedirs(self.dir, exist_ok=True)

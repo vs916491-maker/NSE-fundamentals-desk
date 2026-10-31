@@ -565,6 +565,7 @@ def run_fund(c: Collector, results_rows, minutes):
     try:
         f = fundamentals.Fund(c, DATA, CACHE, jload, jsave, parse_nse_date)
         f.run([r["sym"] for r in results_rows if r.get("sym")], minutes)
+        f.fill_series()
         f.save()
     except Exception:
         log.exception("fundamentals failed")
@@ -640,6 +641,7 @@ def main():
     ap.add_argument("--flow-days", type=int, default=7, help="days of derivatives data to (re)check")
     ap.add_argument("--fund-minutes", type=float, default=30, help="minutes for filling stock fundamentals")
     ap.add_argument("--fund-only", action="store_true", help="only fill stock fundamentals (and prices)")
+    ap.add_argument("--series-only", action="store_true", help="only add quarter series to stored fundamentals (no downloads)")
     ap.add_argument("--fund-probe", help="comma-separated symbols: parse their latest filing and print it (testing)")
     a = ap.parse_args()
 
@@ -677,6 +679,11 @@ def main():
                 print(f"::notice title={sym} error::{type(e).__name__}: {e}"[:900])
             r = f.rows.get(sym) or {}
             print(f"::notice title={sym}::state {f.state.get(sym)} " + _json.dumps(r)[:1700])
+        return
+    if a.series_only:
+        f = fundamentals.Fund(c, DATA, CACHE, jload, jsave, parse_nse_date)
+        f.fill_series()
+        f.save()
         return
     if a.fund_only:
         d = date.fromisoformat(a.date) if a.date else today

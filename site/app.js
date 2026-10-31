@@ -141,8 +141,9 @@ async function renderFlowsCompact() {
 
 // tiny SVG chart: one y-axis, crosshair tooltip
 const compact = (v) => Math.abs(v) >= 1e7 ? inr(v / 1e7, 1) + " Cr" : Math.abs(v) >= 1e5 ? inr(v / 1e5, Math.abs(v) >= 1e6 ? 0 : 1) + " L" : inr(v);
-function svgChart(el, { dates, series, kind = "line", fmt = (v) => inr(v), zero = false, yMin = null, yMax = null }) {
-  const W = Math.max(280, el.clientWidth || 560), H = 190, m = { l: 52, r: 14, t: 10, b: 24 };
+function svgChart(el, { dates, series, kind = "line", fmt = (v) => inr(v), zero = false, yMin = null, yMax = null,
+                         xfmt = shortDay, tfmt = niceDate, labels = false }) {
+  const W = Math.max(280, el.clientWidth || 560), H = 190, m = { l: 52, r: 14, t: labels ? 22 : 10, b: 24 };
   const iw = W - m.l - m.r, ih = H - m.t - m.b, n = dates.length;
   let vals = series.flatMap((s) => s.values.filter((v) => v != null));
   if (!vals.length) { el.innerHTML = '<div class="empty" style="padding:40px 0">No data for this range yet.</div>'; return; }
@@ -160,19 +161,21 @@ function svgChart(el, { dates, series, kind = "line", fmt = (v) => inr(v), zero 
     g += `<line x1="${m.l}" x2="${W - m.r}" y1="${y(t)}" y2="${y(t)}" class="${Math.abs(t) < step / 1e6 && lo < 0 ? "zl" : "gl"}"/>`;
     g += `<text x="${m.l - 6}" y="${y(t) + 4}" class="yt">${fmt(Math.abs(t) < step / 1e6 ? 0 : t)}</text>`;
   }
-  const ticks = Math.max(2, Math.min(6, n, Math.floor(iw / 75) + 1));
+  const ticks = n <= 8 ? n : Math.max(2, Math.min(6, n, Math.floor(iw / 75) + 1));
   for (let k = 0; k < ticks; k++) {
     const i = Math.round(k * (n - 1) / Math.max(1, ticks - 1));
-    g += `<text x="${x(i)}" y="${H - 6}" class="xt" text-anchor="${k === 0 ? "start" : k === ticks - 1 ? "end" : "middle"}">${shortDay(dates[i])}</text>`;
+    g += `<text x="${x(i)}" y="${H - 6}" class="xt" text-anchor="${n <= 8 ? "middle" : k === 0 ? "start" : k === ticks - 1 ? "end" : "middle"}">${xfmt(dates[i])}</text>`;
   }
   let marks = "";
   series.forEach((s, si) => {
     if (kind === "bar") {
-      const w = Math.max(1, bw - 2);
+      const w = Math.max(1, Math.min(bw - 2, 46));
       s.values.forEach((v, i) => {
         if (v == null) return;
         const y0 = y(0), y1 = y(v), h = Math.max(1, Math.abs(y1 - y0));
-        marks += `<rect x="${x(i) - w / 2}" y="${Math.min(y0, y1)}" width="${w}" height="${h}" rx="${Math.min(2, w / 2)}" class="${v >= 0 ? "bu" : "bd"}"/>`;
+        const fill = v >= 0 && s.color ? ` style="fill:var(${s.color})"` : "";
+        marks += `<rect x="${x(i) - w / 2}" y="${Math.min(y0, y1)}" width="${w}" height="${h}" rx="${Math.min(3, w / 2)}" class="${v >= 0 ? "bu" : "bd"}"${fill}/>`;
+        if (labels) marks += `<text x="${x(i)}" y="${v >= 0 ? y1 - 5 : y1 + 13}" class="bl">${fmt(v)}</text>`;
       });
     } else {
       let d = "", pen = false;
@@ -190,7 +193,7 @@ function svgChart(el, { dates, series, kind = "line", fmt = (v) => inr(v), zero 
     const r = svg.getBoundingClientRect(), px = (cx - r.left) * (W / r.width);
     const i = Math.max(0, Math.min(n - 1, Math.floor((px - m.l) / bw)));
     xh.setAttribute("x1", x(i)); xh.setAttribute("x2", x(i)); xh.style.display = "";
-    tip.innerHTML = `<div class="tdate">${niceDate(dates[i])}</div>` + series.map((s) =>
+    tip.innerHTML = `<div class="tdate">${tfmt(dates[i])}</div>` + series.map((s) =>
       `<div class="trow">${series.length > 1 || kind === "line" ? `<i style="background:var(${s.color || "--c1"})"></i>` : ""}<b>${s.values[i] == null ? "–" : fmt(s.values[i])}</b>${s.name ? `<span>${esc(s.name)}</span>` : ""}</div>`).join("");
     tip.hidden = false;
     const left = x(i) / W * r.width;
@@ -564,6 +567,15 @@ function fundSection(sym, f) {
   if (t.pat != null) bits.push(`<b>Last 12 months</b>: sales ₹${cr(t.rev)} cr, net profit ₹${cr(t.pat)} cr, NPM ${pctf(ratio(t.pat, t.rev) * 100)}`);
   if (bits.length) h += `<div class="fund-lines">${bits.map((b) => `<div>${b}</div>`).join("")}</div>`;
 
+  // sales / profit trend from the quarter series
+  if ((f.qs || []).length >= 2) {
+    const calc = f.qs.some((r) => r.calc);
+    h += `<div class="cgrid qtrend">
+      <div class="ccard"><div class="chead"><h4>Sales · ₹ cr</h4></div><p class="csub">Last ${f.qs.length} quarters${calc ? " · * calculated from yearly totals" : ""}</p><div class="chart" id="qsRev"></div></div>
+      <div class="ccard"><div class="chead"><h4>Net profit (PAT) · ₹ cr</h4></div><p class="csub">Last ${f.qs.length} quarters, ${esc((f.nat || "").toLowerCase())}</p><div class="chart" id="qsPat"></div></div>
+    </div>`;
+  }
+
   // quality checks on the latest quarter
   const flags = [];
   const flag = (warn, text, tip) => flags.push(`<span class="fflag ${warn ? "warn" : "ok"}" title="${esc(tip)}">${warn ? "⚠ " : ""}${text}</span>`);
@@ -622,6 +634,7 @@ async function renderStock(sym) {
     : '<div class="empty">No tagged filings in the last 120 days.</div>') + "</div>";
   out.innerHTML = h;
   wireWatchButton(sym, fname);
+  drawQTrend(fund);
   if (res.length) table($("#stRes"), "stres", [{ key: "qe", label: "Quarter", l: 1, f: (r) => qLabel(r.qe) }, ...RES_COLS.slice(1, 11)], res, ["qe", false]);
   if (hold.length) table($("#stHold"), "sthold", H_COLS.slice(1), hold, ["qe", false]);
   if (sd.length) table($("#stDeals"), "stdeals", [
@@ -633,6 +646,25 @@ async function renderStock(sym) {
     { key: "price", label: "Price ₹", f: (r) => inr(r.price, 2) },
     { key: "kind", label: "Type", l: 1, f: (r) => esc(r.kind) }], sd, ["date", false]);
 }
+
+function drawQTrend(f) {
+  if (!f || !(f.qs || []).length || !$("#qsRev")) return;
+  const dates = f.qs.map((r) => r.e), calc = Object.fromEntries(f.qs.map((r) => [r.e, r.calc]));
+  const narrow = ($("#qsRev").clientWidth || 600) < 520;
+  // narrow screens: Q1'26 and 2.8L / 13.9k so six bars' labels don't collide
+  const xfmt = (e) => (narrow ? qLabel(e).replace(" FY", "'") : qLabel(e)) + (calc[e] ? "*" : "");
+  const tfmt = (e) => `${qLabel(e)} (quarter to ${shortDate(e)})${calc[e] ? " · calculated" : ""}`;
+  const short = (v) => Math.abs(v) >= 1e5 ? inr(v / 1e5, 1) + "L" : Math.abs(v) >= 1e4 ? inr(v / 1e3, 1) + "k" : cr(v);
+  const money = (v) => v === 0 ? "0" : narrow ? short(v) : cr(v);
+  const opts = { dates, kind: "bar", labels: true, fmt: money, xfmt, tfmt };
+  svgChart($("#qsRev"), { ...opts, series: [{ name: "Sales", color: "--c1", values: f.qs.map((r) => r.rev) }] });
+  svgChart($("#qsPat"), { ...opts, series: [{ name: "PAT", values: f.qs.map((r) => r.pat) }] });
+}
+let qResize;
+window.addEventListener("resize", () => { clearTimeout(qResize); qResize = setTimeout(() => {
+  const sym = decodeURIComponent(location.hash.split("/")[1] || "").toUpperCase();
+  if (currentTab() === "stock" && sym && $("#qsRev")) loadFund(sym).then(drawQTrend);
+}, 200); });
 
 // ---------- sign-in (same email/password as the F&O Desk) ----------
 const CFG = window.FD_CONFIG || {};
