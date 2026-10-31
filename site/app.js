@@ -142,7 +142,7 @@ async function renderFlowsCompact() {
 // tiny SVG chart: one y-axis, crosshair tooltip
 const compact = (v) => Math.abs(v) >= 1e7 ? inr(v / 1e7, 1) + " Cr" : Math.abs(v) >= 1e5 ? inr(v / 1e5, Math.abs(v) >= 1e6 ? 0 : 1) + " L" : inr(v);
 function svgChart(el, { dates, series, kind = "line", fmt = (v) => inr(v), zero = false, yMin = null, yMax = null,
-                         xfmt = shortDay, tfmt = niceDate, labels = false }) {
+                         xfmt = shortDay, tfmt = niceDate, labels = false, points = false }) {
   const W = Math.max(280, el.clientWidth || 560), H = 190, m = { l: 52, r: 14, t: labels ? 22 : 10, b: 24 };
   const iw = W - m.l - m.r, ih = H - m.t - m.b, n = dates.length;
   let vals = series.flatMap((s) => s.values.filter((v) => v != null));
@@ -181,6 +181,7 @@ function svgChart(el, { dates, series, kind = "line", fmt = (v) => inr(v), zero 
       let d = "", pen = false;
       s.values.forEach((v, i) => { if (v == null) { pen = false; return; } d += `${pen ? "L" : "M"}${x(i).toFixed(1)},${y(v).toFixed(1)}`; pen = true; });
       marks += `<path d="${d}" class="ln" style="stroke:var(${s.color || "--c1"})"/>`;
+      if (points) s.values.forEach((v, i) => { if (v != null) marks += `<circle cx="${x(i)}" cy="${y(v)}" r="4" style="fill:var(${s.color || "--c1"})" class="endpt"/>`; });
       const li = s.values.map((v, i) => v == null ? -1 : i).filter((i) => i >= 0).pop();
       if (li != null && li >= 0) marks += `<circle cx="${x(li)}" cy="${y(s.values[li])}" r="3.5" style="fill:var(${s.color || "--c1"})" class="endpt"/>`;
     }
@@ -573,6 +574,8 @@ function fundSection(sym, f) {
     h += `<div class="cgrid qtrend">
       <div class="ccard"><div class="chead"><h4>Sales · ₹ cr</h4></div><p class="csub">Last ${f.qs.length} quarters${calc ? " · * calculated from yearly totals" : ""}</p><div class="chart" id="qsRev"></div></div>
       <div class="ccard"><div class="chead"><h4>Net profit (PAT) · ₹ cr</h4></div><p class="csub">Last ${f.qs.length} quarters, ${esc((f.nat || "").toLowerCase())}</p><div class="chart" id="qsPat"></div></div>
+      <div class="ccard"><div class="chead"><h4>Margins · %</h4><div class="legend">${f.finco ? "" : '<span><i style="background:var(--c1)"></i>OPM</span>'}<span><i style="background:var(--c2)"></i>NPM</span></div></div>
+        <p class="csub">${f.finco ? "Net profit ÷ income. Operating margin isn't meaningful for banks, NBFCs and insurers." : "OPM = operating profit ÷ sales · NPM = net profit ÷ sales"}</p><div class="chart" id="qsMargin"></div></div>
     </div>`;
   }
 
@@ -659,6 +662,12 @@ function drawQTrend(f) {
   const opts = { dates, kind: "bar", labels: true, fmt: money, xfmt, tfmt };
   svgChart($("#qsRev"), { ...opts, series: [{ name: "Sales", color: "--c1", values: f.qs.map((r) => r.rev) }] });
   svgChart($("#qsPat"), { ...opts, series: [{ name: "PAT", values: f.qs.map((r) => r.pat) }] });
+  const pctOf = (a, b) => a == null || !b ? null : Math.round(a / b * 1000) / 10;
+  const mseries = [];
+  if (!f.finco) mseries.push({ name: "OPM", color: "--c1", values: f.qs.map((r) => pctOf(r.op, r.rev)) });
+  mseries.push({ name: "NPM", color: "--c2", values: f.qs.map((r) => pctOf(r.pat, r.rev)) });
+  svgChart($("#qsMargin"), { dates, kind: "line", points: true, zero: mseries.some((x) => x.values.some((v) => v < 0)),
+    fmt: (v) => inr(v, 1) + "%", xfmt, tfmt, series: mseries });
 }
 let qResize;
 window.addEventListener("resize", () => { clearTimeout(qResize); qResize = setTimeout(() => {
