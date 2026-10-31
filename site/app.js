@@ -393,6 +393,7 @@ const RES_COLS = [
   { key: "pat_yoy", label: "PAT YoY", f: (r) => pct(r.pat_yoy) },
   { key: "pat_qoq", label: "PAT QoQ", f: (r) => pct(r.pat_qoq) },
   { key: "eps", label: "EPS ₹", f: (r) => r.eps == null ? "–" : inr(r.eps, 2) },
+  { key: "pe", label: "P/E", f: (r) => peCell(r.pe), sv: (r) => r.pe == null || r.pe === -1 ? null : r.pe },
   { key: "verdict", label: "Verdict", f: (r) => r.verdict ? `<span class="verdict v-${r.verdict}">${r.verdict}</span>` : '<span class="dim">–</span>' },
   { key: "nature", label: "Basis", l: 1, f: (r) => `<span class="dim">${esc((r.nature || "").slice(0, 4))}${r.revision ? " · rev" : ""}</span>` },
   { key: "filed", label: "Filed", l: 1, f: (r) => `<span class="dim">${esc(String(r.filed || "").slice(0, 11))}</span>`, sv: (r) => String(r.filed || "") },
@@ -406,11 +407,15 @@ async function renderResults(day) {
   if (S.resScope === "day") rows = day.results || [];
   else rows = Object.values((await loadSeason("results", S.resScope)).rows || {});
   const total = rows.length;
+  const funds = {};
+  await Promise.all(rows.map(async (r) => { funds[r.sym] = await loadFund(r.sym).catch(() => null); }));
+  rows = rows.map((r) => ({ ...r, pe: peOf(r.sym, funds[r.sym]) }));
   const cap = +$("#resCap").value, v = $("#resVerdict").value, q = $("#resQ").value.trim().toLowerCase();
   rows = rows.filter((r) => (!cap || (r.mcap ?? 0) >= cap) && (!v || r.verdict === v) &&
     (!q || r.sym.toLowerCase().includes(q) || (r.name || "").toLowerCase().includes(q)));
   $("#resNote").innerHTML = `${rows.length} of ${total} companies. Quarter figures in ₹ crore; consolidated where filed, else standalone. ` +
-    `Verdict: <b>Strong</b> = PAT YoY ≥ 15% and revenue YoY ≥ 10%; <b>Weak</b> = PAT or revenue down YoY.` +
+    `Verdict: <b>Strong</b> = PAT YoY ≥ 15% and revenue YoY ≥ 10%; <b>Weak</b> = PAT or revenue down YoY. ` +
+    `P/E = market cap at the latest close ÷ net profit of the last 4 quarters (blank until 4 quarters are on file).` +
     (cap ? " Companies without a known market cap are hidden by the MCap filter." : "");
   table($("#resTable"), "res", RES_COLS, rows, ["pat_yoy", false]);
 }
@@ -460,12 +465,28 @@ function renderDeals(day) {
 
 // ---------- Stock fundamentals ----------
 S.fund = {}; S.prices = null;
+const fundLoads = {};
 async function loadFund(sym) {
   const c = /^[A-Z]/i.test(sym) ? sym[0].toUpperCase() : "0";
-  if (!(c in S.fund)) S.fund[c] = await getJSON(`data/fund/${c}.json`).catch(() => ({}));
-  if (!S.prices) S.prices = await getJSON("data/fund/prices.json").catch(() => ({ p: {} }));
+  // share one download per file even when many rows ask at once
+  fundLoads[c] = fundLoads[c] || getJSON(`data/fund/${c}.json`).catch(() => ({}));
+  fundLoads.prices = fundLoads.prices || getJSON("data/fund/prices.json").catch(() => ({ p: {} }));
+  S.fund[c] = await fundLoads[c];
+  S.prices = await fundLoads.prices;
   return S.fund[c][sym] || null;
 }
+// P/E = market cap / 12-month net profit (price / 12-month EPS when the share count is missing).
+// Returns -1 for a 12-month loss, null when there aren't 4 quarters or no price.
+function peOf(sym, f) {
+  const px = S.prices?.p?.[sym], t = (f || {}).ttm || {};
+  if (!f || !px) return null;
+  const mcap = f.sh ? f.sh * px / 1e7 : null;
+  const base = mcap ? t.pat : t.eps;
+  if (base == null) return null;
+  if (base <= 0) return -1;
+  return mcap ? mcap / t.pat : px / t.eps;
+}
+const peCell = (v) => v === -1 ? '<span class="down">Loss</span>' : num1(v);
 const ratio = (a, b) => (a == null || b == null || b === 0) ? null : a / b;
 const grow = (a, b) => (a == null || b == null || b === 0) ? null : (a - b) / Math.abs(b) * 100;
 const num1 = (v, d = 1) => v == null || !isFinite(v) ? '<span class="dim">–</span>' : inr(v, d);
