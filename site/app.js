@@ -814,75 +814,70 @@ async function init() {
 init();
 
 
-// ---------- manual refresh ----------
+// ---------- manual refresh (same way as the F&O Desk's "Run scan") ----------
+// The button adds a row to scan_requests; the database starts the GitHub job.
+// Progress is read from GitHub's public run list, so no GitHub login is needed.
 const GH = { repo: "vs916491-maker/NSE-fundamentals-desk", wf: "collect.yml" };
-const GH_RUN_PAGE = `https://github.com/${GH.repo}/actions/workflows/${GH.wf}`;
 const ls = { get: (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } },
              set: (k, v) => { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} } };
 let refreshTimer = null;
 const hhmm = (t) => new Date(t).toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" });
 
-async function gh(path, opts = {}) {
-  const tok = ls.get("ghToken");
-  const r = await fetch(`https://api.github.com/repos/${GH.repo}${path}`, {
-    ...opts, headers: { Accept: "application/vnd.github+json", ...(tok ? { Authorization: `Bearer ${tok}` } : {}), ...(opts.headers || {}) } });
-  if (!r.ok && r.status !== 204) throw new Error(r.status === 401 || r.status === 403 ? "GitHub refused the token (check it has Actions: Read and write on this repo, and hasn't expired)" : `GitHub error ${r.status}`);
-  return r.status === 204 ? null : r.json();
-}
-
 function panel(html) { const p = $("#refreshPanel"); p.innerHTML = `<button class="rclose" aria-label="Close">×</button>${html}`; p.hidden = false;
   p.querySelector(".rclose").onclick = () => { p.hidden = true; }; }
+function setBtn(busy, title) { const b = $("#refreshBtn"); b.classList.toggle("busy", busy); b.textContent = busy ? "↻ Refreshing…" : "↻ Refresh"; b.title = title || "Refresh the data now"; }
 
 async function pollRun(since) {
   clearTimeout(refreshTimer);
+  if (Date.now() - new Date(since) > 45 * 60000) { ls.set("refreshSince", null); setBtn(false); return; }
   try {
-    const d = await gh(`/actions/workflows/${GH.wf}/runs?event=workflow_dispatch&per_page=3`);
-    const run = (d.workflow_runs || []).find((r) => new Date(r.created_at) >= new Date(since) - 60000);
-    const btn = $("#refreshBtn");
+    const r = await fetch(`https://api.github.com/repos/${GH.repo}/actions/workflows/${GH.wf}/runs?event=workflow_dispatch&per_page=3`,
+      { headers: { Accept: "application/vnd.github+json" } });
+    if (!r.ok) throw new Error(`GitHub status ${r.status}`);
+    const run = ((await r.json()).workflow_runs || []).find((x) => new Date(x.created_at) >= new Date(since) - 60000);
     if (!run || run.status !== "completed") {
-      btn.textContent = "↻ Refreshing…"; btn.classList.add("busy");
-      btn.title = run ? `Running since ${hhmm(run.run_started_at || run.created_at)} · takes about 10 minutes` : "Starting…";
-      refreshTimer = setTimeout(() => pollRun(since), 20000);
+      setBtn(true, run ? `Running since ${hhmm(run.run_started_at || run.created_at)} · takes about 10 minutes` : "Starting…");
+      refreshTimer = setTimeout(() => pollRun(since), 30000);
       return;
     }
-    btn.classList.remove("busy"); btn.textContent = "↻ Refresh"; ls.set("refreshSince", null);
+    ls.set("refreshSince", null); setBtn(false);
     if (run.conclusion === "success") {
-      // the site is published by a second job right after; give it a moment
       panel(`<b>Refresh finished at ${hhmm(run.updated_at)}.</b><p>The new data is live within a minute.</p><button class="rbtn" id="rReload">Reload now</button>`);
       $("#rReload").onclick = () => location.reload();
     } else {
-      panel(`<b>The refresh did not finish (${esc(run.conclusion)}).</b><p><a href="${esc(run.html_url)}" target="_blank" rel="noopener">See what happened on GitHub ↗</a></p>`);
+      panel(`<b>The refresh did not finish (${esc(run.conclusion)}).</b><p><a href="${esc(run.html_url)}" target="_blank" rel="noopener">Details on GitHub ↗</a></p>`);
     }
   } catch (e) {
-    $("#refreshBtn").classList.remove("busy"); $("#refreshBtn").textContent = "↻ Refresh";
-    panel(`<b>Could not check the refresh.</b><p>${esc(e.message)}</p>`);
+    // can't see progress (e.g. GitHub's hourly limit for anonymous checks); the refresh itself still runs
+    refreshTimer = setTimeout(() => pollRun(since), 60000);
   }
 }
 
 async function startRefresh() {
+  const ses = await session();
+  if (!ses) { panel(`<b>Sign in first.</b><p>The Refresh button works after signing in with your F&O Desk email and password.</p>`); return; }
+  setBtn(true, "Starting…");
   const since = new Date().toISOString();
-  try {
-    await gh(`/actions/workflows/${GH.wf}/dispatches`, { method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ref: "main", inputs: { args: "--auto --again" } }) });
-  } catch (e) { panel(`<b>Refresh not started.</b><p>${esc(e.message)}</p><button class="rbtn ghost" id="rForget">Remove saved token</button>`);
-    $("#rForget").onclick = () => { ls.set("ghToken", null); $("#refreshPanel").hidden = true; }; return; }
+  const { data, error } = await sb.from("scan_requests").insert({ kind: "fundamentals" }).select("status").single();
+  if (error) {
+    setBtn(false);
+    panel(`<b>Refresh not started.</b><p>${/kind_check|violates check/i.test(error.message)
+      ? "The database doesn't know this button yet: run <code>supabase/002_refresh_button.sql</code> once in Supabase → SQL Editor."
+      : esc(error.message)}</p>`);
+    return;
+  }
+  if (data && data.status === "skipped") {
+    panel(`<b>A refresh started in the last 10 minutes.</b><p>It's still running; the button shows its progress.</p>`);
+    const prev = ls.get("refreshSince"); pollRun(prev || new Date(Date.now() - 10 * 60000).toISOString()); return;
+  }
   ls.set("refreshSince", since);
-  panel(`<b>Refresh started.</b><p>It takes about 10 minutes. Before 6:30 PM it's the partial (2 PM-style) refresh; after that it's the end-of-day refresh with the email. The button shows progress.</p>`);
+  panel(`<b>Refresh started.</b><p>It takes about 10 minutes. Before 6:30 PM it's the partial (2 PM) refresh; after that it's the end-of-day refresh with the email. The button shows progress.</p>`);
   pollRun(since);
-}
-
-function refreshSetup() {
-  panel(`<b>Refresh now</b>
-    <p><a class="rbtn" href="${GH_RUN_PAGE}" target="_blank" rel="noopener">Open GitHub → Run workflow ↗</a></p>
-    <p class="dim">On that page press <i>Run workflow</i>, then the green <i>Run workflow</i> button.</p>
-    <hr><b>Or make this button one-click</b>
-    <p>Paste a GitHub fine-grained token with access to only this repository and <i>Actions: Read and write</i>. It is saved in this browser only.</p>
-    <input id="rTok" type="password" placeholder="github_pat_…" autocomplete="off"><button class="rbtn" id="rSave">Save and refresh</button>`);
-  $("#rSave").onclick = () => { const t = $("#rTok").value.trim(); if (!t) return; ls.set("ghToken", t); startRefresh(); };
 }
 
 $("#refreshBtn").onclick = () => {
   if ($("#refreshBtn").classList.contains("busy")) { panel(`<b>Refresh in progress.</b><p>${esc($("#refreshBtn").title)}</p>`); return; }
-  ls.get("ghToken") ? startRefresh() : refreshSetup();
+  startRefresh();
 };
-if (ls.get("refreshSince") && ls.get("ghToken")) pollRun(ls.get("refreshSince"));
+ls.set("ghToken", null);  // the earlier GitHub-token approach is no longer used
+if (ls.get("refreshSince")) pollRun(ls.get("refreshSince"));
