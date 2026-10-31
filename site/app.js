@@ -393,7 +393,8 @@ const RES_COLS = [
   { key: "pat_yoy", label: "PAT YoY", f: (r) => pct(r.pat_yoy) },
   { key: "pat_qoq", label: "PAT QoQ", f: (r) => pct(r.pat_qoq) },
   { key: "eps", label: "EPS ₹", f: (r) => r.eps == null ? "–" : inr(r.eps, 2) },
-  { key: "pe", label: "P/E", f: (r) => peCell(r.pe), sv: (r) => r.pe == null || r.pe === -1 ? null : r.pe },
+  { key: "pe", label: "TTM P/E", f: (r) => peCell(r.pe), sv: (r) => r.pe == null || r.pe === -1 ? null : r.pe },
+  { key: "rpe", label: "Run-rate P/E", f: (r) => peCell(r.rpe), sv: (r) => r.rpe == null || r.rpe === -1 ? null : r.rpe },
   { key: "verdict", label: "Verdict", f: (r) => r.verdict ? `<span class="verdict v-${r.verdict}">${r.verdict}</span>` : '<span class="dim">–</span>' },
   { key: "nature", label: "Basis", l: 1, f: (r) => `<span class="dim">${esc((r.nature || "").slice(0, 4))}${r.revision ? " · rev" : ""}</span>` },
   { key: "filed", label: "Filed", l: 1, f: (r) => `<span class="dim">${esc(String(r.filed || "").slice(0, 11))}</span>`, sv: (r) => String(r.filed || "") },
@@ -409,13 +410,14 @@ async function renderResults(day) {
   const total = rows.length;
   const funds = {};
   await Promise.all(rows.map(async (r) => { funds[r.sym] = await loadFund(r.sym).catch(() => null); }));
-  rows = rows.map((r) => ({ ...r, pe: peOf(r.sym, funds[r.sym]) }));
+  rows = rows.map((r) => ({ ...r, pe: peOf(r.sym, funds[r.sym]), rpe: runRatePe(r.sym, funds[r.sym], r.pat, r.eps) }));
   const cap = +$("#resCap").value, v = $("#resVerdict").value, q = $("#resQ").value.trim().toLowerCase();
   rows = rows.filter((r) => (!cap || (r.mcap ?? 0) >= cap) && (!v || r.verdict === v) &&
     (!q || r.sym.toLowerCase().includes(q) || (r.name || "").toLowerCase().includes(q)));
   $("#resNote").innerHTML = `${rows.length} of ${total} companies. Quarter figures in ₹ crore; consolidated where filed, else standalone. ` +
     `Verdict: <b>Strong</b> = PAT YoY ≥ 15% and revenue YoY ≥ 10%; <b>Weak</b> = PAT or revenue down YoY. ` +
-    `P/E = market cap at the latest close ÷ net profit of the last 4 quarters (blank until 4 quarters are on file).` +
+    `<b>TTM P/E</b> = market cap at the latest close ÷ net profit of the last 4 quarters (blank until 4 quarters are on file). ` +
+    `<b>Run-rate P/E</b> = market cap ÷ (this quarter's profit × 4), a rough forward view; seasonal businesses and one-off gains distort it.` +
     (cap ? " Companies without a known market cap are hidden by the MCap filter." : "");
   table($("#resTable"), "res", RES_COLS, rows, ["pat_yoy", false]);
 }
@@ -487,6 +489,16 @@ function peOf(sym, f) {
   return mcap ? mcap / t.pat : px / t.eps;
 }
 const peCell = (v) => v === -1 ? '<span class="down">Loss</span>' : num1(v);
+// Run-rate P/E = market cap / (this quarter's profit x 4): a simple forward-looking proxy
+function runRatePe(sym, f, pat, eps) {
+  const px = S.prices?.p?.[sym];
+  if (!px) return null;
+  const mcap = f && f.sh ? f.sh * px / 1e7 : null;
+  const base = mcap ? pat : eps;
+  if (base == null) return null;
+  if (base <= 0) return -1;
+  return mcap ? mcap / (pat * 4) : px / (eps * 4);
+}
 const ratio = (a, b) => (a == null || b == null || b === 0) ? null : a / b;
 const grow = (a, b) => (a == null || b == null || b === 0) ? null : (a - b) / Math.abs(b) * 100;
 const num1 = (v, d = 1) => v == null || !isFinite(v) ? '<span class="dim">–</span>' : inr(v, d);
