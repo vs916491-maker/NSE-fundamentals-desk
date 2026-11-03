@@ -31,7 +31,14 @@ async function getJSON(path) {
   return r.json();
 }
 /* TradingView daily chart for an NSE symbol (opens in a new tab, in your saved TradingView layout) */
-const tvHref = (s) => `https://www.tradingview.com/chart/?symbol=${encodeURIComponent("NSE:" + String(s).toUpperCase().replace(/[&-]/g, "_"))}&interval=D`;
+// Phones/tablets: TradingView's full chart page (/chart/) often spins forever in mobile browsers,
+// so link to the lighter symbol page there (it has a chart, a "full chart" button, and opens the app if installed).
+const TV_MOBILE = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) ||
+  (window.matchMedia && matchMedia("(pointer: coarse)").matches && Math.min(screen.width, screen.height) < 900);
+const tvSym = (s) => String(s).toUpperCase().replace(/[&-]/g, "_");
+const tvHref = (s) => TV_MOBILE
+  ? `https://www.tradingview.com/symbols/NSE-${encodeURIComponent(tvSym(s))}/`
+  : `https://www.tradingview.com/chart/?symbol=${encodeURIComponent("NSE:" + tvSym(s))}&interval=D`;
 const CHART_SVG = '<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><line x1="4" y1="2" x2="4" y2="14" stroke="currentColor" stroke-width="1.4"/><rect x="2.2" y="5" width="3.6" height="6" rx=".6" fill="currentColor"/><line x1="11" y1="1.5" x2="11" y2="12.5" stroke="currentColor" stroke-width="1.4"/><rect x="9.2" y="3.5" width="3.6" height="6" rx=".6" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>';
 const chartLink = (s) => s ? `<a class="chart-link" href="${tvHref(s)}" target="_blank" rel="noopener" title="Open ${esc(s)} chart on TradingView" aria-label="Open ${esc(s)} chart on TradingView">${CHART_SVG}</a>` : "";
 const symLink = (s) => `<span class="sym" data-sym="${esc(s)}">${esc(s)}</span>${chartLink(s)}`;
