@@ -175,7 +175,9 @@ def fetch_all(session):
                     ts = parsedate_to_datetime(it["date"]).astimezone(timezone.utc)
                 except Exception:
                     continue
-                desc = "" if srcname is None else clean(it["desc"])[:220]
+                desc = "" if srcname is None else clean(it["desc"])
+                if len(desc) > 220:  # end on a whole word
+                    desc = desc[:220].rsplit(" ", 1)[0].rstrip(",;:-") + "…"
                 items.append({"t": title, "u": it["link"].strip(), "src": src, "ts": ts.isoformat(timespec="minutes"),
                               "desc": desc, "feed_group": group})
                 got += 1
