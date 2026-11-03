@@ -32,6 +32,7 @@
 
 <nav class="tabs" role="tablist">
   <a href="#today" data-tab="today">Today</a>
+  <a href="#news" data-tab="news">Market News</a>
   <a href="#fii" data-tab="fii">FII/DII Activity</a>
   <a href="#adding" data-tab="adding">FII/DII Adding</a>
   <a href="#results" data-tab="results">Results</a>
@@ -51,6 +52,16 @@
       <label class="chk"><input type="checkbox" id="showOther"> Show routine filings</label>
     </div>
     <div id="feed" class="feed"></div>
+  </section>
+
+  <section id="tab-news" class="tab" hidden>
+    <div class="toolbar">
+      <div class="seg" id="newsView"></div>
+      <div class="seg" id="newsGroup"></div>
+      <input id="newsQ" type="search" placeholder="Search headlines" autocomplete="off">
+    </div>
+    <p class="note" id="newsNote"></p>
+    <div id="newsOut"></div>
   </section>
 
   <section id="tab-fii" class="tab" hidden>

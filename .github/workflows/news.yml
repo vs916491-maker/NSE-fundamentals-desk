@@ -1,0 +1,68 @@
+name: news
+
+# Market News: refreshes site/data/news.json every hour, 8 AM - 11 PM IST.
+# Supabase starts it on time (supabase/003_news_schedule.sql); the schedule below is only a
+# fallback, and the script skips a run if the news was updated in the last 40 minutes.
+on:
+  schedule:
+    - cron: "35 2-17 * * *"
+  push:
+    branches: [main]
+    paths: ["collector/news.py"]
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Refresh even if updated in the last 40 minutes"
+        required: false
+        default: "false"
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: news
+  cancel-in-progress: false
+
+jobs:
+  news:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install "curl_cffi>=0.7"
+      - name: Collect news
+        run: python collector/news.py ${{ (github.event_name == 'push' || github.event.inputs.force == 'true') && '--force' || '' }}
+      - name: Commit
+        id: commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add site/data/news.json
+          if git diff --cached --quiet; then echo "changed=false" >> "$GITHUB_OUTPUT"; exit 0; fi
+          git commit -qm "news $(TZ=Asia/Kolkata date +'%Y-%m-%d %H:%M') IST"
+          for i in 1 2 3 4; do git pull -q --rebase -X theirs origin main && git push -q && break; sleep 6; done
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+      - name: Stamp file versions
+        if: steps.commit.outputs.changed == 'true'
+        run: sed -i "s/__V__/${GITHUB_SHA::7}/g" site/index.html
+      - uses: actions/upload-pages-artifact@v3
+        if: steps.commit.outputs.changed == 'true'
+        with:
+          path: site
+
+  deploy:
+    needs: news
+    if: needs.news.result == 'success'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+        continue-on-error: true

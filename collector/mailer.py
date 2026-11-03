@@ -79,6 +79,23 @@ def flows_block(day):
     return section("🌐 FII / DII activity", html_)
 
 
+def news_block():
+    try:
+        import json
+        here = os.path.dirname(os.path.abspath(__file__))
+        with open(os.path.join(here, "..", "site", "data", "news.json")) as f:
+            items = [n for n in json.load(f).get("items", []) if n.get("key")][:5]
+    except Exception:
+        return ""
+    if not items:
+        return ""
+    rows = "".join(
+        f'<li style="margin:0 0 7px"><a href="{e(n["u"])}" style="color:#1f4fd1;text-decoration:none">{e(n["t"])}</a>'
+        f'<br><span style="color:{GREY};font-size:12px">{e(n["group"])} · {e(", ".join(n.get("themes", [])[:2]))} · {e(n["src"])}</span></li>'
+        for n in items)
+    return section("📰 Market news: key drivers", f'<ul style="padding-left:18px;margin:0;font-size:14px">{rows}</ul>')
+
+
 def build(day):
     d = day["date"]
     ann = day.get("announcements", [])
@@ -144,6 +161,9 @@ def build(day):
         parts.append(section(f"💼 Institutional bulk/block deals ({len(inst)})", table(["Stock", "Client", "Type", "Side", "₹cr"], rows)))
 
     parts.insert(0, flows_block(day))
+    nb = news_block()
+    if nb:
+        parts.insert(1, nb)
     if len(parts) == 1:
         parts.append("<p>No tagged events today.</p>")
 

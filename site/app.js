@@ -7,7 +7,7 @@ const TAGS = [
 const S = {
   index: null, date: null, days: {}, seasons: { results: {}, holdings: {} }, search: null,
   tag: null, resScope: "day", holdScope: "day", sort: {},
-  flows: null, inst: null, addWin: 30, addType: "", fiiRange: 130,
+  flows: null, inst: null, addWin: 30, addType: "", fiiRange: 130, news: null, newsView: "key", newsGroup: "",
 };
 const TYPE_LABEL = { FII: "FII", DII: "DII", Fund: "AIF/PMS" };
 const badge = (t) => t ? `<span class="badge b-${t}">${TYPE_LABEL[t] || t}</span>` : "";
@@ -270,6 +270,46 @@ async function renderFii() {
 }
 let fiiResize;
 window.addEventListener("resize", () => { clearTimeout(fiiResize); fiiResize = setTimeout(() => { if (currentTab() === "fii") render(); }, 200); });
+
+// ---------- Market News ----------
+const NEWS_GROUPS = [["", "All"], ["India economy", "India economy"], ["India markets", "India markets"], ["US & global", "US & global"]];
+const GROUP_CLS = { "India economy": "g-eco", "India markets": "g-mkt", "US & global": "g-glb" };
+function ago(iso) {
+  const m = Math.max(0, Math.round((Date.now() - new Date(iso)) / 60000));
+  if (m < 60) return `${m} min ago`;
+  const h = Math.round(m / 60);
+  if (h < 24) return `${h} h ago`;
+  return new Date(iso).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+}
+async function renderNews() {
+  if (!S.news) S.news = await getJSON(`data/news.json?${Math.floor(Date.now() / 600000)}`).catch(() => null);
+  $("#newsView").innerHTML = [["key", "Key drivers"], ["all", "All headlines"]].map(([v, l]) => `<button data-v="${v}" class="${S.newsView === v ? "on" : ""}">${l}</button>`).join("");
+  $("#newsGroup").innerHTML = NEWS_GROUPS.map(([v, l]) => `<button data-g="${v}" class="${S.newsGroup === v ? "on" : ""}">${l}</button>`).join("");
+  $("#newsView").querySelectorAll("button").forEach((b) => b.onclick = () => { S.newsView = b.dataset.v; render(); });
+  $("#newsGroup").querySelectorAll("button").forEach((b) => b.onclick = () => { S.newsGroup = b.dataset.g; render(); });
+  const out = $("#newsOut");
+  if (!S.news || !S.news.items) { out.innerHTML = '<div class="empty">No news collected yet. The first update runs within the hour.</div>'; $("#newsNote").textContent = ""; return; }
+  const q = $("#newsQ").value.trim().toLowerCase();
+  let items = S.news.items.filter((n) => (!S.newsGroup || n.group === S.newsGroup) && (!q || n.t.toLowerCase().includes(q) || (n.themes || []).join(" ").toLowerCase().includes(q)));
+  if (S.newsView === "key") items = items.filter((n) => n.key);
+  else items = items.slice().sort((a, b) => String(b.ts).localeCompare(String(a.ts)));
+  $("#newsNote").innerHTML = `Updated ${ago(S.news.updated)} · refreshed every hour, 8 AM – 11 PM. ` +
+    (S.newsView === "key" ? "Key drivers: headlines about rates, inflation, growth, flows, currency, crude, US markets and similar, ranked by importance, how many outlets carry them, and how recent they are. Stock tips are left out." : "Every business headline from the last 48 hours, newest first.") +
+    " Headlines link to the publisher's site.";
+  if (!items.length) { out.innerHTML = '<div class="empty">Nothing matches.</div>'; return; }
+  if (S.newsView === "key") {
+    out.innerHTML = `<div class="nlist">${items.map((n) => `<article class="ncard">
+      <div class="nhead"><span class="ngroup ${GROUP_CLS[n.group] || ""}">${esc(n.group)}</span>${(n.themes || []).slice(0, 3).map((t) => `<span class="ntheme">${esc(t)}</span>`).join("")}</div>
+      <a class="ntitle" href="${esc(n.u)}" target="_blank" rel="noopener">${esc(n.t)}</a>
+      ${n.desc ? `<div class="ndesc">${esc(n.desc)}</div>` : ""}
+      <div class="nmeta">${esc(n.src)} · ${ago(n.ts)}${(n.also || []).length ? ` · also: ${n.also.map(([s, u]) => `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(s)}</a>`).join(", ")}` : ""}</div>
+    </article>`).join("")}</div>`;
+  } else {
+    out.innerHTML = `<div class="nrows">${items.map((n) => `<div class="nrow">
+      <span class="ntime">${ago(n.ts)}</span><span class="ngroup ${GROUP_CLS[n.group] || ""}">${esc(n.group)}</span>
+      <a href="${esc(n.u)}" target="_blank" rel="noopener">${esc(n.t)}</a><span class="nsrc">${esc(n.src)}${n.key ? " · ★" : ""}</span></div>`).join("")}</div>`;
+  }
+}
 
 // ---------- FII/DII Adding ----------
 const ADD_COLS = [
@@ -845,6 +885,7 @@ async function render() {
     if (my !== rendering) return;
     if (tab === "today") { renderToday(day); renderFlowsCompact().catch(console.error); }
     else if (tab === "fii") await renderFii();
+    else if (tab === "news") await renderNews();
     else if (tab === "adding") await renderAdding();
     else if (tab === "results") await renderResults(day);
     else if (tab === "holdings") await renderHoldings(day);
@@ -878,7 +919,7 @@ async function init() {
   $("#dateSel").onchange = () => { S.date = $("#dateSel").value; S.tag = null; render(); };
   $("#prevDay").onclick = () => { const i = dates.indexOf(S.date); if (i < dates.length - 1) { S.date = dates[i + 1]; $("#dateSel").value = S.date; render(); } };
   $("#nextDay").onclick = () => { const i = dates.indexOf(S.date); if (i > 0) { S.date = dates[i - 1]; $("#dateSel").value = S.date; render(); } };
-  ["#todayQ", "#resQ", "#holdQ", "#dealQ", "#addQ"].forEach((s) => $(s).addEventListener("input", render));
+  ["#todayQ", "#resQ", "#holdQ", "#dealQ", "#addQ", "#newsQ"].forEach((s) => $(s).addEventListener("input", render));
   ["#showOther", "#resCap", "#resVerdict", "#holdMin", "#instOnly", "#dealSide", "#addSide", "#addMin"].forEach((s) => $(s).addEventListener("change", render));
   $("#stockQ").addEventListener("change", () => { const v = $("#stockQ").value.trim().toUpperCase(); if (v) location.hash = "#stock/" + encodeURIComponent(v); });
   document.addEventListener("click", (e) => { const s = e.target.closest(".sym"); if (s) location.hash = "#stock/" + encodeURIComponent(s.dataset.sym); });
