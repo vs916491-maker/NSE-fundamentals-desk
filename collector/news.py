@@ -16,6 +16,7 @@ log = logging.getLogger("news")
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 OUT = os.path.join(ROOT, "site", "data", "news.json")
 KEEP_HOURS = 48
+MAX_KEY = 30
 IST = timezone(timedelta(hours=5, minutes=30))
 
 
@@ -91,12 +92,16 @@ THEMES = [
     ("Big Tech & AI", "global", 1.0, r"\b(nvidia|apple|microsoft|alphabet|google|amazon|meta|tesla|palantir|openai|anthropic)\b"),
 ]
 THEMES_RX = [(n, g, w, re.compile(p, re.I)) for n, g, w, p in THEMES]
-INDIA_RX = re.compile(r"\bindia|\brbi\b|sensex|nifty|rupee|\bsebi\b|dalal|mumbai|delhi|\bnse\b|\bbse\b|crore", re.I)
+INDIA_RX = re.compile(r"\bindia|\brbi\b|sensex|nifty|rupee|\bsebi\b|dalal|mumbai|delhi|\bnse\b|\bbse\b|crore|lakh|\bgst\b|"
+                      r"sitharaman|goyal|\bfiis?\b|\bfpis?\b|\bdiis?\b|\bmcx\b", re.I)
 # stock tips and listicles are not market drivers
 NOISE_RX = re.compile(r"stocks? to (buy|watch|sell)|target,? stop[- ]loss|multibagger|should you (buy|sell)|penny stock|"
                       r"top (gainers|losers)|buy or sell|technical (view|picks)|share price (today|live)|stock picks|"
                       r"\bipo\b.{0,40}(gmp|subscription status|allotment)|horoscope|lottery|fd (interest )?rates|"
-                      r"small-cap stock|mid-cap stock|\bkya\b|hindi", re.I)
+                      r"small-cap stock|mid-cap stock|\bkya\b|hindi|prediction|support,? (and )?resistance|expiry today|"
+                      r"currency notes|how much (more )?will you earn|which banks? (give|offer)|\blive( updates|:)|"
+                      r"trade setup|market outlook today|ahead of (diwali|dhanteras)", re.I)
+GLOBAL_CTX = re.compile(r"\b(us|u\.s\.|america|europe|european|eurozone|china|japan|global|world|wall street|fed|treasury)\b", re.I)
 STOP = set("a an the of to in on for and or as at by with from is are be after amid over vs its it this that today "
            "says said may will what why how new".split())
 
@@ -200,6 +205,9 @@ def score_item(it, now):
         score += 0.5
     if group is None:
         group = it["feed_group"]
+    # an "India" theme in a story with no Indian angle but a foreign one (e.g. Europe's bond yields) is global news
+    if group != "global" and not INDIA_RX.search(text) and GLOBAL_CTX.search(text):
+        group = "global"
     # a global theme in an Indian story (e.g. crude and India's import bill) stays global; India-only themes need India
     return round(score, 2), themes, group
 
@@ -253,9 +261,12 @@ def build(raw_items, prev_items, now):
         sc += min(3.0, 0.75 * (len(sources) - 1))
         out.append({"t": lead["t"], "u": lead["u"], "src": lead["src"], "ts": max(m["ts"] for m in mem),
                     "desc": lead.get("desc", ""), "group": GROUP_LABEL[group], "themes": themes[:4], "score": round(sc, 2),
-                    "key": sc >= 3.5 and bool(themes),
+                    "key": sc >= 4.0 and bool(themes),
                     "also": [[m["src"], m["u"]] for m in mem if m is not lead and m["src"] != lead["src"]][:6]})
-    keys = sorted([o for o in out if o["key"]], key=lambda o: -o["score"])
+    keys = sorted([o for o in out if o["key"]], key=lambda o: (-o["score"], o["ts"]))
+    for o in keys[MAX_KEY:]:  # keep the key-driver list short
+        o["key"] = False
+    keys = keys[:MAX_KEY]
     rest = sorted([o for o in out if not o["key"]], key=lambda o: o["ts"], reverse=True)
     return keys + rest
 
