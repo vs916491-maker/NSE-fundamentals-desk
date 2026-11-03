@@ -99,7 +99,7 @@ NOISE_RX = re.compile(r"stocks? to (buy|watch|sell)|target,? stop[- ]loss|multib
                       r"top (gainers|losers)|buy or sell|technical (view|picks)|share price (today|live)|stock picks|"
                       r"\bipo\b.{0,40}(gmp|subscription status|allotment)|horoscope|lottery|fd (interest )?rates|"
                       r"small-cap stock|mid-cap stock|\bkya\b|hindi|prediction|support,? (and )?resistance|expiry today|"
-                      r"currency notes|how much (more )?will you earn|which banks? (give|offer)|\blive( updates|:)|"
+                      r"currency notes|rs 10, rs 20|fact check|how much (more )?will you earn|which banks? (give|offer)|\blive( updates|:)|"
                       r"trade setup|market outlook today|ahead of (diwali|dhanteras)", re.I)
 GLOBAL_CTX = re.compile(r"\b(us|u\.s\.|america|europe|european|eurozone|china|japan|global|world|wall street|fed|treasury)\b", re.I)
 STOP = set("a an the of to in on for and or as at by with from is are be after amid over vs its it this that today "
@@ -209,7 +209,8 @@ def score_item(it, now):
     if group != "global" and not INDIA_RX.search(text) and GLOBAL_CTX.search(text):
         group = "global"
     # a global theme in an Indian story (e.g. crude and India's import bill) stays global; India-only themes need India
-    return round(score, 2), themes, group
+    title_hit = any(rx.search(it["t"]) for _, _, _, rx in THEMES_RX)
+    return round(score, 2), themes, group, title_hit
 
 
 def cluster(items):
@@ -254,14 +255,15 @@ def build(raw_items, prev_items, now):
                 sources.append(m["src"])
         # lead: a top-tier source if there is one, else the earliest report
         lead = sorted(mem, key=lambda m: (m["src"] not in TIER1, m["ts"]))[0]
-        sc, themes, group = score_item(lead, now)
+        sc, themes, group, title_hit = score_item(lead, now)
         for m in mem:  # themes found in any version of the story count
-            _, th, _ = score_item(m, now)
+            _, th, _, th_hit = score_item(m, now)
             themes += [t for t in th if t not in themes]
+            title_hit = title_hit or th_hit
         sc += min(3.0, 0.75 * (len(sources) - 1))
         out.append({"t": lead["t"], "u": lead["u"], "src": lead["src"], "ts": max(m["ts"] for m in mem),
                     "desc": lead.get("desc", ""), "group": GROUP_LABEL[group], "themes": themes[:4], "score": round(sc, 2),
-                    "key": sc >= 4.0 and bool(themes),
+                    "key": sc >= 4.0 and title_hit,
                     "also": [[m["src"], m["u"]] for m in mem if m is not lead and m["src"] != lead["src"]][:6]})
     keys = sorted([o for o in out if o["key"]], key=lambda o: (-o["score"], o["ts"]))
     for o in keys[MAX_KEY:]:  # keep the key-driver list short
