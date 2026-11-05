@@ -980,6 +980,25 @@ function recordHtml(rec, asOf) {
     <div class="tablewrap"><table class="grid"><thead><tr><th class="l">Stock</th><th class="l">Theme</th><th>First</th><th>Days</th><th>Entry ₹</th><th>Return</th><th>Nifty 500</th><th>Excess</th><th class="l">Now</th></tr></thead><tbody>${ent}</tbody></table></div></details>`;
 }
 
+// A second horizontal scrollbar above a wide table, kept in step with the table's own one at the bottom
+function topScroll(bar, wrap) {
+  const size = () => {
+    bar.firstElementChild.style.width = wrap.scrollWidth + "px";
+    bar.hidden = wrap.scrollWidth <= wrap.clientWidth + 1;
+    bar.scrollLeft = wrap.scrollLeft;
+  };
+  if (!bar.dataset.on) {
+    bar.dataset.on = "1";
+    let lock = false;
+    const sync = (from, to) => from.addEventListener("scroll", () => {
+      if (lock) return; lock = true; to.scrollLeft = from.scrollLeft; requestAnimationFrame(() => { lock = false; });
+    });
+    sync(bar, wrap); sync(wrap, bar);
+    window.addEventListener("resize", size);
+  }
+  size();
+}
+
 async function renderIdeas() {
   const [d, ss] = await Promise.all([loadIdeas(), loadSS()]);
   if (!d) { $("#ideasTop").innerHTML = '<div class="empty">No ideas yet: they are built with the end-of-day refresh.</div>'; return; }
@@ -1018,6 +1037,7 @@ async function renderIdeas() {
     ` Click a symbol for its filings and fundamentals; the chart icon opens TradingView.`;
   table($("#ideaTable"), "ideas", IDEA_COLS, rows, ["score", false]);
   $("#ideaTable").querySelectorAll("tbody tr").forEach((tr, i) => { if (newSet.has(tr.querySelector(".sym")?.dataset.sym)) tr.classList.add("newrow"); });
+  topScroll($("#ideaScroll"), $("#ideaWrap"));
   $("#ideaRecord").innerHTML = recordHtml(d.record, d.as_of);
 }
 
