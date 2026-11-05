@@ -11,12 +11,20 @@ different theme or to point a theme at another Sector Strength index (column ss_
 import csv
 import logging
 import os
+import re
 import time
 from datetime import date
 
 log = logging.getLogger("industry")
 HERE = os.path.dirname(os.path.abspath(__file__))
 RETRY_DAYS = 30
+
+
+def norm(name):
+    """NSE spells the same industry with and without commas and spaces around dashes."""
+    t = (name or "").lower().replace("–", "-").replace(",", " ")
+    t = re.sub(r"\s*-\s*", "-", t)
+    return re.sub(r"\s+", " ", t).strip()
 
 
 def load_themes(path=os.path.join(HERE, "themes.csv")):
@@ -27,7 +35,7 @@ def load_themes(path=os.path.join(HERE, "themes.csv")):
             names = {m.strip() for m in (r.get("matches") or "").split("|") if m.strip()}
             rows.append((r["theme"].strip(), (r.get("ss_index") or "").strip(), names))
             for m in names:
-                lookup.setdefault(m.lower(), r["theme"].strip())
+                lookup.setdefault(norm(m), r["theme"].strip())
     return rows, lookup
 
 
@@ -35,12 +43,12 @@ def theme_of(info, ann_ind, lookup):
     """Most specific name first: basic industry, industry, sector, then the announcement industry."""
     for k in ("basic", "industry", "sector"):
         v = (info or {}).get(k)
-        if v and v.lower() in lookup:
-            return lookup[v.lower()]
-    if ann_ind and ann_ind.lower() in lookup:
-        return lookup[ann_ind.lower()]
+        if v and norm(v) in lookup:
+            return lookup[norm(v)]
+    if ann_ind and norm(ann_ind) in lookup:
+        return lookup[norm(ann_ind)]
     # unmapped: show NSE's industry name itself so it can be added to themes.csv later
-    return (info or {}).get("industry") or ann_ind or None
+    return (info or {}).get("basic") or (info or {}).get("industry") or ann_ind or None
 
 
 def _find(obj, key):

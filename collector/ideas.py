@@ -58,6 +58,7 @@ WINDOW_DAYS = 90
 BIG_PENALTY_PCT = 0.5
 MAX_ORDER_PCT_REV = 300     # one order above 3x yearly revenue is almost always a misread amount
 LOG_DAYS = 400
+MIN_THEME_STOCKS = 8         # smaller groups (often unmapped industries) get no theme card
 GROUPS = {"earn": 40, "orders": 15, "own": 20, "inst": 10, "val": 15}
 GROUP_NAMES = {"earn": "Earnings", "orders": "Orders", "own": "Ownership", "inst": "Inst. buying", "val": "Valuation"}
 G_CAP = 40                  # growth above 40% a year is not trusted to last when judging P/E
@@ -424,7 +425,7 @@ def build_themes(universe, scored, idea_syms, inst, themes_rows, ss):
             by.setdefault(base["theme"], []).append((base, rec, orders))
     rows = []
     for theme, items in by.items():
-        if len(items) < 5:
+        if len(items) < MIN_THEME_STOCKS:
             continue
         rev = sum((rec.get("ttm") or {}).get("rev") or 0 for _, rec, _ in items)
         o_n = sum(len(o) for _, _, o in items)
