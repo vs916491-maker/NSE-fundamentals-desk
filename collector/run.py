@@ -686,6 +686,7 @@ def main():
     ap.add_argument("--fund-minutes", type=float, default=30, help="minutes for filling stock fundamentals")
     ap.add_argument("--fund-only", action="store_true", help="only fill stock fundamentals (and prices)")
     ap.add_argument("--series-only", action="store_true", help="only add quarter series to stored fundamentals (no downloads)")
+    ap.add_argument("--industry-probe", help="comma-separated symbols: test where NSE publishes industry (testing)")
     ap.add_argument("--ideas-only", action="store_true", help="only rebuild the Ideas tab (and look up missing industries)")
     ap.add_argument("--industry-minutes", type=float, default=6, help="minutes for looking up stock industries")
     ap.add_argument("--fund-probe", help="comma-separated symbols: parse their latest filing and print it (testing)")
@@ -725,6 +726,37 @@ def main():
                 print(f"::notice title={sym} error::{type(e).__name__}: {e}"[:900])
             r = f.rows.get(sym) or {}
             print(f"::notice title={sym}::state {f.state.get(sym)} " + _json.dumps(r)[:1700])
+        return
+    if a.industry_probe:
+        # try the places NSE publishes a stock's industry; results go to cache/industry_probe.json
+        out = {}
+        for sym in a.industry_probe.split(","):
+            tries = {
+                "quote_equity_referer": ("/api/quote-equity", {"symbol": sym},
+                                         f"https://www.nseindia.com/get-quotes/equity?symbol={sym}"),
+                "nextapi_symbol": ("/api/NextApi/apiClient/GetQuoteApi",
+                                   {"functionName": "getSymbolData", "marketType": "N", "series": "EQ", "symbol": sym},
+                                   f"https://www.nseindia.com/get-quote/equity/{sym}"),
+                "nextapi_secinfo": ("/api/NextApi/apiClient/GetQuoteApi",
+                                    {"functionName": "getSecurityInfo", "symbol": sym},
+                                    f"https://www.nseindia.com/get-quote/equity/{sym}"),
+            }
+            for name, (path, params, ref) in tries.items():
+                try:
+                    c.n.s.get(ref, timeout=20)
+                    c.n.s.headers["Referer"] = ref
+                    r = c.n.get(path, params, tries=1)
+                    txt = json.dumps(r)
+                    i = txt.lower().find("industry")
+                    out[f"{sym}|{name}"] = txt[max(0, i - 300):i + 600] if i >= 0 else txt[:900]
+                except Exception as e:  # noqa: BLE001
+                    out[f"{sym}|{name}"] = "ERR " + str(e)[:200]
+        try:
+            r = c.n.get("/api/equity-stockIndices", {"index": "NIFTY 500"}, tries=1)
+            out["stockIndices_n500"] = json.dumps((r.get("data") or [None, None])[1])[:1200]
+        except Exception as e:  # noqa: BLE001
+            out["stockIndices_n500"] = "ERR " + str(e)[:200]
+        jsave(os.path.join(CACHE, "industry_probe.json"), out)
         return
     if a.ideas_only:
         d = date.fromisoformat(a.date) if a.date else today
