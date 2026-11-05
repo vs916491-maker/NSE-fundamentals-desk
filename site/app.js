@@ -935,7 +935,9 @@ const IDEA_COLS = [
   { key: "inst_stake_chg", label: "FII+DII stake pp", f: (r) => r.inst_stake_chg == null ? '<span class="dim">–</span>' : pp(r.inst_stake_chg) },
   { key: "promoter_chg", label: "Promoter pp", f: (r) => r.promoter_chg == null ? '<span class="dim">–</span>' : pp(r.promoter_chg) },
   { key: "inst_net_cr", label: "Bulk/block net ₹cr", f: (r) => r.inst_net_cr == null ? '<span class="dim">–</span>' : netv(r.inst_net_cr) },
-  { key: "pe", label: "P/E", f: (r) => num1(r.pe) },
+  { key: "pe", label: "P/E used", f: (r) => r.pe_basis === "RR"
+      ? `<span title="Run-rate P/E (last 2 quarters' profit × 2). Trailing 12-month P/E: ${r.pe_ttm == null ? "–" : inr(r.pe_ttm, 1)}">${num1(r.pe)} <span class="rr">RR</span></span>`
+      : num1(r.pe) },
   { key: "peg", label: "P/E ÷ growth", f: (r) => num1(r.peg) },
   { key: "flags", label: "Notes", l: 1, f: (r) => r.flags.length ? `<span class="flags">${r.flags.map(esc).join("<br>")}</span>` : "", sv: (r) => r.flags.length },
 ];

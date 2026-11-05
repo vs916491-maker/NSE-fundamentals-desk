@@ -368,3 +368,4 @@ details.method ul { padding-left: 18px; }
   #ideaTable td:nth-child(1) .name { max-width: 115px; }
   #ideaTable th:nth-child(2), #ideaTable td:nth-child(2) { position: static; box-shadow: none; }
 }
+.rr { font-family: var(--sans); font-size: 10.5px; font-weight: 600; color: var(--accent); border: 1px solid currentColor; border-radius: 4px; padding: 0 3px; margin-left: 2px; }

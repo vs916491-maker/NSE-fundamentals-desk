@@ -15,7 +15,9 @@ Score out of 100, in five groups:
   Ownership 20  promoter stake change (8), FII + DII stake change (12), latest quarter
   Inst. buying 10  net FII/DII/fund buying in bulk/block deals, 90 days, as % of market cap (1% = full)
   Valuation 15  P/E against profit growth, growth capped at 40% (P/E <= growth = full, P/E >= 2.5x growth = 0);
-                P/E > 80 = 0
+                P/E > 80 = 0. P/E is trailing 12 months, or the run-rate P/E (market cap / last two quarters'
+                profit x 2) when lower and growth is proven: profit up 25%+ YoY in both quarters, sales up
+                15%+, profitable a year ago, and no one-off / other-income flag.
 
 An idea needs a score >= IDEA_SCORE and at least 3 of the 5 groups at half marks or better,
 so one strong signal on its own never makes an idea.
@@ -61,6 +63,9 @@ LOG_DAYS = 400
 MIN_THEME_STOCKS = 8         # smaller groups (often unmapped industries) get no theme card
 GROUPS = {"earn": 40, "orders": 15, "own": 20, "inst": 10, "val": 15}
 GROUP_NAMES = {"earn": "Earnings", "orders": "Orders", "own": "Ownership", "inst": "Inst. buying", "val": "Valuation"}
+MAX_PE = 80
+RR_PROFIT_YOY = 25          # run-rate P/E only after two quarters of profit up 25%+ YoY ...
+RR_SALES_YOY = 15           # ... and sales up 15%+ in the latest quarter
 G_CAP = 40                  # growth above 40% a year is not trusted to last when judging P/E
 HORIZONS = (("3m", 91), ("6m", 182), ("12m", 365))
 
@@ -281,20 +286,32 @@ def score_stock(sym, rec, mcap, hold, orders, inst):
             i = lin(ipct, 0, 1.0, 10)
         det.update(inst_net_cr=net, inst_bought_cr=bought, inst_sold_cr=sold, inst_buyers=nb, inst_pct_mcap=r1(ipct))
 
-    # valuation: P/E against growth
-    pe = mcap / ttm["pat"] if mcap and ttm.get("pat") else None
+    # valuation: P/E against growth. Trailing P/E overstates the price of a fast grower (the 12 months
+    # include older, smaller quarters), so when growth is proven the run-rate P/E is used if lower.
+    pe_ttm = mcap / ttm["pat"] if mcap and ttm.get("pat") else None
+    pq = rec.get("pq") or {}
+    pe_rr = None
+    if (mcap and q.get("pat") is not None and pq.get("pat") is not None and (py.get("pat") or 0) > 0
+            and (p_yoy or 0) >= RR_PROFIT_YOY and (pp_ or 0) >= RR_PROFIT_YOY and (s_yoy or 0) >= RR_SALES_YOY
+            and "Large one-off items" not in flags and "Profit mostly other income" not in flags):
+        rr_profit = (q["pat"] + pq["pat"]) * 2
+        if rr_profit > 0:
+            pe_rr = mcap / rr_profit
+    use_rr = pe_rr is not None and (pe_ttm is None or pe_rr < pe_ttm)
+    pe = pe_rr if use_rr else pe_ttm
     ytd, ytd_py = rec.get("ytd") or {}, rec.get("ytd_py") or {}
     g = growth(ytd.get("pat"), ytd_py.get("pat")) if ytd and ytd_py and (months(rec.get("ytd")) or 0) >= 6 else p_yoy
     if turn:
         g = 30.0
     v = 0.0
-    if pe and pe <= 80:
+    if pe and pe <= MAX_PE:
         if g is None or g <= 5:
             v = lin(pe, 25, 10, 6)        # little growth: only cheap shares score, and only partly
         else:
             peg = pe / min(g, G_CAP)
             v = lin(peg, 2.5, 1.0, 15)
-    det.update(pe=r1(pe), growth_used=r1(g), peg=r1(pe / min(g, G_CAP)) if pe and g and g > 5 else None)
+    det.update(pe=r1(pe), pe_ttm=r1(pe_ttm), pe_rr=r1(pe_rr), pe_basis="RR" if use_rr else "TTM",
+               growth_used=r1(g), peg=r1(pe / min(g, G_CAP)) if pe and g and g > 5 else None)
 
     groups = {"earn": round(e, 1), "orders": round(o, 1), "own": round(w, 1), "inst": round(i, 1), "val": round(v, 1)}
     return round(sum(groups.values()), 1), groups, det, flags
@@ -482,6 +499,7 @@ def update_log(data_dir, jload, jsave, as_of, ideas, close, bench_close):
         lg["bench"][as_of] = bench_close
     syms = [r["sym"] for r in ideas]
     lg["days"][as_of] = syms
+    lg["entries"] = [e for e in lg["entries"] if not (e["first"] == as_of and e["sym"] not in syms)]
     prev_days = sorted(d for d in lg["days"] if d < as_of)
     prev = set(lg["days"][prev_days[-1]]) if prev_days else set()
     cur = set(syms)
