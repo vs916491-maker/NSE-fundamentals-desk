@@ -13,6 +13,7 @@ from zoneinfo import ZoneInfo
 sys.path.insert(0, os.path.dirname(__file__))
 from nse import NSE
 import tagger, xbrl, flows, clients, fundamentals
+import ideas, industry
 
 IST = ZoneInfo("Asia/Kolkata")
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -571,12 +572,53 @@ def run_fund(c: Collector, results_rows, minutes):
         log.exception("fundamentals failed")
 
 
+def nifty500_close(c: Collector):
+    """Nifty 500 close for the bhavcopy date (the Ideas track record compares against it)."""
+    try:
+        rows = (c.n.get("/api/allIndices") or {}).get("data") or []
+    except Exception as e:  # noqa: BLE001
+        log.warning("allIndices: %s", e)
+        return None
+    now = datetime.now(IST)
+    for r in rows:
+        if (r.get("index") or r.get("indexSymbol") or "").upper() == "NIFTY 500":
+            try:
+                if c.close_date == now.date().isoformat() and now.hour >= 16:
+                    return float(r["last"])
+                if c.close_date and c.close_date < now.date().isoformat():
+                    return float(r["previousClose"])
+            except (KeyError, TypeError, ValueError):
+                return None
+    return None
+
+
+def run_ideas(c: Collector, industry_minutes=6.0):
+    """Industry lookups for stocks not classified yet, then the Ideas tab (ideas.json, ideas_log.json)."""
+    try:
+        fund = {}
+        fdir = os.path.join(DATA, "fund")
+        for f in os.listdir(fdir) if os.path.isdir(fdir) else []:
+            if f.endswith(".json") and f != "prices.json":
+                fund.update(jload(os.path.join(fdir, f), {}))
+        close = c.close or (jload(os.path.join(fdir, "prices.json"), {}).get("p") or {})
+        mc = {s: r["sh"] * close[s] / 1e7 for s, r in fund.items() if r.get("sh") and close.get(s)}
+        order = [s for s, v in sorted(mc.items(), key=lambda kv: -kv[1]) if v >= ideas.MIN_MCAP_CR]
+        if industry_minutes > 0:
+            industry.update(c.n, order, os.path.join(CACHE, "industry.json"), jload, jsave, industry_minutes)
+        ideas.build(DATA, CACHE, jload, jsave, close=c.close or None, close_date=c.close_date,
+                    bench_close=nifty500_close(c), ss=ideas.load_sector_strength())
+    except Exception as e:  # noqa: BLE001
+        log.exception("ideas failed")
+        print(f"::warning title=Ideas::could not build the Ideas tab: {type(e).__name__}: {e}"[:400])
+
+
 def send_email(d: date, day, force=False):
     import mailer
     fl = jload(os.path.join(DATA, "flows.json"), {})
     day["flows"] = fl.get(d.isoformat())
     prev = [k for k in sorted(fl) if k < d.isoformat() and fl[k].get("poi")]
     day["flows_prev"] = fl[prev[-1]] if prev else None
+    day["ideas"] = jload(os.path.join(DATA, "ideas.json"), None)
     state_path = os.path.join(CACHE, "state.json")
     state = jload(state_path, {"emailed": []})
     if force or d.isoformat() not in state.get("emailed", []):
@@ -618,6 +660,8 @@ def auto_refresh(c: Collector, a):
     if "run_fund" in globals():
         c.budget = Budget(a.fund_minutes + 5)
         run_fund(c, day.get("results") or [], a.fund_minutes)
+    if mode == "eod":
+        run_ideas(c, a.industry_minutes)
     state = jload(state_path, {})
     state["refreshes"] = (state.get("refreshes", []) + [key])[-60:]
     state["last_refresh"] = {"date": d.isoformat(), "mode": mode, "at": datetime.now(IST).isoformat(timespec="minutes")}
@@ -642,6 +686,8 @@ def main():
     ap.add_argument("--fund-minutes", type=float, default=30, help="minutes for filling stock fundamentals")
     ap.add_argument("--fund-only", action="store_true", help="only fill stock fundamentals (and prices)")
     ap.add_argument("--series-only", action="store_true", help="only add quarter series to stored fundamentals (no downloads)")
+    ap.add_argument("--ideas-only", action="store_true", help="only rebuild the Ideas tab (and look up missing industries)")
+    ap.add_argument("--industry-minutes", type=float, default=6, help="minutes for looking up stock industries")
     ap.add_argument("--fund-probe", help="comma-separated symbols: parse their latest filing and print it (testing)")
     a = ap.parse_args()
 
@@ -680,6 +726,11 @@ def main():
             r = f.rows.get(sym) or {}
             print(f"::notice title={sym}::state {f.state.get(sym)} " + _json.dumps(r)[:1700])
         return
+    if a.ideas_only:
+        d = date.fromisoformat(a.date) if a.date else today
+        c.load_close(d)
+        run_ideas(c, a.industry_minutes)
+        return
     if a.series_only:
         f = fundamentals.Fund(c, DATA, CACHE, jload, jsave, parse_nse_date)
         f.fill_series()
@@ -712,6 +763,7 @@ def main():
     update_market(c, d, [d - timedelta(days=i) for i in range(7)])
     c.budget = Budget(a.fund_minutes + 5)
     run_fund(c, day.get("results") or [], a.fund_minutes)
+    run_ideas(c, a.industry_minutes)
     rebuild_index()
     if a.email and not a.force_email and datetime.now(IST).hour < 19:
         log.info("before 7 PM IST: collected, email left for a later run")
@@ -722,6 +774,7 @@ def main():
         day["flows"] = fl.get(d.isoformat())
         prev = [k for k in sorted(fl) if k < d.isoformat() and fl[k].get("poi")]
         day["flows_prev"] = fl[prev[-1]] if prev else None
+        day["ideas"] = jload(os.path.join(DATA, "ideas.json"), None)
         state_path = os.path.join(CACHE, "state.json")
         state = jload(state_path, {"emailed": []})
         if a.force_email or d.isoformat() not in state["emailed"]:

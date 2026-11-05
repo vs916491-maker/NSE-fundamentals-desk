@@ -96,6 +96,30 @@ def news_block():
     return section("📰 Market news: key drivers", f'<ul style="padding-left:18px;margin:0;font-size:14px">{rows}</ul>')
 
 
+def ideas_block(day):
+    """New and dropped investment ideas (Ideas tab), only when they were rebuilt for this day."""
+    idx = day.get("ideas") or {}
+    if not idx or not idx.get("ideas") or (idx.get("as_of") or "") < day["date"]:
+        return ""
+    by = {r["sym"]: r for r in idx["ideas"]}
+    new = [by[s] for s in idx.get("new", []) if s in by]
+    dropped = idx.get("dropped", [])
+    head = (f'<p style="margin:0 0 6px;color:{GREY};font-size:13px">{len(idx["ideas"])} stocks qualify today '
+            f'(1-year ideas: earnings, orders, ownership, institutional buying and valuation lining up).</p>')
+    if not new and not dropped:
+        return section("💡 Investment ideas", head + '<p style="margin:0;font-size:13px">No changes since the previous day.</p>')
+    body = head
+    if new:
+        rows = [[f'<b>{e(r["sym"])}</b>', e(r.get("theme") or "–"), f'{r["score"]:.0f}', cr(r.get("mcap")),
+                 f'{pct(r.get("sales_yoy"))} / {pct(r.get("pat_yoy"))}', e(r.get("label") or "")] for r in new[:10]]
+        body += "<p style='margin:8px 0 4px'><b>New today</b></p>" + table(
+            ["Stock", "Theme", "Score", "MCap ₹cr", "Sales / profit YoY", "Price"], rows)
+    if dropped:
+        body += (f'<p style="margin:10px 0 0;font-size:13px"><b>Dropped:</b> {e(", ".join(dropped[:20]))}'
+                 f'{" …" if len(dropped) > 20 else ""}</p>')
+    return section(f"💡 Investment ideas: {len(new)} new, {len(dropped)} dropped", body)
+
+
 def build(day):
     d = day["date"]
     ann = day.get("announcements", [])
@@ -164,6 +188,9 @@ def build(day):
     nb = news_block()
     if nb:
         parts.insert(1, nb)
+    ib = ideas_block(day)
+    if ib:
+        parts.insert(2 if nb else 1, ib)
     if len(parts) == 1:
         parts.append("<p>No tagged events today.</p>")
 
