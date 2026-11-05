@@ -355,3 +355,16 @@ details.method ul { padding-left: 18px; }
 .topscroll::-webkit-scrollbar { height: 10px; }
 .topscroll::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--muted) 55%, transparent); border-radius: 5px; }
 .topscroll::-webkit-scrollbar-track { background: color-mix(in srgb, var(--muted) 12%, transparent); border-radius: 5px; }
+
+/* Ideas table: Stock and Theme columns stay in place while scrolling sideways */
+#ideaTable th:nth-child(1), #ideaTable td:nth-child(1) { position: sticky; left: 0; z-index: 1; width: 200px; min-width: 200px; max-width: 200px; background: var(--panel); }
+#ideaTable th:nth-child(2), #ideaTable td:nth-child(2) { position: sticky; left: 200px; z-index: 1; width: 170px; min-width: 170px; max-width: 170px;
+  white-space: normal; background: var(--panel); box-shadow: inset -1px 0 0 var(--line), 6px 0 8px -6px rgba(0,0,0,.18); }
+#ideaTable th:nth-child(1), #ideaTable th:nth-child(2) { z-index: 3; }
+#ideaTable td:nth-child(1) .name { max-width: 180px; white-space: nowrap; }
+#ideaTable tr:hover td:nth-child(1), #ideaTable tr:hover td:nth-child(2) { background: color-mix(in srgb, var(--accent) 5%, var(--panel)); }
+@media (max-width: 640px) {   /* phone: keep only the Stock column fixed */
+  #ideaTable th:nth-child(1), #ideaTable td:nth-child(1) { width: 130px; min-width: 130px; max-width: 130px; box-shadow: inset -1px 0 0 var(--line), 6px 0 8px -6px rgba(0,0,0,.18); }
+  #ideaTable td:nth-child(1) .name { max-width: 115px; }
+  #ideaTable th:nth-child(2), #ideaTable td:nth-child(2) { position: static; box-shadow: none; }
+}
