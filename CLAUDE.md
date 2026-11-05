@@ -8,6 +8,7 @@ Kept as a **separate site** on purpose (not a tab inside F&O Desk).
 Daily digest of NSE corporate filings for all listed stocks, plus a nightly email. NSE data only (yfinance dropped). Free tools only.
 
 ## Tabs
+- **Ideas** – 1-year investment ideas and industry themes (`collector/ideas.py`, data `ideas.json` + `ideas_log.json`): stocks ≥ ₹500 cr scored on earnings 40, orders 15, ownership 20, institutional buying 10, valuation 15; idea = 65+ with 3 of 5 groups at half marks; theme cards (groupings in `collector/themes.csv`); price-timing label and theme stage read live from Sector Strength (`docs` table, needs sign-in); track record vs Nifty 500 at 3/6/12 months
 - **Today** – tagged announcement feed (orders won, penalties, buybacks, rating changes, red flags), FII/DII daily summary at top; "partial day" note after the 2 PM refresh
 - **Results** – quarterly results with YoY / QoQ and verdicts, sortable
 - **Holdings** – quarterly shareholding changes (promoter / FII / DII / MF)
@@ -21,14 +22,16 @@ Daily digest of NSE corporate filings for all listed stocks, plus a nightly emai
 
 ## Main files
 - `collector/run.py` – main job; `nse.py` (NSE session with cookie warm-up), `tagger.py` (tags announcements), `xbrl.py` (results + shareholding XBRL), `flows.py` (FII/DII), `fundamentals.py` (per-stock records), `news.py`, `mailer.py`
-- `cache/` – year-ago and previous-quarter filings, fetched once and kept
+- `collector/ideas.py` – Ideas tab (scoring rules at the top of the file); `industry.py` – stock → NSE industry (`cache/industry.json`); `themes.csv` – industry → theme and theme → Sector Strength index (edit freely)
+- `cache/` – year-ago and previous-quarter filings, fetched once and kept; `ideas_events.json` keeps orders / red flags / penalties / ratings beyond the 120 days of day files
 - `control/request.json` – edit + push for a manual run (e.g. `--date 2026-10-23 --force-email`, `--backfill <from> <to> --budget 120`)
 - `site/` – plain HTML/CSS/JS; `site/data/` JSON is committed and published
 - `supabase/001_watchlist.sql`, `002_refresh_button.sql`, `003_news_schedule.sql`
 
 ## Schedule (IST)
 - `collect.yml`: 14:00 (2 PM refresh), 18:45 (end-of-day + email), 20:00 (fallback, skips if done). Supabase pg_cron also starts the evening run with `--email` and a late run at ~23:30 for late filers.
-- Email sent **only after the end-of-day refresh**; by 10 PM is fine.
+- Email sent **only after the end-of-day refresh**; by 10 PM is fine. Includes "Investment ideas: new / dropped".
+- Ideas are rebuilt with the end-of-day refresh only (not the 2 PM one); `--ideas-only` rebuilds them on demand.
 - `news.yml`: hourly, 8 AM–11 PM (Supabase starts it; GitHub cron is backup).
 - Shared Supabase project, token and scheduling pattern: see F&O Desk notes.
 
@@ -42,10 +45,12 @@ Daily digest of NSE corporate filings for all listed stocks, plus a nightly emai
 
 ## Secrets
 `GMAIL_USER`, `GMAIL_APP_PASSWORD` (optional `EMAIL_TO`); email goes to his own Gmail.
+Optional `SUPABASE_URL`, `SUPABASE_SERVICE_KEY` (same as the other two repos): lets the Ideas build log Sector Strength's price-timing label for the track record and email.
 
 ## Rules / decisions to keep
 - Automated tagging and amounts can be wrong; always open the filing.
 - Stock names link to TradingView.
+- Ideas (decided 5 Nov 2026): 1-year horizon, market cap ≥ ₹500 cr. Price timing (Sector Strength) is shown but kept out of the score so the track record can test it.
 
 ## How to ask for changes
 Give: tab name, what's wrong or wanted, and a screenshot or symbol + date. Keep changes small.

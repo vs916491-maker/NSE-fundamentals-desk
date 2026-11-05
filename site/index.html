@@ -32,6 +32,7 @@
 
 <nav class="tabs" role="tablist">
   <a href="#today" data-tab="today">Today</a>
+  <a href="#ideas" data-tab="ideas">Ideas</a>
   <a href="#news" data-tab="news">Market News</a>
   <a href="#fii" data-tab="fii">FII/DII Activity</a>
   <a href="#adding" data-tab="adding">FII/DII Adding</a>
@@ -52,6 +53,44 @@
       <label class="chk"><input type="checkbox" id="showOther"> Show routine filings</label>
     </div>
     <div id="feed" class="feed"></div>
+  </section>
+
+  <section id="tab-ideas" class="tab" hidden>
+    <div id="ideasTop"></div>
+    <h3>Themes</h3>
+    <p class="note" id="themeNote"></p>
+    <div id="themeCards" class="tgrid"></div>
+    <h3>Stock ideas</h3>
+    <div class="toolbar">
+      <div class="seg" id="ideaView"></div>
+      <select id="ideaTheme" aria-label="Theme"><option value="">All themes</option></select>
+      <select id="ideaLabel" aria-label="Price timing">
+        <option value="">Any price timing</option>
+        <option>Ready</option><option>Building</option><option>Wait</option><option>No price data</option>
+      </select>
+      <input id="ideaQ" type="search" placeholder="Symbol / company" autocomplete="off">
+    </div>
+    <p class="note" id="ideaNote"></p>
+    <div class="tablewrap"><table id="ideaTable" class="grid"></table></div>
+    <h3>Track record</h3>
+    <div id="ideaRecord"></div>
+    <details class="more method"><summary>How ideas, themes and timing labels are worked out</summary>
+      <p><b>Horizon:</b> about one year. Only stocks with a market cap of ₹500 cr or more are considered.</p>
+      <p><b>Left out:</b> companies with a loss over the last 12 months, no year-ago quarter to compare, results older than the previous quarter, or a red flag, rating downgrade or penalty of 0.5%+ of market cap in the last 180 days.</p>
+      <p><b>Score (out of 100):</b></p>
+      <ul>
+        <li><b>Earnings, 40:</b> latest quarter vs a year ago: sales (8, full at +20%) and net profit (12, full at +30%); the quarter before that, the same way (8); operating margin change (8, full at +2 pp; net margin for banks and lenders); profit not mostly other income or one-off items (4).</li>
+        <li><b>Orders, 15:</b> order wins announced in the last 90 days as a share of the last 12 months' revenue (full at 30%). Single orders above 3× yearly revenue are ignored as misread amounts.</li>
+        <li><b>Ownership, 20:</b> promoter stake change in the latest shareholding quarter (8; steady counts as good) and FII + DII stake change (12, full at +2 pp).</li>
+        <li><b>Institutional buying, 10:</b> net buying by FIIs, DIIs and funds in bulk/block deals over 90 days, as % of market cap (full at 1%). Most large-cap buying never shows up as a bulk/block deal.</li>
+        <li><b>Valuation, 15:</b> P/E (market cap ÷ 12-month profit) against profit growth, with growth capped at 40%: full marks when P/E ≤ growth, none when P/E ≥ 2.5× growth or above 80. Little growth: only a P/E under 25 scores, up to 6.</li>
+      </ul>
+      <p><b>An idea</b> needs 65+ and at least 3 of the 5 groups at half marks or better. "Close to qualifying" shows the next best (53+).</p>
+      <p><b>Themes</b> group stocks by NSE industry (file <code>collector/themes.csv</code>). The theme score ranks themes against each other: share of companies with profit up 20%+ (35), order wins as % of revenue (25), average FII + DII stake change (25) and net institutional buying (15).</p>
+      <p><b>Price timing</b> comes from Sector Strength (needs sign-in): <b>Ready</b> = relative-strength rating 70+ and above the 200-day average; <b>Wait</b> = below a falling 200-day average; <b>Building</b> = in between. It is not part of the score, so the track record can show whether waiting for "Ready" helps. A theme's stage comes from its Sector Strength index: Improving = <b>Early</b>, Leading = <b>Established</b>, Weakening or Lagging = <b>Watch</b>.</p>
+      <p><b>Track record:</b> each idea is logged with the close on the day it first appeared and followed for a year, whether or not it stays an idea, against the Nifty 500 over the same dates.</p>
+      <p>Everything is worked out automatically from filings and can be wrong (order amounts especially). Open the filing and the chart before acting. Not investment advice.</p>
+    </details>
   </section>
 
   <section id="tab-news" class="tab" hidden>

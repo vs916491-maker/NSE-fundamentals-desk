@@ -876,6 +876,151 @@ async function renderWatch() {
   });
 }
 
+// ---------- Ideas (1-year investment ideas and themes) ----------
+S.ideas = null; S.ss = undefined; S.ideaView = "ideas"; S.allThemes = false;
+async function loadIdeas() {
+  if (!S.ideas) S.ideas = await getJSON("data/ideas.json").catch(() => null);
+  return S.ideas;
+}
+// Sector Strength's latest data (shared Supabase `docs` table; readable once signed in)
+async function loadSS() {
+  if (S.ss !== undefined) return S.ss;
+  S.ss = null;
+  if (!sb) return null;
+  try {
+    const { data, error } = await sb.from("docs").select("key,data,updated_at").in("key", ["ss_stocks", "ss_sectors", "ss_regime"]);
+    if (error) throw error;
+    const o = {};
+    for (const r of data || []) o[r.key.slice(3)] = { ...r.data, _at: r.updated_at };
+    S.ss = Object.keys(o).length ? o : null;
+  } catch (e) { console.warn("Sector Strength data not loaded", e); }
+  return S.ss;
+}
+// same rule as collector/ideas.py: fundamentals decide what, price decides when
+const timingLabel = (st) => !st || st.rs_rating == null ? "No price data"
+  : (st.rs_rating >= 70 && st.above_200) ? "Ready"
+  : (st.above_200 === false && st["200_rising"] === false) ? "Wait" : "Building";
+const LABEL_CLS = { Ready: "vb1", Building: "vn", Wait: "vr1", "No price data": "vdim" };
+const labelTag = (l) => `<span class="vtag ${LABEL_CLS[l] || "vn"}">${esc(l)}</span>`;
+const SS_NAMES = { AUTO: "Auto", BANK: "Bank", FINSERV: "Financial Services", FMCG: "FMCG", HEALTHCARE: "Healthcare", IT: "IT",
+  MEDIA: "Media", METAL: "Metal", PHARMA: "Pharma", REALTY: "Realty", CONSDUR: "Consumer Durables", OILGAS: "Oil & Gas",
+  CHEMICALS: "Chemicals", ENERGY: "Energy", INFRA: "Infrastructure", CPSE: "CPSE", MFG: "India Manufacturing",
+  DEFENCE: "India Defence", CAPMKT: "Capital Markets", TOURISM: "India Tourism" };
+const STAGE = { Improving: ["Early", "vb1"], Leading: ["Established", "vb2"], Weakening: ["Watch", "vr1"], Lagging: ["Watch", "vr1"] };
+const REGIME_NOTE = {
+  Green: "Broad uptrend in the Nifty 500.",
+  Amber: "Mixed market: buying in instalments spreads the timing risk.",
+  Red: "Weak market: good businesses can keep falling with it for a while; staggering buys and favouring “Ready” stocks lowers timing risk.",
+};
+const ptsBar = (v, max) => {
+  const w = Math.round((v || 0) / max * 100);
+  return `<span class="pbar" title="${inr(v, 1)} of ${max}"><i style="width:${w}%"></i></span><span class="pnum">${inr(v, 0)}</span>`;
+};
+const IDEA_COLS = [
+  { key: "sym", label: "Stock", l: 1, f: (r) => `${symLink(r.sym)}<span class="name">${esc(r.name || "")}</span>`, sv: (r) => r.sym },
+  { key: "theme", label: "Theme", l: 1, f: (r) => r.theme ? `<span class="tname">${esc(r.theme)}</span>` : '<span class="dim">–</span>', sv: (r) => r.theme || "" },
+  { key: "score", label: "Score", f: (r) => `<b>${inr(r.score, 0)}</b>` },
+  { key: "g_earn", label: "Earnings /40", f: (r) => ptsBar(r.groups.earn, 40), sv: (r) => r.groups.earn },
+  { key: "g_orders", label: "Orders /15", f: (r) => ptsBar(r.groups.orders, 15), sv: (r) => r.groups.orders },
+  { key: "g_own", label: "Ownership /20", f: (r) => ptsBar(r.groups.own, 20), sv: (r) => r.groups.own },
+  { key: "g_inst", label: "Inst. buying /10", f: (r) => ptsBar(r.groups.inst, 10), sv: (r) => r.groups.inst },
+  { key: "g_val", label: "Valuation /15", f: (r) => ptsBar(r.groups.val, 15), sv: (r) => r.groups.val },
+  { key: "label", label: "Price timing", l: 1, f: (r) => r._label ? labelTag(r._label) : '<span class="dim">sign in</span>', sv: (r) => r._label || "" },
+  { key: "mcap", label: "MCap ₹cr", f: (r) => cr(r.mcap) },
+  { key: "sales_yoy", label: "Sales YoY", f: (r) => pct(r.sales_yoy) },
+  { key: "pat_yoy", label: "Profit YoY", f: (r) => pct(r.pat_yoy) },
+  { key: "prev_pat_yoy", label: "Prev qtr profit YoY", f: (r) => pct(r.prev_pat_yoy) },
+  { key: "margin_chg", label: "Margin chg pp", f: (r) => r.margin_chg == null ? '<span class="dim">–</span>' : pp(r.margin_chg) },
+  { key: "orders_cr", label: "Orders 90d ₹cr", f: (r) => r.orders_cr ? `${cr(r.orders_cr)} <span class="dim">(${inr(r.orders_pct_rev, 0)}% rev)</span>` : '<span class="dim">–</span>' },
+  { key: "inst_stake_chg", label: "FII+DII stake pp", f: (r) => r.inst_stake_chg == null ? '<span class="dim">–</span>' : pp(r.inst_stake_chg) },
+  { key: "promoter_chg", label: "Promoter pp", f: (r) => r.promoter_chg == null ? '<span class="dim">–</span>' : pp(r.promoter_chg) },
+  { key: "inst_net_cr", label: "Bulk/block net ₹cr", f: (r) => r.inst_net_cr == null ? '<span class="dim">–</span>' : netv(r.inst_net_cr) },
+  { key: "pe", label: "P/E", f: (r) => num1(r.pe) },
+  { key: "peg", label: "P/E ÷ growth", f: (r) => num1(r.peg) },
+  { key: "flags", label: "Notes", l: 1, f: (r) => r.flags.length ? `<span class="flags">${r.flags.map(esc).join("<br>")}</span>` : "", sv: (r) => r.flags.length },
+];
+
+function themeCard(t, ss) {
+  const sec = ss && t.ss_index ? ss.sectors?.benchmarks?.NIFTY500?.rows?.[t.ss_index] : null;
+  const ixName = ss?.sectors?.names?.[t.ss_index] || SS_NAMES[t.ss_index] || t.ss_index;
+  const stage = sec && STAGE[sec.quadrant];
+  const ssLine = !t.ss_index ? '<span class="dim">No matching Sector Strength index</span>'
+    : !ss ? `<span class="dim">Nifty ${esc(ixName)}: sign in to see its trend</span>`
+    : sec ? `Nifty ${esc(ixName)}: rank ${sec.rank == null ? "–" : inr(sec.rank)} · ${esc(sec.quadrant || "–")} ${stage ? `<span class="vtag ${stage[1]}">${stage[0]}</span>` : ""}`
+    : `<span class="dim">Nifty ${esc(ixName)}: no data</span>`;
+  const ideas = t.ideas.length ? t.ideas.map((s) => `<span class="chip hot sym" data-sym="${esc(s)}">${esc(s)}</span>`).join("")
+    : t.top.slice(0, 4).map((x) => `<span class="chip sym" data-sym="${esc(x.sym)}" title="score ${inr(x.score, 0)}">${esc(x.sym)} <span class="dim">${inr(x.score, 0)}</span></span>`).join("");
+  return `<div class="tcard">
+    <div class="thead"><b>${esc(t.theme)}</b><span class="tscore" title="Theme score (0–100), relative to other themes">${inr(t.score, 0)}</span></div>
+    <div class="tsub">${t.n} stocks ≥ ₹500 cr</div>
+    <ul class="tlist">
+      <li><span>Orders, 90 days</span><span>${t.orders_n ? `${t.orders_n} · ₹${cr(t.orders_cr)} cr <span class="dim">(${inr(t.orders_pct_rev, 1)}% of rev)</span>` : '<span class="dim">none</span>'}</span></li>
+      <li><span>Profit up 20%+ YoY</span><span>${t.reported ? `${t.strong} of ${t.reported} <span class="dim">(${inr(t.strong_pct, 0)}%)</span>` : "–"}</span></li>
+      <li><span>Median sales growth</span><span>${pct(t.median_sales_yoy)}</span></li>
+      <li><span>FII + DII stake, avg</span><span>${t.stake_chg == null ? "–" : pp(t.stake_chg) + " pp"} <span class="dim">${t.stake_up_pct == null ? "" : `(${inr(t.stake_up_pct, 0)}% up)`}</span></span></li>
+      <li><span>Bulk/block net, 90 days</span><span>${t.inst_net_cr ? netv(t.inst_net_cr) + " cr" : '<span class="dim">–</span>'}</span></li>
+    </ul>
+    <div class="tss">${ssLine}</div>
+    <div class="chips">${t.ideas.length ? '<span class="dim tlab">Ideas</span>' : '<span class="dim tlab">Best scores</span>'}${ideas}</div>
+  </div>`;
+}
+
+function recordHtml(rec, asOf) {
+  if (!rec || !rec.all || !rec.all.n) return '<p class="note">The log starts with today\'s ideas. Returns will show here as they build up; 3-, 6- and 12-month results need that long to arrive.</p>';
+  const st = (x) => !x || !x.n ? '<span class="dim">–</span>'
+    : `${x.n} · avg ${pct(x.avg)} · vs Nifty 500 ${x.excess == null ? "–" : pct(x.excess)} · beat it ${x.beat_pct == null ? "–" : inr(x.beat_pct, 0) + "%"}`;
+  const rows = [["Every idea so far (return to date)", rec.all]];
+  for (const [k, lab] of [["3m", "After 3 months"], ["6m", "After 6 months"], ["12m", "After 12 months"]]) rows.push([lab, rec.horizons?.[k]]);
+  for (const [lab, x] of Object.entries(rec.by_label || {})) rows.push([`Price timing “${lab}” at entry`, x]);
+  const sum = `<div class="tablewrap"><table class="grid"><tbody>${rows.map(([l, x]) => `<tr><td class="l">${esc(l)}</td><td class="l">${st(x)}</td></tr>`).join("")}</tbody></table></div>`;
+  const ent = (rec.entries || []).slice(0, 60).map((e) => `<tr><td>${symLink(e.sym)}</td><td class="l">${esc(e.theme || "–")}</td><td>${esc(e.first)}</td><td>${inr(e.age)}</td>
+    <td>${inr(e.px, 2)}</td><td>${pct(e.ret)}</td><td>${pct(e.bret)}</td><td>${e.ret != null && e.bret != null ? pct(e.ret - e.bret) : '<span class="dim">–</span>'}</td>
+    <td>${e.last === asOf ? '<span class="up">Still an idea</span>' : `<span class="dim">Dropped after ${esc(e.last)}</span>`}</td></tr>`).join("");
+  return sum + `<details class="more"><summary>Show the latest ${Math.min(60, (rec.entries || []).length)} entries (return from the close on the day each first appeared)</summary>
+    <div class="tablewrap"><table class="grid"><thead><tr><th class="l">Stock</th><th class="l">Theme</th><th>First</th><th>Days</th><th>Entry ₹</th><th>Return</th><th>Nifty 500</th><th>Excess</th><th class="l">Now</th></tr></thead><tbody>${ent}</tbody></table></div></details>`;
+}
+
+async function renderIdeas() {
+  const [d, ss] = await Promise.all([loadIdeas(), loadSS()]);
+  if (!d) { $("#ideasTop").innerHTML = '<div class="empty">No ideas yet: they are built with the end-of-day refresh.</div>'; return; }
+  // top strip: market regime + counts
+  const reg = ss?.regime;
+  const regHtml = reg ? `<div class="regime r-${esc(reg.light)}"><b>Market: ${esc(reg.light)}</b>${reg.light_since ? ` since ${shortDate(reg.light_since)}` : ""} · ${esc(REGIME_NOTE[reg.light] || "")}
+    <span class="dim">(Sector Strength regime light${reg.date ? ", " + shortDate(reg.date) : ""})</span></div>`
+    : `<div class="regime"><span class="dim">Sign in to see the market regime and price timing from Sector Strength.</span></div>`;
+  const c = d.counts || {};
+  const ex = Object.entries(c.excluded || {}).sort((a, b) => b[1] - a[1]).map(([k, v]) => `${k.toLowerCase()} ${v}`).join(", ");
+  $("#ideasTop").innerHTML = regHtml + `<p class="note">As of ${niceDate(d.as_of)} · results season ${qLabel(d.season)} · ${c.universe} stocks ≥ ₹${d.rules.min_mcap_cr} cr, ${c.scored} scored, <b>${c.ideas} ideas</b>.
+    Left out: ${esc(ex)}. ${c.with_industry < c.universe ? `Industry known for ${c.with_industry} of ${c.universe} stocks so far (the rest are looked up over the next few evenings).` : ""}</p>`;
+  // themes
+  const themes = d.themes || [];
+  const shown = S.allThemes ? themes : themes.slice(0, 8);
+  $("#themeNote").innerHTML = `Ranked by theme score (relative to other themes). ${themes.length > 8 ? `<a href="#ideas" id="themeMore">${S.allThemes ? "Show top 8" : `Show all ${themes.length}`}</a>` : ""}`;
+  $("#themeCards").innerHTML = shown.map((t) => themeCard(t, ss)).join("") || '<div class="empty">No themes yet.</div>';
+  const tm = $("#themeMore"); if (tm) tm.onclick = (e) => { e.preventDefault(); S.allThemes = !S.allThemes; render(); };
+  // stock table
+  const ssStocks = ss?.stocks?.stocks || null;
+  $("#ideaView").innerHTML = [["ideas", `Ideas (${(d.ideas || []).length})`], ["near", `Close to qualifying (${(d.near || []).length})`]]
+    .map(([v, l]) => `<button data-v="${v}" class="${S.ideaView === v ? "on" : ""}">${l}</button>`).join("");
+  $("#ideaView").querySelectorAll("button").forEach((b) => b.onclick = () => { S.ideaView = b.dataset.v; render(); });
+  const tsel = $("#ideaTheme"), cur = tsel.value;
+  const tnames = [...new Set([...(d.ideas || []), ...(d.near || [])].map((r) => r.theme).filter(Boolean))].sort();
+  tsel.innerHTML = '<option value="">All themes</option>' + tnames.map((t) => `<option${t === cur ? " selected" : ""}>${esc(t)}</option>`).join("");
+  const lab = $("#ideaLabel").value, q = $("#ideaQ").value.trim().toLowerCase();
+  let rows = (S.ideaView === "near" ? d.near : d.ideas) || [];
+  rows = rows.map((r) => ({ ...r, _label: ssStocks ? timingLabel(ssStocks[r.sym]) : (r.label || null) }));
+  rows = rows.filter((r) => (!tsel.value || r.theme === tsel.value) && (!lab || r._label === lab) &&
+    (!q || r.sym.toLowerCase().includes(q) || (r.name || "").toLowerCase().includes(q)));
+  const newSet = new Set(d.new || []);
+  $("#ideaNote").innerHTML = (S.ideaView === "ideas"
+    ? `Score 65+ with at least 3 of the 5 groups at half marks or better. ${d.new?.length ? `<b>New today:</b> ${d.new.map(esc).join(", ")}. ` : ""}${d.dropped?.length ? `<b>Dropped:</b> ${d.dropped.map(esc).join(", ")}.` : ""}`
+    : `Stocks scoring 53+ that are not ideas yet (score under 65, or too few groups at half marks).`) +
+    ` Click a symbol for its filings and fundamentals; the chart icon opens TradingView.`;
+  table($("#ideaTable"), "ideas", IDEA_COLS, rows, ["score", false]);
+  $("#ideaTable").querySelectorAll("tbody tr").forEach((tr, i) => { if (newSet.has(tr.querySelector(".sym")?.dataset.sym)) tr.classList.add("newrow"); });
+  $("#ideaRecord").innerHTML = recordHtml(d.record, d.as_of);
+}
+
 // ---------- router ----------
 function currentTab() { return (location.hash.slice(1).split("/")[0]) || "today"; }
 let rendering = 0;
@@ -891,6 +1036,7 @@ async function render() {
     const day = S.date ? await loadDay(S.date) : { announcements: [], results: [], holdings: [], deals: [] };
     if (my !== rendering) return;
     if (tab === "today") { renderToday(day); renderFlowsCompact().catch(console.error); }
+    else if (tab === "ideas") await renderIdeas();
     else if (tab === "fii") await renderFii();
     else if (tab === "news") await renderNews();
     else if (tab === "adding") await renderAdding();
@@ -926,8 +1072,8 @@ async function init() {
   $("#dateSel").onchange = () => { S.date = $("#dateSel").value; S.tag = null; render(); };
   $("#prevDay").onclick = () => { const i = dates.indexOf(S.date); if (i < dates.length - 1) { S.date = dates[i + 1]; $("#dateSel").value = S.date; render(); } };
   $("#nextDay").onclick = () => { const i = dates.indexOf(S.date); if (i > 0) { S.date = dates[i - 1]; $("#dateSel").value = S.date; render(); } };
-  ["#todayQ", "#resQ", "#holdQ", "#dealQ", "#addQ", "#newsQ"].forEach((s) => $(s).addEventListener("input", render));
-  ["#showOther", "#resCap", "#resVerdict", "#holdMin", "#instOnly", "#dealSide", "#addSide", "#addMin"].forEach((s) => $(s).addEventListener("change", render));
+  ["#todayQ", "#resQ", "#holdQ", "#dealQ", "#addQ", "#newsQ", "#ideaQ"].forEach((s) => $(s).addEventListener("input", render));
+  ["#showOther", "#resCap", "#resVerdict", "#holdMin", "#instOnly", "#dealSide", "#addSide", "#addMin", "#ideaTheme", "#ideaLabel"].forEach((s) => $(s).addEventListener("change", render));
   $("#stockQ").addEventListener("change", () => { const v = $("#stockQ").value.trim().toUpperCase(); if (v) location.hash = "#stock/" + encodeURIComponent(v); });
   document.addEventListener("click", (e) => { const s = e.target.closest(".sym"); if (s) location.hash = "#stock/" + encodeURIComponent(s.dataset.sym); });
   window.addEventListener("hashchange", render);

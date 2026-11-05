@@ -320,3 +320,31 @@ details.method ul { padding-left: 18px; }
   .nrow { grid-template-columns: 1fr; gap: 3px; }
   .nrow .ngroup { justify-self: start; }
 }
+
+/* Ideas tab */
+.regime { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--muted); border-radius: 10px; padding: 10px 14px; font-size: 13.5px; line-height: 1.45; margin-bottom: 8px; }
+.regime.r-Green { border-left-color: var(--up); }
+.regime.r-Amber { border-left-color: var(--t-Rating); }
+.regime.r-Red { border-left-color: var(--down); }
+.tgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 10px; }
+.tcard { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; min-width: 0; }
+.thead { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.tscore { font-family: var(--mono); font-size: 18px; font-weight: 500; color: var(--accent); }
+.tsub { color: var(--muted); font-size: 12px; margin: 1px 0 8px; }
+.tlist { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: 13px; }
+.tlist li { display: flex; justify-content: space-between; gap: 10px; }
+.tlist li > span:first-child { color: var(--muted); }
+.tlist li > span:last-child { font-family: var(--mono); font-size: 12.5px; text-align: right; }
+.tss { margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--line); font-size: 12.5px; }
+.tss .vtag { font-size: 11.5px; padding: 1px 8px; margin-left: 4px; }
+.tlab { font-size: 12px; margin-right: 2px; }
+.chip.sym { cursor: pointer; font-weight: 600; }
+.vdim { color: var(--muted); background: color-mix(in srgb, var(--muted) 10%, transparent); font-weight: 500; }
+.pbar { display: inline-block; width: 42px; height: 6px; border-radius: 3px; background: color-mix(in srgb, var(--muted) 18%, transparent); vertical-align: middle; margin-right: 6px; overflow: hidden; }
+.pbar i { display: block; height: 100%; background: var(--accent); }
+.pnum { display: inline-block; min-width: 18px; text-align: right; }
+.tname { font-family: var(--sans); font-size: 12.5px; }
+.flags { font-family: var(--sans); font-size: 11.5px; color: var(--muted); white-space: normal; display: inline-block; min-width: 150px; }
+.grid tr.newrow td:first-child { box-shadow: inset 3px 0 0 var(--up); }
+#tab-ideas .grid td .vtag { font-size: 11.5px; padding: 1px 8px; }
+@media (max-width: 640px) { .tgrid { grid-template-columns: 1fr; } }
