@@ -1,7 +1,7 @@
 """Stock -> industry, for the Ideas tab's themes.
 
-NSE's own four-level classification (macro sector, sector, industry, basic industry) comes from its
-quote page API. Each stock is looked up once and kept in cache/industry.json; lookups that fail are
+NSE's basic industry (the finest of its four classification levels, e.g. "Railway Wagons",
+"Aerospace & Defense") comes from the quote page's data API. Each stock is looked up once and kept in cache/industry.json; lookups that fail are
 retried after RETRY_DAYS. Stocks NSE never classified fall back to the older industry name NSE puts on
 corporate announcements (collected separately by ideas.py).
 
@@ -43,6 +43,35 @@ def theme_of(info, ann_ind, lookup):
     return (info or {}).get("industry") or ann_ind or None
 
 
+def _find(obj, key):
+    if isinstance(obj, dict):
+        if obj.get(key):
+            return obj[key]
+        obj = list(obj.values())
+    if isinstance(obj, list):
+        for v in obj:
+            r = _find(v, key)
+            if r:
+                return r
+    return None
+
+
+def lookup_basic(n, sym):
+    """NSE's basic industry for one stock, from the quote page's data API (the older /api/quote-equity
+    now answers 403). Only the basic-industry level is in this response."""
+    ref = f"https://www.nseindia.com/get-quote/equity/{sym}"
+    n.s.headers["Referer"] = ref
+    try:
+        r = n.get("/api/NextApi/apiClient/GetQuoteApi",
+                  {"functionName": "getSymbolData", "marketType": "N", "series": "EQ", "symbol": sym}, tries=2)
+    except RuntimeError:
+        n.s.get(ref, timeout=20)          # fresh cookies from the quote page, then one more try
+        r = n.get("/api/NextApi/apiClient/GetQuoteApi",
+                  {"functionName": "getSymbolData", "marketType": "N", "series": "EQ", "symbol": sym}, tries=1)
+    b = _find(r, "basicIndustry")
+    return b.strip() if isinstance(b, str) and b.strip() not in ("", "-", "NA") else None
+
+
 def update(n, syms, path, jload, jsave, minutes=6.0):
     """Look up stocks that have no classification yet (in the order given). Returns the map."""
     m = jload(path, {})
@@ -52,7 +81,7 @@ def update(n, syms, path, jload, jsave, minutes=6.0):
         r = m.get(s)
         if r and (r.get("industry") or r.get("basic")):
             continue
-        if r and r.get("checked") and (today - date.fromisoformat(r["checked"])).days < RETRY_DAYS:
+        if r and r.get("checked") and not r.get("err") and (today - date.fromisoformat(r["checked"])).days < RETRY_DAYS:
             continue
         todo.append(s)
     if not todo:
@@ -63,18 +92,9 @@ def update(n, syms, path, jload, jsave, minutes=6.0):
         if time.time() > end:
             break
         try:
-            q = n.get("/api/quote-equity", {"symbol": s}, tries=2) or {}
-            info = q.get("industryInfo") or {}
-            rec = {"macro": info.get("macro"), "sector": info.get("sector"),
-                   "industry": info.get("industry"), "basic": info.get("basicIndustry"),
-                   "checked": today.isoformat()}
-            if not (rec["industry"] or rec["basic"]):
-                # some responses carry only the older single industry name
-                old = (q.get("metadata") or {}).get("industry") or (q.get("info") or {}).get("industry")
-                if old:
-                    rec["industry"] = old
-            m[s] = {k: v for k, v in rec.items() if v}
-            found += bool(rec.get("industry") or rec.get("basic"))
+            basic = lookup_basic(n, s)
+            m[s] = {"basic": basic, "checked": today.isoformat()} if basic else {"checked": today.isoformat()}
+            found += bool(basic)
             fails = 0
         except Exception as e:  # noqa: BLE001
             m[s] = {"checked": today.isoformat(), "err": str(e)[:80]}

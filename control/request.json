@@ -1,1 +1,1 @@
-{"args": "--industry-probe RELIANCE,BEL,TITAGARH", "note": "Edit and push this file to start a manual run. Example args: --auto | --date 2026-10-23 --force-email"}
+{"args": "--ideas-only --industry-minutes 45", "note": "Edit and push this file to start a manual run. Example args: --auto | --date 2026-10-23 --force-email"}
