@@ -897,11 +897,12 @@ async function loadSS() {
   return S.ss;
 }
 // same rule as collector/ideas.py: fundamentals decide what, price decides when
-const timingLabel = (st) => !st || st.rs_rating == null ? "No price data"
+const timingLabel = (st) => !st ? "Not tracked" : st.rs_rating == null ? "No price data"
   : (st.rs_rating >= 70 && st.above_200) ? "Ready"
   : (st.above_200 === false && st["200_rising"] === false) ? "Wait" : "Building";
-const LABEL_CLS = { Ready: "vb1", Building: "vn", Wait: "vr1", "No price data": "vdim" };
-const labelTag = (l) => `<span class="vtag ${LABEL_CLS[l] || "vn"}">${esc(l)}</span>`;
+const LABEL_CLS = { Ready: "vb1", Building: "vn", Wait: "vr1", "No price data": "vdim", "Not tracked": "vdim" };
+const LABEL_TIP = { "Not tracked": "Outside Sector Strength's stocks (Nifty 500 + Microcap 250, tracked indices, F&O), so there is no price history to judge timing", "No price data": "Tracked, but not enough price history for an RS rating yet" };
+const labelTag = (l) => `<span class="vtag ${LABEL_CLS[l] || "vn"}"${LABEL_TIP[l] ? ` title="${esc(LABEL_TIP[l])}"` : ""}>${esc(l)}</span>`;
 const SS_NAMES = { AUTO: "Auto", BANK: "Bank", FINSERV: "Financial Services", FMCG: "FMCG", HEALTHCARE: "Healthcare", IT: "IT",
   MEDIA: "Media", METAL: "Metal", PHARMA: "Pharma", REALTY: "Realty", CONSDUR: "Consumer Durables", OILGAS: "Oil & Gas",
   CHEMICALS: "Chemicals", ENERGY: "Energy", INFRA: "Infrastructure", CPSE: "CPSE", MFG: "India Manufacturing",
@@ -1036,7 +1037,7 @@ async function renderIdeas() {
   $("#ideaNote").innerHTML = (S.ideaView === "ideas"
     ? `Score 65+ with at least 3 of the 5 groups at half marks or better. ${d.new?.length ? `<b>New today:</b> ${d.new.map(esc).join(", ")}. ` : ""}${d.dropped?.length ? `<b>Dropped:</b> ${d.dropped.map(esc).join(", ")}.` : ""}`
     : `Stocks scoring 53+ that are not ideas yet (score under 65, or too few groups at half marks).`) +
-    ` Click a symbol for its filings and fundamentals; the chart icon opens TradingView.`;
+    ` Click a symbol for its filings and fundamentals; the chart icon opens TradingView. <span class="dim">Price timing “Not tracked” = outside Sector Strength’s stocks (Nifty 500 + Microcap 250, tracked indices, F&O).</span>`;
   table($("#ideaTable"), "ideas", IDEA_COLS, rows, ["score", false]);
   $("#ideaTable").querySelectorAll("tbody tr").forEach((tr, i) => { if (newSet.has(tr.querySelector(".sym")?.dataset.sym)) tr.classList.add("newrow"); });
   topScroll($("#ideaScroll"), $("#ideaWrap"));

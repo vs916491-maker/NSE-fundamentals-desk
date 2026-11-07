@@ -342,8 +342,10 @@ def load_sector_strength():
 
 def timing_label(ss_stock):
     """Same rule as the website: fundamentals decide what to buy, price decides when."""
-    if not ss_stock or ss_stock.get("rs_rating") is None:
-        return "No price data"
+    if not ss_stock:
+        return "Not tracked"      # outside Sector Strength's stocks (Nifty 500 + Microcap 250, tracked indices, F&O)
+    if ss_stock.get("rs_rating") is None:
+        return "No price data"    # tracked, but not enough price history for an RS rating yet
     rs, above, rising = ss_stock.get("rs_rating"), ss_stock.get("above_200"), ss_stock.get("200_rising")
     if rs >= 70 and above:
         return "Ready"
