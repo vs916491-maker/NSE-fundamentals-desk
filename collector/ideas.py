@@ -26,7 +26,11 @@ Themes
 ------
 Stocks are grouped into themes (themes.csv) by NSE industry. Each theme gets: order wins (90 days),
 share of companies with profit up 20%+ YoY, average FII + DII stake change, net institutional
-buying, and how many of its stocks are ideas. The theme score ranks themes against each other.
+buying, and how many of its stocks are ideas. The theme score ranks themes against each other:
+profit-growth share 35, orders as % of theme revenue 25, FII + DII stake change 25, net institutional
+buying as % of the theme's market cap 15 (percentile ranks; none at all scores 0 for orders and buying).
+An order is ignored as a probable misread only if it is above 3x the company's yearly revenue AND above
+1.5x its market cap.
 
 Track record
 ------------
@@ -58,7 +62,8 @@ HALF_GROUPS = 3
 FLAG_DAYS = 180
 WINDOW_DAYS = 90
 BIG_PENALTY_PCT = 0.5
-MAX_ORDER_PCT_REV = 300     # one order above 3x yearly revenue is almost always a misread amount
+MAX_ORDER_PCT_REV = 300     # one order above 3x yearly revenue is usually a misread amount ...
+MAX_ORDER_PCT_MCAP = 150    # ... unless it is also small against the market cap (a long-cycle order, e.g. shipbuilding)
 LOG_DAYS = 400
 MIN_THEME_STOCKS = 8         # smaller groups (often unmapped industries) get no theme card
 GROUPS = {"earn": 40, "orders": 15, "own": 20, "inst": 10, "val": 15}
@@ -371,7 +376,9 @@ def build(data_dir, cache_dir, jload, jsave, close=None, close_date=None, bench_
         ev = inp.events.get(sym, [])
         orders = [x["v"] for x in ev if x["tag"] == "Order" and x["d"] >= since and x.get("v")]
         ttm = rec.get("ttm") or {}
-        orders = [v for v in orders if not (ttm.get("rev") and v / ttm["rev"] * 100 > MAX_ORDER_PCT_REV)]
+        # dropped only when above 3x revenue AND above 1.5x market cap (both look like a misread amount)
+        orders = [v for v in orders if not (ttm.get("rev") and v / ttm["rev"] * 100 > MAX_ORDER_PCT_REV
+                                            and v / mc * 100 > MAX_ORDER_PCT_MCAP)]
         base = {"sym": sym, "name": rec.get("n"), "mcap": mc, "theme": theme, "qe": rec.get("qe"),
                 "close": inp.close.get(sym)}
         universe.append((base, rec, orders))
@@ -455,6 +462,7 @@ def build_themes(universe, scored, idea_syms, inst, themes_rows, ss):
         stake = [score_of[b["sym"]].get("inst_stake_chg") for b, _, _ in items if b["sym"] in score_of]
         stake = [s for s in stake if s is not None]
         inet = sum(inst[b["sym"]][0] for b, _, _ in items if b["sym"] in inst)
+        tmcap = sum(b["mcap"] or 0 for b, _, _ in items)
         top = sorted((score_of[b["sym"]] for b, _, _ in items if b["sym"] in score_of), key=lambda r: -r["score"])[:6]
         rows.append({
             "theme": theme, "n": len(items), "ss_index": ss_index.get(theme) or None,
@@ -463,7 +471,7 @@ def build_themes(universe, scored, idea_syms, inst, themes_rows, ss):
             "median_sales_yoy": r1(statistics.median(sales)) if sales else None,
             "stake_chg": round(statistics.mean(stake), 2) if stake else None,
             "stake_up_pct": r1(sum(1 for s in stake if s > 0) / len(stake) * 100) if stake else None,
-            "inst_net_cr": round(inet, 0),
+            "inst_net_cr": round(inet, 0), "inst_net_pct_mcap": round(inet / tmcap * 100, 3) if tmcap else None,
             "ideas": sorted(b["sym"] for b, _, _ in items if b["sym"] in idea_syms),
             "top": [{"sym": r["sym"], "score": r["score"]} for r in top],
         })
@@ -478,11 +486,13 @@ def build_themes(universe, scored, idea_syms, inst, themes_rows, ss):
             else:
                 p = (sum(1 for x in vals if x < v) + 0.5 * sum(1 for x in vals if x == v)) / len(vals)
             r.setdefault("_p", {})[key] = p
-    for k, z in (("strong_pct", False), ("orders_pct_rev", True), ("stake_chg", False), ("inst_net_cr", True)):
+    # institutional buying is ranked as % of the theme's market cap, so a theme with many stocks gets no head start
+    for k, z in (("strong_pct", False), ("orders_pct_rev", True), ("stake_chg", False), ("inst_net_pct_mcap", True)):
         pr(k, z)
     for r in rows:
         p = r.pop("_p")
-        r["score"] = round(35 * p["strong_pct"] + 25 * p["orders_pct_rev"] + 25 * p["stake_chg"] + 15 * p["inst_net_cr"], 0)
+        r["score"] = round(35 * p["strong_pct"] + 25 * p["orders_pct_rev"] + 25 * p["stake_chg"]
+                           + 15 * p["inst_net_pct_mcap"], 0)
         if ss and r["ss_index"]:
             sec = (((ss.get("sectors") or {}).get("benchmarks") or {}).get("NIFTY500") or {}).get("rows", {}).get(r["ss_index"])
             if sec:

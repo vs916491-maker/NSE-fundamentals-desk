@@ -52,6 +52,7 @@ Optional `SUPABASE_URL`, `SUPABASE_SERVICE_KEY` (same as the other two repos): l
 - Stock names link to TradingView.
 - Ideas (decided 5 Nov 2026): 1-year horizon, market cap ≥ ₹500 cr. Price timing (Sector Strength) is shown but kept out of the score so the track record can test it.
 - Ideas valuation (5 Nov 2026): run-rate P/E (last 2 quarters' profit × 2) replaces trailing P/E when lower, only for proven growers (profit +25% YoY in both quarters, sales +15%, no one-off/other-income flag). Vivek chose not to make the P/E ÷ growth scale stricter.
+- Theme score (7 Nov 2026): orders ignored as a probable misread only if above 3x revenue AND above 1.5x market cap (GRSE's ₹32,000 cr NGC order was being dropped); bulk/block buying ranked as % of the theme's market cap, not ₹ cr, so big themes get no head start. Theme score is still percentile ranks, so a 33% order book scores the same as a 3% one if both rank first.
 
 ## How to ask for changes
 Give: tab name, what's wrong or wanted, and a screenshot or symbol + date. Keep changes small.
