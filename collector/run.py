@@ -13,7 +13,7 @@ from zoneinfo import ZoneInfo
 sys.path.insert(0, os.path.dirname(__file__))
 from nse import NSE
 import tagger, xbrl, flows, clients, fundamentals
-import ideas, industry, profiles, finco
+import ideas, industry, profiles, finco, history
 
 IST = ZoneInfo("Asia/Kolkata")
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -22,6 +22,7 @@ CACHE = os.path.join(ROOT, "cache")
 KEEP_DAYS = 120
 IF_FIN = "Integrated Filing- Financials"
 FINCO_MINUTES = 10   # per run, for the extra bank / lender numbers (collector/finco.py)
+HISTORY_MINUTES = 15  # per run, for daily prices + EPS history (collector/history.py, Price & P/E chart)
 
 log = logging.getLogger("run")
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
@@ -130,30 +131,6 @@ class Collector:
             log.info("bhavcopy %s: %d prices", dd, len(self.close))
             return
         log.warning("no bhavcopy found near %s", d)
-
-    def closes_on(self, d: date):
-        """(trading date, {symbol: close}) for the last trading day on or before d, from NSE's bhavcopy.
-        Used for the quarter-end prices on the Stock Screener's Price and P/E chart."""
-        for i in range(0, 7):
-            dd = d - timedelta(days=i)
-            url = f"https://nsearchives.nseindia.com/products/content/sec_bhavdata_full_{dd.strftime('%d%m%Y')}.csv"
-            try:
-                raw = self.n.get(url, raw=True, tries=2).decode(errors="ignore")
-            except Exception:
-                continue
-            rows = csv.reader(io.StringIO(raw))
-            hdr = [h.strip() for h in next(rows)]
-            si, se, ci = hdr.index("SYMBOL"), hdr.index("SERIES"), hdr.index("CLOSE_PRICE")
-            out = {}
-            for r in rows:
-                if len(r) > ci and r[se].strip() in ("EQ", "BE", "BZ", "SM", "ST"):
-                    try:
-                        out[r[si].strip()] = float(r[ci])
-                    except ValueError:
-                        pass
-            if out:
-                return dd.isoformat(), out
-        return None, {}
 
     # ----- shareholding cache -----
     def shp_history(self, sym):
@@ -592,10 +569,16 @@ def run_fund(c: Collector, results_rows, minutes):
         f = fundamentals.Fund(c, DATA, CACHE, jload, jsave, parse_nse_date)
         f.run([r["sym"] for r in results_rows if r.get("sym")], minutes)
         f.fill_series()
-        f.quarter_prices()
         f.save()
         try:
             finco.fill(f, FINCO_MINUTES)
+        finally:
+            f.save()
+        try:
+            history.update(f, DATA, HISTORY_MINUTES)
+        except Exception as e:  # noqa: BLE001
+            log.exception("price / EPS history failed")
+            print(f"::warning title=Price and P/E history::{type(e).__name__}: {e}"[:400])
         finally:
             f.save()
     except Exception:
@@ -723,10 +706,12 @@ def main():
     ap.add_argument("--flow-days", type=int, default=7, help="days of derivatives data to (re)check")
     ap.add_argument("--fund-minutes", type=float, default=30, help="minutes for filling stock fundamentals")
     ap.add_argument("--fund-only", action="store_true", help="only fill stock fundamentals (and prices)")
-    ap.add_argument("--series-only", action="store_true", help="only rebuild quarter series (no filing downloads) and quarter-end prices")
+    ap.add_argument("--series-only", action="store_true", help="only add quarter series to stored fundamentals (no downloads)")
     ap.add_argument("--industry-probe", help="comma-separated symbols: test where NSE publishes industry (testing)")
     ap.add_argument("--ideas-only", action="store_true", help="only rebuild the Ideas tab (and look up missing industries)")
     ap.add_argument("--industry-minutes", type=float, default=6, help="minutes for looking up stock industries")
+    ap.add_argument("--history-only", action="store_true", help="only fill daily prices and EPS history (Price & P/E chart)")
+    ap.add_argument("--history-minutes", type=float, default=150, help="minutes for --history-only")
     ap.add_argument("--profile-minutes", type=float, default=8, help="minutes for writing company descriptions (0 = none)")
     ap.add_argument("--profiles-only", action="store_true", help="only write company profiles for the Stock page")
     ap.add_argument("--fund-probe", help="comma-separated symbols: parse their latest filing and print it (testing)")
@@ -807,10 +792,17 @@ def main():
         c.load_close(d)
         run_ideas(c, a.industry_minutes, a.profile_minutes)
         return
+    if a.history_only:
+        c.load_close(date.fromisoformat(a.date) if a.date else today)
+        f = fundamentals.Fund(c, DATA, CACHE, jload, jsave, parse_nse_date)
+        try:
+            history.update(f, DATA, a.history_minutes)
+        finally:
+            f.save()
+        return
     if a.series_only:
         f = fundamentals.Fund(c, DATA, CACHE, jload, jsave, parse_nse_date)
         f.fill_series()
-        f.quarter_prices()
         f.save()
         return
     if a.fund_only:
