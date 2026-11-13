@@ -13,7 +13,7 @@ from zoneinfo import ZoneInfo
 sys.path.insert(0, os.path.dirname(__file__))
 from nse import NSE
 import tagger, xbrl, flows, clients, fundamentals
-import ideas, industry, profiles
+import ideas, industry, profiles, finco
 
 IST = ZoneInfo("Asia/Kolkata")
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -21,6 +21,7 @@ DATA = os.path.join(ROOT, "site", "data")
 CACHE = os.path.join(ROOT, "cache")
 KEEP_DAYS = 120
 IF_FIN = "Integrated Filing- Financials"
+FINCO_MINUTES = 10   # per run, for the extra bank / lender numbers (collector/finco.py)
 
 log = logging.getLogger("run")
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
@@ -568,6 +569,10 @@ def run_fund(c: Collector, results_rows, minutes):
         f.run([r["sym"] for r in results_rows if r.get("sym")], minutes)
         f.fill_series()
         f.save()
+        try:
+            finco.fill(f, FINCO_MINUTES)
+        finally:
+            f.save()
     except Exception:
         log.exception("fundamentals failed")
 
