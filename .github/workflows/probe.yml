@@ -14,4 +14,4 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install "curl_cffi>=0.7"
-      - run: python tools/probe_tags.py HDFCBANK,SBIN,BAJFINANCE,LICHSGFIN,CHOLAFIN
+      - run: python tools/probe_tags.py HDFCBANK,SBIN,AUBANK,BAJFINANCE,LICHSGFIN,MUTHOOTFIN,HDFCAMC,SBILIFE,ANGELONE,BAJAJFINSV,PFC
