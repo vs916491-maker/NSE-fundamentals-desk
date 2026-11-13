@@ -387,3 +387,8 @@ details.method ul { padding-left: 18px; }
 .plean { font-size: 11.5px; padding: 1px 7px; border-radius: 999px; border: 1px solid; white-space: nowrap; cursor: help; }
 .plean.up { color: var(--up); }
 .plean.down { color: var(--down); }
+
+/* stock search box in the header */
+.gsearch { flex: 1 1 220px; max-width: 320px; margin: 0 12px; }
+.gsearch input { width: 100%; }
+@media (max-width: 640px) { .gsearch { order: 3; max-width: none; margin: 0; flex-basis: 100%; } }
