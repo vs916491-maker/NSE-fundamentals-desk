@@ -238,7 +238,8 @@ def _listings(c, sym, need_old):
     out = {}
 
     def put(nat, qe, url, filed):
-        if not qe or not url or not url.lower().startswith("http"):
+        # NSE sometimes lists a filing with no file ("-" or a link ending in "/-")
+        if not qe or not url or not url.lower().startswith("http") or url.rstrip().endswith("/-"):
             return
         k = (nat, qe)
         if k in out:
@@ -280,7 +281,13 @@ def eps_history(c, sym, rec, jload, jsave):
                 out.append([qe.isoformat(), None, None])
                 continue
             url, filed = ent
-            m = c.fin_metrics(sym, nature, qe, url, cache, accept_old=True, strict=True)
+            try:
+                m = c.fin_metrics(sym, nature, qe, url, cache, accept_old=True, strict=True)
+            except Exception as e:  # noqa: BLE001
+                if "HTTP 404" not in str(e):
+                    raise               # network trouble: retry the whole stock next run
+                m = None                # the listed file is gone: leave this quarter blank
+                log.info("eps history %s %s: file missing on NSE", sym, qe)
             eps = None
             if m:
                 q = (m.get("periods") or {}).get("q") if m.get("_v") == xbrl.FIN_VERSION else None
