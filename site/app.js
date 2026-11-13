@@ -579,6 +579,7 @@ function fundSection(sym, f) {
     tile("Price ₹", num1(px, 2), pxDate ? `close ${shortDate(pxDate)}` : "") +
     tile("Market cap ₹cr", mcap == null ? '<span class="dim">–</span>' : cr(Math.round(mcap))) +
     tile("P/E", peTxt, peNote) +
+    tile("Run-rate P/E", peCell(runRatePe(sym, f, q.pat, q.eps)), `${f.qe ? qLabel(f.qe) : "latest quarter"} profit × 4`) +
     tile("Mcap / Sales", num1(ps, 2), ps == null && t.rev == null ? "needs 4 quarters" : "last 4 quarters") +
     tile("EPS ₹ (12 m)", num1(t.eps, 2)) +
     tile("Sales ₹cr (12 m)", t.rev == null ? '<span class="dim">–</span>' : cr(t.rev)) + `</div>`;
@@ -646,7 +647,7 @@ function fundSection(sym, f) {
     if (s >= 10) flag(true, `Exceptional items ₹${cr(q.exc)} cr (${inr(s, 0)}% of PBT)`, "One-off gains or losses: compare profit growth without them.");
   }
   if (flags.length) h += `<div class="fflags">${flags.join("")}</div>`;
-  h += `<div class="fund-note">From the company's results filing. Operating profit = sales − operating costs (before other income, interest and depreciation). P/E and Mcap/Sales use the last 4 quarters and the latest close; numbers are read automatically, so open the filing before acting.</div>`;
+  h += `<div class="fund-note">From the company's results filing. Operating profit = sales − operating costs (before other income, interest and depreciation). P/E and Mcap/Sales use the last 4 quarters and the latest close; run-rate P/E uses the latest quarter's net profit × 4, so one unusually strong or weak quarter (or a one-off gain) distorts it; numbers are read automatically, so open the filing before acting.</div>`;
   return h;
 }
 
@@ -691,13 +692,33 @@ function policySection(p, pol) {
   return h + `<div class="fund-note">Sector-level headlines matched by keywords, not about this company specifically. “Tailwind / headwind” is a guess from the headline’s wording, not an estimate of the effect on earnings; open the article before acting.</div>`;
 }
 
+// ---------- stock search (box in the header and on the Stock Screener tab) ----------
+let searchLoad;
+function ensureSearch() {
+  // one download, shared; also fills the suggestion list both search boxes use
+  searchLoad = searchLoad || getJSON("data/search.json").catch(() => ({})).then((d) => {
+    S.search = d;
+    $("#symList").innerHTML = Object.keys(d).sort().map((s) => `<option value="${esc(s)}">${esc(d[s].n || "")}</option>`).join("");
+  });
+  return searchLoad;
+}
+// what was typed -> a symbol: exact symbol, exact company name, else the first symbol or name that starts with / contains it
+async function goToStock(text) {
+  const v = String(text || "").trim();
+  if (!v) return;
+  await ensureSearch();
+  const up = v.toUpperCase(), low = v.toLowerCase(), syms = Object.keys(S.search || {});
+  const nm = (s) => (S.search[s].n || "").toLowerCase();
+  const sym = S.search?.[up] ? up
+    : syms.find((s) => nm(s) === low) || syms.find((s) => s.startsWith(up)) || syms.find((s) => nm(s).startsWith(low))
+    || syms.find((s) => nm(s).includes(low)) || up;
+  location.hash = "#stock/" + encodeURIComponent(sym);
+}
+
 // ---------- Stock ----------
 async function renderStock(sym) {
   const out = $("#stockOut");
-  if (!S.search) {
-    S.search = await getJSON("data/search.json").catch(() => ({}));
-    $("#symList").innerHTML = Object.keys(S.search).sort().map((s) => `<option value="${esc(s)}">${esc(S.search[s].n || "")}</option>`).join("");
-  }
+  await ensureSearch();
   if (!sym) { out.innerHTML = '<div class="empty">Type a symbol to see its results, shareholding and filings from the last 120 days.</div>'; return; }
   $("#stockQ").value = sym;
   out.innerHTML = '<div class="empty">Loading…</div>';
@@ -910,7 +931,7 @@ async function renderWatch() {
     { key: "note", label: "Note", l: 1, f: (r) => `<span class="wnote">${r.w.setup ? `<span class="dim">Sector Strength: ${esc(r.w.setup)}${r.w.buy ? `, buy ${r.w.buy_is_trigger ? "above " : ""}${inr(r.w.buy, 2)}, stop ${inr(r.w.stop, 2)}` : ""}</span><br>` : ""}${esc(r.w.note || "")}</span>`, sv: (r) => r.w.note || "" },
     { key: "act", label: "", l: 1, f: (r) => `<button class="wact" data-edit="${r.w.id}" title="Edit note">✎</button><button class="wact del" data-del="${r.w.id}" title="Delete from watchlist">Delete</button>`, sv: () => 0 },
   ];
-  out.innerHTML = '<div class="tablewrap"><table class="grid" id="watchTable"></table></div><p class="note">New filings: tagged NSE filings (results, orders, ratings, red flags…) since the day you added the stock; routine filings are left out. P/E, OPM and YoY growth are from the latest results (Fundamentals section of the Stock page).</p>';
+  out.innerHTML = '<div class="tablewrap"><table class="grid" id="watchTable"></table></div><p class="note">New filings: tagged NSE filings (results, orders, ratings, red flags…) since the day you added the stock; routine filings are left out. P/E, OPM and YoY growth are from the latest results (Fundamentals section of the Stock Screener tab).</p>';
   table($("#watchTable"), "watch", cols, rows, ["added", false]);
   out.querySelectorAll("[data-edit]").forEach((b) => b.onclick = () => { const w = list.find((x) => x.id == b.dataset.edit); watchDialog({ sym: w.symbol, name: w.name, entry: w }); });
   out.querySelectorAll("[data-del]").forEach((b) => b.onclick = () => {
@@ -1141,7 +1162,10 @@ async function init() {
   $("#nextDay").onclick = () => { const i = dates.indexOf(S.date); if (i > 0) { S.date = dates[i - 1]; $("#dateSel").value = S.date; render(); } };
   ["#todayQ", "#resQ", "#holdQ", "#dealQ", "#addQ", "#newsQ", "#ideaQ"].forEach((s) => $(s).addEventListener("input", render));
   ["#showOther", "#resCap", "#resVerdict", "#holdMin", "#instOnly", "#dealSide", "#addSide", "#addMin", "#ideaTheme", "#ideaLabel"].forEach((s) => $(s).addEventListener("change", render));
-  $("#stockQ").addEventListener("change", () => { const v = $("#stockQ").value.trim().toUpperCase(); if (v) location.hash = "#stock/" + encodeURIComponent(v); });
+  $("#stockQ").addEventListener("change", () => goToStock($("#stockQ").value));
+  const gq = $("#globalQ");
+  gq.addEventListener("focus", ensureSearch);
+  gq.addEventListener("change", async () => { await goToStock(gq.value); gq.value = ""; gq.blur(); });
   document.addEventListener("click", (e) => { const s = e.target.closest(".sym"); if (s) location.hash = "#stock/" + encodeURIComponent(s.dataset.sym); });
   window.addEventListener("hashchange", render);
   render();

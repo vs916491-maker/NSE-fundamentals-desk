@@ -15,7 +15,7 @@ Daily digest of NSE corporate filings for all listed stocks, plus a nightly emai
 - **Deals** – bulk/block deals
 - **FII/DII Adding** – stocks institutions are buying via bulk/block deals, ranked over 7/30/90 days
 - **FII/DII Activity** – cash + index F&O trend charts with short-term and swing bullish/bearish verdicts
-- **Stock** – per-symbol timeline + fundamentals (P/E, margins, growth, quality flags); **About** box (theme, NSE industry, 2-line AI-written description) and **Policy & Budget watch** (sector-level government/regulator headlines with a rough tailwind/headwind guess)
+- **Stock Screener** (tab renamed 13 Nov 2026; hash still `#stock`) – per-symbol timeline + fundamentals (P/E, run-rate P/E, margins, growth, quality flags); header search box (symbol or company name) opens it from any tab; **About** box (theme, NSE industry, 2-line AI-written description) and **Policy & Budget watch** (sector-level government/regulator headlines with a rough tailwind/headwind guess)
 - **News** – market headlines from RSS feeds, hourly 8 AM–11 PM
 - **Watchlist** – private, Supabase table `fd_watchlist`, shared with Sector Strength (the F&O Desk has its own separate watchlist)
 - **Refresh** button – runs an on-demand refresh (needs sign-in)

@@ -20,6 +20,10 @@
       <p class="sub" id="updated">Loading…</p>
     </div>
   </div>
+  <div class="gsearch">
+    <input id="globalQ" type="search" list="symList" placeholder="Search a stock: symbol or name" autocomplete="off" aria-label="Search a stock">
+    <datalist id="symList"></datalist>
+  </div>
   <div class="datebar">
     <button class="icon" id="prevDay" aria-label="Previous day">‹</button>
     <select id="dateSel" aria-label="Date"></select>
@@ -39,7 +43,7 @@
   <a href="#results" data-tab="results">Results</a>
   <a href="#holdings" data-tab="holdings">Holdings</a>
   <a href="#deals" data-tab="deals">Deals</a>
-  <a href="#stock" data-tab="stock">Stock</a>
+  <a href="#stock" data-tab="stock">Stock Screener</a>
   <a href="#watch" data-tab="watch">Watchlist <span class="wcount" id="wCount"></span></a>
 </nav>
 
@@ -192,8 +196,7 @@
 
   <section id="tab-stock" class="tab" hidden>
     <div class="toolbar">
-      <input id="stockQ" type="search" list="symList" placeholder="Type a symbol, e.g. TCS" autocomplete="off" autocapitalize="characters">
-      <datalist id="symList"></datalist>
+      <input id="stockQ" type="search" list="symList" placeholder="Type a symbol or company name, e.g. TCS" autocomplete="off">
     </div>
     <div id="stockOut"></div>
   </section>
