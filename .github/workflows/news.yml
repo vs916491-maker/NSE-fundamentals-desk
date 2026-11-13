@@ -8,7 +8,7 @@ on:
     - cron: "35 2-17 * * *"
   push:
     branches: [main]
-    paths: ["collector/news.py"]
+    paths: ["collector/news.py", "collector/policy.py"]
   workflow_dispatch:
     inputs:
       force:
@@ -37,12 +37,15 @@ jobs:
       - run: pip install "curl_cffi>=0.7"
       - name: Collect news
         run: python collector/news.py ${{ (github.event_name == 'push' || github.event.inputs.force == 'true') && '--force' || '' }}
+      - name: Collect policy and Budget news (skips unless 10 hours old)
+        continue-on-error: true
+        run: python collector/policy.py ${{ (github.event_name == 'push' || github.event.inputs.force == 'true') && '--force' || '' }}
       - name: Commit
         id: commit
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
-          git add site/data/news.json
+          git add site/data/news.json site/data/policy.json 2>/dev/null || git add site/data/news.json
           if git diff --cached --quiet; then echo "changed=false" >> "$GITHUB_OUTPUT"; exit 0; fi
           git commit -qm "news $(TZ=Asia/Kolkata date +'%Y-%m-%d %H:%M') IST"
           for i in 1 2 3 4; do git pull -q --rebase -X theirs origin main && git push -q && break; sleep 6; done

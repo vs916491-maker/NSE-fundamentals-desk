@@ -650,6 +650,47 @@ function fundSection(sym, f) {
   return h;
 }
 
+// ---------- Company profile + policy news (Stock page) ----------
+S.prof = {}; S.policy = undefined;
+const profLoads = {};
+async function loadProfile(sym) {
+  const c = /^[A-Z]/i.test(sym) ? sym[0].toUpperCase() : "0";
+  profLoads[c] = profLoads[c] || getJSON(`data/profiles/${c}.json`).catch(() => ({}));
+  S.prof[c] = await profLoads[c];
+  return S.prof[c][sym] || null;
+}
+async function loadPolicy() {
+  if (S.policy === undefined) S.policy = await getJSON(`data/policy.json?${Math.floor(Date.now() / 3600000)}`).catch(() => null);
+  return S.policy;
+}
+function aboutSection(p) {
+  if (!p || !(p.ind || p.th || p.d)) return "";
+  const tags = [p.th ? `<span class="ptag theme" title="Theme used on the Ideas tab">${esc(p.th)}</span>` : "",
+    p.ind ? `<span class="ptag" title="NSE basic industry">${esc(p.ind)}</span>` : ""].join("");
+  return `<div class="about">${tags ? `<div class="ptags">${tags}</div>` : ""}
+    ${p.d ? `<p class="pdesc">${esc(p.d)}</p><div class="fund-note">AI-written summary (Google Gemini) from general knowledge, not from a filing; it can be wrong or out of date.</div>`
+      : `<div class="fund-note">Description not written yet.</div>`}</div>`;
+}
+function policySection(p, pol) {
+  if (!pol || !pol.items || !p) return "";
+  const mine = Object.entries(pol.topics || {}).filter(([, v]) => (p.ind && (v.inds || []).includes(p.ind)) || (p.th && (v.themes || []).includes(p.th)));
+  if (!mine.length) return "";
+  // narrow topics (matched on this stock's own industry) first, then theme-wide ones
+  const rank = Object.fromEntries(mine.map(([n, v]) => [n, p.ind && (v.inds || []).includes(p.ind) ? 0 : 1]));
+  const items = pol.items.filter((n) => n.topics.some((t) => t in rank))
+    .map((n) => ({ ...n, r: Math.min(...n.topics.filter((t) => t in rank).map((t) => rank[t])) }))
+    .sort((a, b) => a.r - b.r || String(b.ts).localeCompare(String(a.ts))).slice(0, 12);
+  const LEAN = { up: ['<span class="plean up" title="Wording suggests support for the sector (a guess from the headline)">possible tailwind</span>'],
+    down: ['<span class="plean down" title="Wording suggests pressure on the sector (a guess from the headline)">possible headwind</span>'] };
+  let h = `<h3>Policy &amp; Budget watch</h3><div class="fund-meta">${mine.map(([n]) => esc(n)).join(" · ")} · government and regulator headlines from the last ${pol.keep_days || 75} days · updated ${ago(pol.updated)}</div>`;
+  if (!items.length) return h + `<div class="empty fund-empty">No policy or Budget headlines matched for this sector yet.</div>`;
+  h += `<div class="prows">${items.map((n) => `<div class="prow">
+      <span class="ntime">${ago(n.ts)}</span>
+      <a href="${esc(n.u)}" target="_blank" rel="noopener">${esc(n.t)}</a>
+      ${n.lean ? LEAN[n.lean][0] : ""}<span class="nsrc">${esc(n.src)}${n.n ? ` +${n.n - 1}` : ""} · ${esc(n.topics.filter((t) => t in rank).join(", "))}</span></div>`).join("")}</div>`;
+  return h + `<div class="fund-note">Sector-level headlines matched by keywords, not about this company specifically. “Tailwind / headwind” is a guess from the headline’s wording, not an estimate of the effect on earnings; open the article before acting.</div>`;
+}
+
 // ---------- Stock ----------
 async function renderStock(sym) {
   const out = $("#stockOut");
@@ -668,13 +709,16 @@ async function renderStock(sym) {
   const label = Object.fromEntries(TAGS);
   const fund = await loadFund(sym).catch(() => null);
   const fname = name || fund?.n || "";
+  const [prof, pol] = await Promise.all([loadProfile(sym).catch(() => null), loadPolicy()]);
   let h = `<div class="stockhead"><h2>${esc(sym)}</h2>${chartLink(sym)}<span class="co">${esc(fname)}</span>
     <a href="https://www.nseindia.com/get-quotes/equity?symbol=${encodeURIComponent(sym)}" target="_blank" rel="noopener">NSE page ↗</a>${await watchButton(sym, fname)}</div>`;
   const inst = await loadInst();
   const sd = inst ? inst.rows.filter((r) => r[2] === sym).map(([date, kind, , client, side, qty, price, value_cr, type]) =>
     ({ date, kind, client, side, qty, price, value_cr, type })) : [];
+  h += aboutSection(prof);
   if (!fund && !res.length && !hold.length && !ev.length && !sd.length) { out.innerHTML = h + '<div class="empty">Nothing recorded for this symbol yet.</div>'; wireWatchButton(sym, fname); return; }
   h += fundSection(sym, fund);
+  h += policySection(prof, pol);
   if (res.length) h += `<h3>Quarterly results</h3><div class="tablewrap"><table class="grid" id="stRes"></table></div>`;
   if (sd.length) h += `<h3>Institutional bulk/block deals (last 90 days)</h3><div class="tablewrap"><table class="grid" id="stDeals"></table></div>`;
   if (hold.length) h += `<h3>Shareholding</h3><div class="tablewrap"><table class="grid" id="stHold"></table></div>`;

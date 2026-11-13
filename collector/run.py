@@ -13,7 +13,7 @@ from zoneinfo import ZoneInfo
 sys.path.insert(0, os.path.dirname(__file__))
 from nse import NSE
 import tagger, xbrl, flows, clients, fundamentals
-import ideas, industry
+import ideas, industry, profiles
 
 IST = ZoneInfo("Asia/Kolkata")
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -592,8 +592,9 @@ def nifty500_close(c: Collector):
     return None
 
 
-def run_ideas(c: Collector, industry_minutes=6.0):
-    """Industry lookups for stocks not classified yet, then the Ideas tab (ideas.json, ideas_log.json)."""
+def run_ideas(c: Collector, industry_minutes=6.0, profile_minutes=8.0, ideas_too=True):
+    """Industry lookups for stocks not classified yet, then the Ideas tab (ideas.json, ideas_log.json),
+    then company profiles for the Stock page (industry, theme, short description)."""
     try:
         fund = {}
         fdir = os.path.join(DATA, "fund")
@@ -605,11 +606,18 @@ def run_ideas(c: Collector, industry_minutes=6.0):
         order = [s for s, v in sorted(mc.items(), key=lambda kv: -kv[1]) if v >= ideas.MIN_MCAP_CR]
         if industry_minutes > 0:
             industry.update(c.n, order, os.path.join(CACHE, "industry.json"), jload, jsave, industry_minutes)
-        ideas.build(DATA, CACHE, jload, jsave, close=c.close or None, close_date=c.close_date,
-                    bench_close=nifty500_close(c), ss=ideas.load_sector_strength())
+        if ideas_too:
+            ideas.build(DATA, CACHE, jload, jsave, close=c.close or None, close_date=c.close_date,
+                        bench_close=nifty500_close(c), ss=ideas.load_sector_strength())
     except Exception as e:  # noqa: BLE001
         log.exception("ideas failed")
         print(f"::warning title=Ideas::could not build the Ideas tab: {type(e).__name__}: {e}"[:400])
+        return
+    try:
+        profiles.build(order, {s: r.get("n") for s, r in fund.items()}, DATA, CACHE, jload, jsave, profile_minutes)
+    except Exception as e:  # noqa: BLE001
+        log.exception("profiles failed")
+        print(f"::warning title=Company profiles::{type(e).__name__}: {e}"[:400])
 
 
 def send_email(d: date, day, force=False):
@@ -661,7 +669,7 @@ def auto_refresh(c: Collector, a):
         c.budget = Budget(a.fund_minutes + 5)
         run_fund(c, day.get("results") or [], a.fund_minutes)
     if mode == "eod":
-        run_ideas(c, a.industry_minutes)
+        run_ideas(c, a.industry_minutes, a.profile_minutes)
     state = jload(state_path, {})
     state["refreshes"] = (state.get("refreshes", []) + [key])[-60:]
     state["last_refresh"] = {"date": d.isoformat(), "mode": mode, "at": datetime.now(IST).isoformat(timespec="minutes")}
@@ -689,6 +697,8 @@ def main():
     ap.add_argument("--industry-probe", help="comma-separated symbols: test where NSE publishes industry (testing)")
     ap.add_argument("--ideas-only", action="store_true", help="only rebuild the Ideas tab (and look up missing industries)")
     ap.add_argument("--industry-minutes", type=float, default=6, help="minutes for looking up stock industries")
+    ap.add_argument("--profile-minutes", type=float, default=8, help="minutes for writing company descriptions (0 = none)")
+    ap.add_argument("--profiles-only", action="store_true", help="only write company profiles for the Stock page")
     ap.add_argument("--fund-probe", help="comma-separated symbols: parse their latest filing and print it (testing)")
     a = ap.parse_args()
 
@@ -758,10 +768,14 @@ def main():
             out["stockIndices_n500"] = "ERR " + str(e)[:200]
         jsave(os.path.join(CACHE, "industry_probe.json"), out)
         return
+    if a.profiles_only:
+        c.load_close(date.fromisoformat(a.date) if a.date else today)
+        run_ideas(c, 0, a.profile_minutes, ideas_too=False)
+        return
     if a.ideas_only:
         d = date.fromisoformat(a.date) if a.date else today
         c.load_close(d)
-        run_ideas(c, a.industry_minutes)
+        run_ideas(c, a.industry_minutes, a.profile_minutes)
         return
     if a.series_only:
         f = fundamentals.Fund(c, DATA, CACHE, jload, jsave, parse_nse_date)
@@ -795,7 +809,7 @@ def main():
     update_market(c, d, [d - timedelta(days=i) for i in range(7)])
     c.budget = Budget(a.fund_minutes + 5)
     run_fund(c, day.get("results") or [], a.fund_minutes)
-    run_ideas(c, a.industry_minutes)
+    run_ideas(c, a.industry_minutes, a.profile_minutes)
     rebuild_index()
     if a.email and not a.force_email and datetime.now(IST).hour < 19:
         log.info("before 7 PM IST: collected, email left for a later run")
