@@ -310,39 +310,6 @@ class Fund:
                 added += 1
         log.info("quarter series added for %d stocks", added)
 
-    def quarter_prices(self, keep=10):
-        """Closing price at each quarter end in the quarter series (qs[i]["px"]), for the Price and P/E chart.
-        One bhavcopy per quarter end, downloaded once and kept in cache/qclose.json."""
-        path = os.path.join(self.c.cache_dir, "qclose.json")
-        qc = self.jload(path, {})
-        today = date.today().isoformat()
-        ends = sorted({q["e"] for r in self.rows.values() for q in r.get("qs") or []}, reverse=True)
-        ends = [e for e in ends if e < today][:keep]
-        got = 0
-        for e in ends:
-            if e in qc:
-                continue
-            try:
-                d, p = self.c.closes_on(date.fromisoformat(e))
-            except Exception as ex:  # noqa: BLE001
-                log.warning("quarter-end prices %s: %s", e, ex)
-                continue
-            if p:
-                qc[e] = {"d": d, "p": p}
-                got += 1
-        qc = {e: qc[e] for e in ends if e in qc}
-        self.jsave(path, qc)
-        n = 0
-        for sym, r in self.rows.items():
-            for q in r.get("qs") or []:
-                v = ((qc.get(q["e"]) or {}).get("p") or {}).get(sym)
-                if v:
-                    q["px"] = v
-                    n += 1
-                else:
-                    q.pop("px", None)
-        log.info("quarter-end prices: %d quarter ends (%d downloaded now), %d stock-quarters priced", len(qc), got, n)
-
     def save(self):
         os.makedirs(self.dir, exist_ok=True)
         shards = {}
