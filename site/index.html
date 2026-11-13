@@ -198,6 +198,24 @@
     <div class="toolbar">
       <input id="stockQ" type="search" list="symList" placeholder="Type a symbol or company name, e.g. TCS" autocomplete="off">
     </div>
+    <form id="scrForm" class="scr" autocomplete="off">
+      <label>Sales growth QoQ %<input id="scrRevQ" type="number" step="any" inputmode="decimal" placeholder="min"></label>
+      <label>PAT growth QoQ %<input id="scrPatQ" type="number" step="any" inputmode="decimal" placeholder="min"></label>
+      <label>Sales growth YoY %<input id="scrRevY" type="number" step="any" inputmode="decimal" placeholder="min"></label>
+      <label>PAT growth YoY %<input id="scrPatY" type="number" step="any" inputmode="decimal" placeholder="min"></label>
+      <label>Market cap ₹cr<input id="scrCap" type="number" step="any" min="500" inputmode="decimal" placeholder="min 500"></label>
+      <label>P/E<input id="scrPe" type="number" step="any" min="0" inputmode="decimal" placeholder="max"></label>
+      <label>OPM %<input id="scrOpm" type="number" step="any" inputmode="decimal" placeholder="min"></label>
+      <label>NPM %<input id="scrNpm" type="number" step="any" inputmode="decimal" placeholder="min"></label>
+      <div class="scr-btns">
+        <button type="button" id="scrClear" class="btn">Clear</button>
+        <button type="submit" id="scrRun" class="btn primary">Run</button>
+      </div>
+    </form>
+    <div id="scrOut" hidden>
+      <p id="scrNote" class="note"></p>
+      <div class="tablewrap"><table id="scrTable" class="grid"></table></div>
+    </div>
     <div id="stockOut"></div>
   </section>
 

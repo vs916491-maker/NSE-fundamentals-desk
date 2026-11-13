@@ -392,3 +392,16 @@ details.method ul { padding-left: 18px; }
 .gsearch { flex: 1 1 220px; max-width: 320px; margin: 0 12px; }
 .gsearch input { width: 100%; }
 @media (max-width: 640px) { .gsearch { order: 3; max-width: none; margin: 0; flex-basis: 100%; } }
+
+/* ---------- Stock Screener: filter boxes ---------- */
+.scr { display: grid; grid-template-columns: repeat(auto-fill, minmax(128px, 1fr)); gap: 8px; align-items: end;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; margin-bottom: 12px; }
+.scr label { display: flex; flex-direction: column; gap: 4px; color: var(--muted); font-size: 12px; min-width: 0; }
+.scr input { background: var(--bg, transparent); border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; min-height: 36px;
+  width: 100%; font-family: var(--mono); font-size: 13.5px; }
+.scr input:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+.scr-btns { display: flex; gap: 8px; justify-content: flex-end; grid-column: -3 / -1; }
+.scr-btns .btn { min-height: 36px; }
+.scr-btns .btn.primary { padding-left: 26px; padding-right: 26px; }
+@media (max-width: 560px) { .scr-btns { grid-column: 1 / -1; } }
+@media (min-width: 1080px) { .scr { grid-template-columns: repeat(8, minmax(0, 1fr)) auto; } .scr-btns { grid-column: auto; } .scr label { white-space: nowrap; font-size: 11.5px; } }
