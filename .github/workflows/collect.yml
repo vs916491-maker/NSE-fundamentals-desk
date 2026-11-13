@@ -60,6 +60,9 @@ jobs:
           # optional: lets the Ideas tab log Sector Strength's timing label (same secrets as the other two repos)
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          # optional: free Google AI Studio key; writes the company descriptions on the Stock page
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: ${{ vars.GEMINI_MODEL }}
         run: python collector/run.py ${{ steps.args.outputs.args }}
 
       - name: Commit data

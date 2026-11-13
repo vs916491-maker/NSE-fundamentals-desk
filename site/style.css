@@ -369,3 +369,21 @@ details.method ul { padding-left: 18px; }
   #ideaTable th:nth-child(2), #ideaTable td:nth-child(2) { position: static; box-shadow: none; }
 }
 .rr { font-family: var(--sans); font-size: 10.5px; font-weight: 600; color: var(--accent); border: 1px solid currentColor; border-radius: 4px; padding: 0 3px; margin-left: 2px; }
+
+/* ---------- company profile + policy news (Stock page) ---------- */
+.about { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 11px 14px; margin: 4px 0 16px; }
+.ptags { display: flex; flex-wrap: wrap; gap: 6px; }
+.ptag { font-size: 12.5px; padding: 3px 9px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
+.ptag.theme { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 40%, var(--line)); font-weight: 500; }
+.pdesc { margin: 9px 0 0; font-size: 14px; line-height: 1.5; max-width: 90ch; }
+.about .fund-note { margin-top: 6px; }
+.prows { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; }
+.prow { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; padding: 8px 12px; border-bottom: 1px solid var(--line); font-size: 13.5px; }
+.prow:last-child { border-bottom: 0; }
+.prow a { color: var(--ink); text-decoration: none; flex: 1 1 320px; }
+.prow a:hover { text-decoration: underline; }
+.prow .ntime { color: var(--muted); font-size: 12px; font-family: var(--mono); min-width: 68px; }
+.prow .nsrc { color: var(--muted); font-size: 12px; }
+.plean { font-size: 11.5px; padding: 1px 7px; border-radius: 999px; border: 1px solid; white-space: nowrap; cursor: help; }
+.plean.up { color: var(--up); }
+.plean.down { color: var(--down); }

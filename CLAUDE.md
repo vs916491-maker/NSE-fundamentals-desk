@@ -15,7 +15,7 @@ Daily digest of NSE corporate filings for all listed stocks, plus a nightly emai
 - **Deals** – bulk/block deals
 - **FII/DII Adding** – stocks institutions are buying via bulk/block deals, ranked over 7/30/90 days
 - **FII/DII Activity** – cash + index F&O trend charts with short-term and swing bullish/bearish verdicts
-- **Stock** – per-symbol timeline + fundamentals (P/E, margins, growth, quality flags)
+- **Stock** – per-symbol timeline + fundamentals (P/E, margins, growth, quality flags); **About** box (theme, NSE industry, 2-line AI-written description) and **Policy & Budget watch** (sector-level government/regulator headlines with a rough tailwind/headwind guess)
 - **News** – market headlines from RSS feeds, hourly 8 AM–11 PM
 - **Watchlist** – private, Supabase table `fd_watchlist`, shared with Sector Strength (the F&O Desk has its own separate watchlist)
 - **Refresh** button – runs an on-demand refresh (needs sign-in)
@@ -23,6 +23,8 @@ Daily digest of NSE corporate filings for all listed stocks, plus a nightly emai
 ## Main files
 - `collector/run.py` – main job; `nse.py` (NSE session with cookie warm-up), `tagger.py` (tags announcements), `xbrl.py` (results + shareholding XBRL), `flows.py` (FII/DII), `fundamentals.py` (per-stock records), `news.py`, `mailer.py`
 - `collector/ideas.py` – Ideas tab (scoring rules at the top of the file); `industry.py` – stock → NSE industry (`cache/industry.json`); `themes.csv` – industry → theme and theme → Sector Strength index (edit freely)
+- `collector/profiles.py` – Stock page About box: industry + theme from `cache/industry.json`, description written once per stock (≥ ₹500 cr, biggest first) by Gemini free tier, kept in `cache/profiles.json`, published to `site/data/profiles/<letter>.json`; runs after Ideas at end of day, `--profiles-only` on demand; picks the newest Flash-Lite/Flash model itself (override with repo variable `GEMINI_MODEL`); stops when the free daily limit is hit and continues next evening
+- `collector/policy.py` – Policy & Budget watch (`site/data/policy.json`): Google News search per topic (TOPICS list: theme-wide or narrower by NSE basic industry, e.g. Water & sanitation), headline must name the topic and a policy action; kept 75 days; runs inside `news.yml` about twice a day
 - `cache/` – year-ago and previous-quarter filings, fetched once and kept; `ideas_events.json` keeps orders / red flags / penalties / ratings beyond the 120 days of day files
 - `control/request.json` – edit + push for a manual run (e.g. `--date 2026-10-23 --force-email`, `--backfill <from> <to> --budget 120`)
 - `site/` – plain HTML/CSS/JS; `site/data/` JSON is committed and published
@@ -45,6 +47,7 @@ Daily digest of NSE corporate filings for all listed stocks, plus a nightly emai
 
 ## Secrets
 `GMAIL_USER`, `GMAIL_APP_PASSWORD` (optional `EMAIL_TO`); email goes to his own Gmail.
+Optional `GEMINI_API_KEY` (free key from Google AI Studio): company descriptions; without it only theme and industry show.
 Optional `SUPABASE_URL`, `SUPABASE_SERVICE_KEY` (same as the other two repos): lets the Ideas build log Sector Strength's price-timing label for the track record and email.
 
 ## Rules / decisions to keep
@@ -54,6 +57,7 @@ Optional `SUPABASE_URL`, `SUPABASE_SERVICE_KEY` (same as the other two repos): l
 - Ideas valuation (5 Nov 2026): run-rate P/E (last 2 quarters' profit × 2) replaces trailing P/E when lower, only for proven growers (profit +25% YoY in both quarters, sales +15%, no one-off/other-income flag). Vivek chose not to make the P/E ÷ growth scale stricter.
 - Theme score (7 Nov 2026): orders ignored as a probable misread only if above 3x revenue AND above 1.5x market cap (GRSE's ₹32,000 cr NGC order was being dropped); bulk/block buying ranked as % of the theme's market cap, not ₹ cr, so big themes get no head start. Theme score is still percentile ranks, so a 33% order book scores the same as a 3% one if both rank first.
 - Price timing label (7 Nov 2026): "Not tracked" = stock is outside Sector Strength's ~765 stocks (Nifty 500 + Microcap 250, tracked indices, F&O) so no price history exists (24 of 60 ideas on 7 Nov); "No price data" = tracked but no RS rating yet. Vivek chose to label it, not widen Sector Strength's universe (that would shift every RS rating).
+- Stock page profile (13 Nov 2026): description = free AI API, cached; tailwinds = theme-level keyword match on news (noisy, labelled as a guess, sector-level not company-level); coverage = market cap ≥ ₹500 cr.
 
 ## How to ask for changes
 Give: tab name, what's wrong or wanted, and a screenshot or symbol + date. Keep changes small.
