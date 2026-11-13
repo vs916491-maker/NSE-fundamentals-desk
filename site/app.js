@@ -694,8 +694,8 @@ function fundSection(sym, f) {
       <div class="ccard"><div class="chead"><h4>Net profit (PAT) · ₹ cr</h4></div><p class="csub">Last ${f.qs.length} quarters, ${esc((f.nat || "").toLowerCase())}</p><div class="chart" id="qsPat"></div></div>
       <div class="ccard"><div class="chead"><h4>Margins · %</h4><div class="legend">${f.finco ? "" : '<span><i style="background:var(--c1)"></i>OPM</span>'}<span><i style="background:var(--c2)"></i>NPM</span></div></div>
         <p class="csub">${f.finco ? "Net profit ÷ income. Operating margin isn't meaningful for banks, NBFCs and insurers." : "OPM = operating profit ÷ sales · NPM = net profit ÷ sales"}</p><div class="chart" id="qsMargin"></div></div>
-      <div class="ccard"><div class="chead"><h4>Price &amp; P/E</h4><div class="legend"><span><i style="background:var(--c1)"></i>Price ₹ (left)</span><span><i style="background:var(--c2)"></i>P/E (right)</span></div></div>
-        <p class="csub">Closing price on each quarter's last trading day · P/E = that price ÷ EPS of the 4 quarters to then (needs 4 quarters, so the first 3 points have none)</p><div class="chart" id="qsPe"></div></div>
+      <div class="ccard"><div class="chead"><h4>Price &amp; P/E</h4><div class="legend"><span><i style="background:var(--c1)"></i>Price ₹ (left)</span><span><i style="background:var(--c2)"></i>TTM P/E (right)</span></div></div>
+        <p class="csub" id="qsPeSub">Daily close · P/E = price ÷ EPS of the last 4 quarters filed by that day</p><div class="chart" id="qsPe"></div></div>
     </div>`;
   }
 
@@ -821,7 +821,7 @@ async function renderStock(sym) {
     : '<div class="empty">No tagged filings in the last 120 days.</div>') + "</div>";
   out.innerHTML = h;
   wireWatchButton(sym, fname);
-  drawQTrend(fund);
+  drawQTrend(fund, sym);
   if (res.length) table($("#stRes"), "stres", [{ key: "qe", label: "Quarter", l: 1, f: (r) => qLabel(r.qe) }, ...RES_COLS.slice(1, 11)], res, ["qe", false]);
   if (hold.length) table($("#stHold"), "sthold", H_COLS.slice(1), hold, ["qe", false]);
   if (sd.length) table($("#stDeals"), "stdeals", [
@@ -834,7 +834,66 @@ async function renderStock(sym) {
     { key: "kind", label: "Type", l: 1, f: (r) => esc(r.kind) }], sd, ["date", false]);
 }
 
-function drawQTrend(f) {
+// ---------- Price & TTM P/E, daily (collector/history.py) ----------
+S.pxIdx = undefined;
+const pxLoads = {};
+let caLoad;
+async function loadPxHistory(sym) {
+  if (S.pxIdx === undefined) S.pxIdx = await getJSON("data/px/index.json").catch(() => null);
+  if (!S.pxIdx || !(S.pxIdx.q || []).length) return null;
+  const c = /^[A-Z]/i.test(sym) ? sym[0].toUpperCase() : "0";
+  const parts = await Promise.all(S.pxIdx.q.map((q) => {
+    const k = `${q}/${c}`;
+    pxLoads[k] = pxLoads[k] || getJSON(`data/px/${k}.json`).catch(() => null);
+    return pxLoads[k];
+  }));
+  caLoad = caLoad || getJSON("data/corp_actions.json").catch(() => ({ a: {} }));
+  const ca = (await caLoad).a?.[sym] || [];
+  const d = [], p = [];
+  parts.forEach((j) => { if (!j) return; const a = j.p[sym]; j.d.forEach((x, i) => { d.push(x); p.push(a ? a[i] : null); }); });
+  return p.some((v) => v != null) ? { d, p, ca } : null;
+}
+// Everything in today's share units: a price before an ex-date, or EPS filed before it, is divided by the split / bonus factor.
+function pricePe(h, eh) {
+  const fac = (t) => h.ca.reduce((m, [ex, f]) => ex > t ? m * f : m, 1);
+  const rows = (eh || []).map(([e, eps, filed]) => ({ e, filed, eps: eps == null || !filed ? null : eps / fac(filed) }));
+  const price = h.p.map((v, i) => v == null ? null : Math.round(v / fac(h.d[i]) * 100) / 100);
+  const pe = h.d.map((t, i) => {
+    if (price[i] == null) return null;
+    let L = -1;
+    rows.forEach((r, k) => { if (r.filed && r.filed <= t) L = k; });        // latest quarter filed by that day
+    if (L < 3) return null;
+    const w = rows.slice(L - 3, L + 1);
+    if (w.some((r) => r.eps == null || r.filed > t)) return null;
+    const e4 = w.reduce((s, r) => s + r.eps, 0);
+    return e4 > 0 ? Math.round(price[i] / e4 * 10) / 10 : null;            // none for a 12-month loss
+  });
+  return { price, pe };
+}
+async function drawPricePe(f, sym) {
+  const el = $("#qsPe");
+  if (!el) return;
+  const h = await loadPxHistory(sym).catch(() => null);
+  if (!$("#qsPe") || $("#stockQ").value.trim().toUpperCase() !== sym) return;   // user moved on
+  if (!h) { el.innerHTML = '<div class="empty" style="padding:40px 0">Daily prices for this stock are still being collected.</div>'; return; }
+  const { price, pe } = pricePe(h, f.eh);
+  const narrow = (el.clientWidth || 600) < 520;
+  const mon = (d) => new Date(d + "T00:00:00").toLocaleDateString("en-IN", { month: "short", year: "2-digit" });
+  const short = (v) => Math.abs(v) >= 1e5 ? inr(v / 1e5, 1) + "L" : Math.abs(v) >= 1e4 ? inr(v / 1e3, 1) + "k" : inr(v, v < 100 ? 1 : 0);
+  svgChart(el, { dates: h.d, kind: "line", xfmt: mon, tfmt: niceDate,
+    fmt: (v) => narrow ? short(v) : inr(v, v < 100 ? 1 : 0), fmt2: (v) => inr(v, 1) + "×",
+    series: [{ name: "Price ₹", color: "--c1", values: price }, { name: "TTM P/E", color: "--c2", axis: 2, values: pe }] });
+  const adjBy = {};
+  h.ca.filter(([ex]) => ex > h.d[0]).forEach(([ex, x]) => { adjBy[ex] = (adjBy[ex] || 1) * x; });   // bonus + split on one day
+  const adj = Object.entries(adjBy).sort();
+  let sub = `Daily close, ${shortDate(h.d[0])} – ${shortDate(h.d[h.d.length - 1])} · TTM P/E = price ÷ EPS of the last 4 quarters filed by that day, so it steps on each results day`;
+  if (!f.eh) sub += " · P/E appears once this stock's older results are read (over the next few evenings)";
+  else if (!pe.some((v) => v != null)) sub += " · no P/E: loss over the last 4 quarters, or quarters missing";
+  if (adj.length) sub += ` · adjusted for ${adj.map(([ex, x]) => `${x >= 1 ? "split/bonus" : "consolidation"} on ${shortDate(ex)} (${inr(x, 2)}× shares)`).join(", ")}`;
+  $("#qsPeSub").textContent = sub;
+}
+
+function drawQTrend(f, sym) {
   if (!f || !(f.qs || []).length || !$("#qsRev")) return;
   const dates = f.qs.map((r) => r.e), calc = Object.fromEntries(f.qs.map((r) => [r.e, r.calc]));
   const narrow = ($("#qsRev").clientWidth || 600) < 520;
@@ -850,26 +909,14 @@ function drawQTrend(f) {
   const mseries = [];
   if (!f.finco) mseries.push({ name: "OPM", color: "--c1", values: f.qs.map((r) => pctOf(r.op, r.rev)) });
   mseries.push({ name: "NPM", color: "--c2", values: f.qs.map((r) => pctOf(r.pat, r.rev)) });
-  // price at each quarter end and trailing P/E (price ÷ last 4 quarters' EPS; none for a 12-month loss)
-  const qs = f.qs, peQ = qs.map((r, i) => {
-    if (i < 3 || r.px == null) return null;
-    const w = qs.slice(i - 3, i + 1).map((x) => x.eps);
-    if (w.some((v) => v == null)) return null;
-    const e4 = w.reduce((a, b) => a + b, 0);
-    return e4 > 0 ? Math.round(r.px / e4 * 10) / 10 : null;
-  });
-  const pxQ = qs.map((r) => r.px ?? null);
-  if (pxQ.some((v) => v != null)) svgChart($("#qsPe"), { dates, kind: "line", points: true, xfmt, tfmt,
-    fmt: (v) => narrow ? short(v) : inr(v, v < 100 ? 1 : 0), fmt2: (v) => inr(v, 1) + "×",
-    series: [{ name: "Price ₹", color: "--c1", values: pxQ }, { name: "P/E", color: "--c2", axis: 2, values: peQ }] });
-  else $("#qsPe").innerHTML = '<div class="empty" style="padding:40px 0">Quarter-end prices arrive with the next data refresh.</div>';
+  if (sym) drawPricePe(f, sym);
   svgChart($("#qsMargin"), { dates, kind: "line", points: true, zero: mseries.some((x) => x.values.some((v) => v < 0)),
     fmt: (v) => inr(v, 1) + "%", xfmt, tfmt, series: mseries });
 }
 let qResize;
 window.addEventListener("resize", () => { clearTimeout(qResize); qResize = setTimeout(() => {
   const sym = decodeURIComponent(location.hash.split("/")[1] || "").toUpperCase();
-  if (currentTab() === "stock" && sym && $("#qsRev")) loadFund(sym).then(drawQTrend);
+  if (currentTab() === "stock" && sym && $("#qsRev")) loadFund(sym).then((f) => drawQTrend(f, sym));
 }, 200); });
 
 // ---------- sign-in (same email/password as the F&O Desk) ----------

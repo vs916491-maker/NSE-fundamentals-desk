@@ -15,7 +15,7 @@ print("TIME", round(time.time() - t0))
 ca = run.jload(os.path.join(tmp, "corp_actions.json"), {})
 print("CAN", len(ca.get("a", {})))
 idx = run.jload(os.path.join(tmp, "px", "index.json"), {})
-print("IDX", json.dumps(idx))
+print("IDX", json.dumps(idx)); print("MISSING", run.jload(os.path.join(run.CACHE, "history_state.json"), {}).get("missing"))
 px = {}
 for q in idx.get("q", []):
     for s in SAMPLE:

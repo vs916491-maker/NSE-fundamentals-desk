@@ -110,23 +110,28 @@ def update_corp_actions(n, frm: date, to: date):
 
 # ---------- daily prices ----------
 def parse_bhav(raw: str):
+    """(trade date written inside the file, {symbol: close}). On an exchange holiday NSE serves a copy of the
+    previous day's file, so the trade date is what tells a real trading day from a holiday."""
     lines = raw.splitlines()
     if not lines:
-        return {}
+        return None, {}
     hdr = [h.strip() for h in lines[0].split(",")]
     try:
         si, se, ci = hdr.index("SYMBOL"), hdr.index("SERIES"), hdr.index("CLOSE_PRICE")
     except ValueError:
-        return {}
-    out = {}
+        return None, {}
+    di = hdr.index("DATE1") if "DATE1" in hdr else None
+    out, day = {}, None
     for ln in lines[1:]:
         r = ln.split(",")
         if len(r) > ci and r[se].strip() in SERIES:
+            if day is None and di is not None:
+                day = _nse_day(r[di])
             try:
                 out[r[si].strip()] = round(float(r[ci]), 2)
             except ValueError:
                 pass
-    return out
+    return day, out
 
 
 def _shard(sym):
@@ -185,27 +190,20 @@ def update_prices(c, syms, px_dir, state, jload, jsave, start: date, minutes):
 
     missing = set(state.get("missing") or [])
     added = errors = 0
-    # today's (or the latest) closes are already loaded by the collector
-    if c.close and c.close_date:
-        qid, data = q_data(last)
-        if not data.get(c.close_date):
-            data[c.close_date] = {s: round(v, 2) for s, v in c.close.items() if s in syms}
-            dirty.add(qid)
-            added += 1
-    d = last - timedelta(days=1)
+    d = last
     while d >= start and time.time() < end_t:
         if d.weekday() < 5 and d.isoformat() not in missing:
             qid, data = q_data(d)
             if d.isoformat() not in data:
                 try:
                     raw = c.n.get(BHAV.format(d.strftime("%d%m%Y")), raw=True, tries=2).decode(errors="ignore")
-                    p = parse_bhav(raw)
-                    if p:
+                    day, p = parse_bhav(raw)
+                    if p and (day is None or day == d):
                         data[d.isoformat()] = {s: v for s, v in p.items() if s in syms}
                         dirty.add(qid)
                         added += 1
-                    else:
-                        missing.add(d.isoformat())
+                    elif day is not None and day != d:
+                        missing.add(d.isoformat())      # holiday: the file is a copy of an earlier day
                 except Exception as e:  # noqa: BLE001
                     if "HTTP 404" in str(e) and (last - d).days > 3:
                         missing.add(d.isoformat())      # exchange holiday: no file
