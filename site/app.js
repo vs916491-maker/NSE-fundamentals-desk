@@ -843,6 +843,7 @@ const SCR_COLS = [
 function scrRead() {
   const v = {};
   SCR_FIELDS.forEach(([id, key]) => { const t = $("#" + id).value.trim(); if (t !== "" && isFinite(+t)) v[key] = +t; });
+  if ($("#scrLatestQ").checked) v.latestOnly = true;
   return v;
 }
 function scrSave(v) { try { localStorage.setItem("fd_screener", JSON.stringify(v)); } catch (e) { /* private mode */ } }
@@ -850,6 +851,7 @@ function scrRestore() {
   let v = {};
   try { v = JSON.parse(localStorage.getItem("fd_screener") || "{}") || {}; } catch (e) { v = {}; }
   SCR_FIELDS.forEach(([id, key]) => { if (v[key] != null) $("#" + id).value = v[key]; });
+  $("#scrLatestQ").checked = !!v.latestOnly;
 }
 async function renderScreen() {
   const box = $("#scrOut");
@@ -857,16 +859,23 @@ async function renderScreen() {
   box.hidden = false;
   if (!scrLoad) { $("#scrNote").textContent = "Loading every company's latest results…"; $("#scrTable").innerHTML = ""; }
   const all = await scrUniverse();
+  // the newest quarter end any company in the universe has reported — used by "Latest quarter only"
+  const maxQe = all.reduce((m, r) => (r.qe && (!m || r.qe > m) ? r.qe : m), null);
   const v = S.scr, used = SCR_FIELDS.filter(([, key]) => v[key] != null);
-  const rows = all.filter((r) => used.every(([, key, kind]) => {
-    const x = r[key];
-    if (x == null) return false;                       // no number on file = cannot pass that filter
-    if (key === "pe") return x !== -1 && x <= v.pe;    // a loss-making company has no P/E
-    return kind === "min" ? x >= v[key] : x <= v[key];
-  }));
+  const rows = all.filter((r) => {
+    if (v.latestOnly && r.qe !== maxQe) return false;    // still on an older quarter: hasn't reported this season yet
+    return used.every(([, key, kind]) => {
+      const x = r[key];
+      if (x == null) return false;                       // no number on file = cannot pass that filter
+      if (key === "pe") return x !== -1 && x <= v.pe;    // a loss-making company has no P/E
+      return kind === "min" ? x >= v[key] : x <= v[key];
+    });
+  });
   const names = { rev_qoq: "Sales QoQ", pat_qoq: "PAT QoQ", rev_yoy: "Sales YoY", pat_yoy: "PAT YoY", mcap: "MCap", pe: "P/E", opm: "OPM", npm: "NPM" };
   const said = used.map(([, key, kind]) => `${names[key]} ${kind === "min" ? "≥" : "≤"} ${inr(v[key], 1).replace(/\.0$/, "")}${key === "mcap" ? " cr" : key === "pe" ? "" : "%"}`).join(" · ");
-  $("#scrNote").innerHTML = `<b>${rows.length}</b> of ${all.length} companies with market cap ≥ ₹${SCR_MIN_MCAP} cr` + (said ? ` match: ${said}. ` : " (no filter set). ") +
+  const scope = v.latestOnly && maxQe ? `reported ${qLabel(maxQe)} results` : `market cap ≥ ₹${SCR_MIN_MCAP} cr`;
+  $("#scrNote").innerHTML = `<b>${rows.length}</b> of ${all.length} companies with market cap ≥ ₹${SCR_MIN_MCAP} cr` +
+    (v.latestOnly && maxQe ? `, narrowed to those that have ${scope}` : "") + (said ? ` match: ${said}. ` : " (no filter set). ") +
     `Latest quarter on file for each company (see Quarter), consolidated where filed; prices at the ${S.prices?.d ? shortDate(S.prices.d) : "latest"} close. ` +
     `<b>P/E</b> = market cap ÷ net profit of the last 4 quarters; marked <b>rr</b> where the run-rate P/E (last two quarters' profit × 2) is lower and growth is proven, as on the Ideas tab. ` +
     `A company with no number for a filter you set is left out (banks and lenders have no OPM; loss-makers have no P/E; a year-ago quarter is needed for YoY). ` +
@@ -1419,6 +1428,7 @@ async function init() {
   });
   $("#scrClear").onclick = () => {
     SCR_FIELDS.forEach(([id]) => { $("#" + id).value = ""; });
+    $("#scrLatestQ").checked = false;
     S.scr = null; scrSave({});
     if (location.hash === "#stock") render();
   };
