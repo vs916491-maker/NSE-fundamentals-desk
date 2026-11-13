@@ -70,7 +70,9 @@ def parse(doc: str, qe: date):
             k = 1 if (c1 and c1 > 1) or (not c1 and g and g > 0.3) else 100
             pc = lambda x: None if x is None else round(x * k, 2)
             out["r"] = {"gnpa": pc(g), "nnpa": pc(nn), "cet1": pc(c1) if c1 else None,
-                        "t1": pc(c1 + (a1 or 0)) if c1 else None}
+                        "t1": pc(c1 + (a1 or 0)) if c1 else None,
+                        # the bank's own cost-to-income (consolidated mixes in insurance and other subsidiaries)
+                        "cti": out["p"]["cti"]}
         if ictx and v("Assets", ictx):
             out["bs"] = {"e": qe.isoformat(), "nw": add(v("Capital", ictx), v("ReservesAndSurplus", ictx)),
                          "adv": v("Advances", ictx), "dep": v("Deposits", ictx), "ta": v("Assets", ictx)}
