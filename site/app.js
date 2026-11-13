@@ -562,11 +562,45 @@ function ytdLabel(p) {
   const e = new Date(p.e + "T00:00:00"); const fy = e.getMonth() + 1 >= 4 ? e.getFullYear() + 1 : e.getFullYear();
   return `${m === 6 ? "H1" : m === 9 ? "9M" : m === 12 ? "FY" : m + "M"} FY${String(fy).slice(2)}`;
 }
+// tiles for banks and lenders: valuation on book value, return on equity, asset quality
+function finTiles(fc, mcap, t, q, tile) {
+  const dim = '<span class="dim">–</span>', bs = fc.bs || {}, old = fc.bs_py || {};
+  const asOf = bs.e ? `book value at ${shortDate(bs.e)}` : "needs a balance sheet";
+  const pat12 = t.pat != null ? t.pat : (q.pat != null ? q.pat * 4 : null);
+  const patNote = t.pat != null ? "last 4 quarters" : "latest quarter × 4";
+  const pb = mcap && bs.nw > 0 ? mcap / bs.nw : null;
+  const roe = pat12 != null && bs.nw > 0 ? pat12 / bs.nw * 100 : null;
+  const roa = pat12 != null && bs.ta > 0 ? pat12 / bs.ta * 100 : null;
+  const p2 = (v) => v == null ? dim : inr(v, 2) + "%";
+  const loanG = grow(bs.adv, old.adv);
+  let h = tile("Price / Book", num1(pb, 2), asOf) +
+    tile("ROE", roe == null ? dim : inr(roe, 1) + "%", roe == null ? "" : `profit of ${patNote} ÷ net worth`) +
+    tile("ROA", p2(roa), roa == null ? "" : "profit ÷ total assets");
+  if (fc.k === "bank") {
+    const r = fc.r || {};
+    h += tile("Gross NPA", p2(r.gnpa), "bank only") + tile("Net NPA", p2(r.nnpa), "bank only") +
+      tile("CET1 capital", p2(r.cet1), r.t1 != null && r.t1 !== r.cet1 ? `Tier 1 ${inr(r.t1, 2)}%` : "core equity ÷ risk-weighted assets");
+  } else {
+    const cc = fc.q?.prov != null && bs.adv > 0 ? fc.q.prov * 4 / bs.adv * 100 : null;
+    const lev = bs.bor != null && bs.nw > 0 ? bs.bor / bs.nw : null;
+    h += tile("Credit cost", p2(cc), "quarter's impairment × 4 ÷ loans") +
+      tile("Borrowings / Equity", lev == null ? dim : inr(lev, 1) + "×", bs.e ? `at ${shortDate(bs.e)}` : "");
+  }
+  h += tile(fc.k === "bank" ? "Advances ₹cr" : "Loans ₹cr", bs.adv == null ? dim : cr(Math.round(bs.adv)),
+    loanG == null ? (bs.e ? `at ${shortDate(bs.e)}` : "") : `${loanG > 0 ? "+" : ""}${inr(loanG, 1)}% in a year`);
+  if (fc.k === "bank" && bs.dep != null) {
+    const depG = grow(bs.dep, old.dep);
+    h += tile("Deposits ₹cr", cr(Math.round(bs.dep)), depG == null ? "" : `${depG > 0 ? "+" : ""}${inr(depG, 1)}% in a year`);
+  }
+  return h;
+}
 function fundSection(sym, f) {
   if (!f) return `<h3>Fundamentals</h3><div class="empty fund-empty">Not collected yet for ${esc(sym)} — the desk is reading every company's latest results filing over the next few evenings.</div>`;
   const px = S.prices?.p?.[sym], pxDate = S.prices?.d;
   const q = f.q || {}, pq = f.pq || {}, py = f.py || {}, t = f.ttm || {};
   const mcap = f.sh && px ? f.sh * px / 1e7 : null;
+  // banks and lenders (NBFCs, housing finance) get their own tiles and rows (collector/finco.py)
+  const fc = f.fc && f.fc.k && f.fc.qe === f.qe ? f.fc : null, fin = !!fc, bank = fin && fc.k === "bank";
   // P/E = market cap / 12-month net profit (falls back to price / 12-month EPS without a share count)
   const pe = mcap && t.pat > 0 ? mcap / t.pat : (!mcap && px && t.eps > 0 ? px / t.eps : null);
   const ps = mcap && t.rev > 0 ? mcap / t.rev : null;
@@ -580,9 +614,10 @@ function fundSection(sym, f) {
     tile("Market cap ₹cr", mcap == null ? '<span class="dim">–</span>' : cr(Math.round(mcap))) +
     tile("P/E", peTxt, peNote) +
     tile("Run-rate P/E", peCell(runRatePe(sym, f, q.pat, q.eps)), `${f.qe ? qLabel(f.qe) : "latest quarter"} profit × 4`) +
-    tile("Mcap / Sales", num1(ps, 2), ps == null && t.rev == null ? "needs 4 quarters" : "last 4 quarters") +
-    tile("EPS ₹ (12 m)", num1(t.eps, 2)) +
-    tile("Sales ₹cr (12 m)", t.rev == null ? '<span class="dim">–</span>' : cr(t.rev)) + `</div>`;
+    (fin ? finTiles(fc, mcap, t, q, tile) :
+      tile("Mcap / Sales", num1(ps, 2), ps == null && t.rev == null ? "needs 4 quarters" : "last 4 quarters") +
+      tile("EPS ₹ (12 m)", num1(t.eps, 2)) +
+      tile("Sales ₹cr (12 m)", t.rev == null ? '<span class="dim">–</span>' : cr(t.rev))) + `</div>`;
 
   // quarter table: latest, previous, year-ago, QoQ, YoY
   const opm = (p) => f.finco ? null : ratio(p.op, p.rev) == null ? null : ratio(p.op, p.rev) * 100;
@@ -596,24 +631,38 @@ function fundSection(sym, f) {
   const pctf = (v) => v == null ? '<span class="dim">–</span>' : inr(v, 1) + "%";
   const g = (a, b) => pct(grow(a, b) == null ? null : Math.round(grow(a, b) * 10) / 10);
   const d = (a, b) => ptsChg(a == null || b == null ? null : a - b);
+  // rows from the bank / lender record; inv() flips the colour where a rise is bad (provisions, NPAs, costs)
+  const inv = (fn) => (a, b) => fn(a, b).replace(/class="(up|down)"/, (m, c) => `class="${c === "up" ? "down" : "up"}"`);
+  const cells = (label, a, b, c, fmt, chg) => `<tr><td>${label}</td><td>${fmt(a)}</td><td>${fmt(b)}</td><td>${fmt(c)}</td><td>${chg(a, b)}</td><td>${chg(a, c)}</td></tr>`;
+  const frow = (label, k, fmt, chg) => cells(label, fc.q?.[k], fc.pq?.[k], fc.py?.[k], fmt, chg);
+  const pct2 = (v) => v == null ? '<span class="dim">–</span>' : inr(v, 2) + "%";
+  const rrow = (label, k, chg) => cells(label, fc.r?.[k], fc.rpq?.[k], fc.rpy?.[k], k === "cti" ? pctf : pct2, chg);
   h += `<div class="tablewrap"><table class="grid fund-q"><thead><tr><th>₹ crore</th><th>${qLabel(f.qe)}</th><th>${prevQ}</th><th>${yaQ}</th><th>QoQ</th><th>YoY</th></tr></thead><tbody>` +
-    row("Sales", (p) => p.rev, crf, g) +
+    row(bank ? "Interest earned" : fin ? "Revenue" : "Sales", (p) => p.rev, crf, g) +
     (f.finco ? "" : row("Operating profit", (p) => p.op, crf, g) + row("OPM", opm, pctf, d)) +
+    (fin ? frow("Net interest income", "nii", crf, g) + frow("Profit before provisions", "ppop", crf, g) +
+      frow(bank ? "Provisions" : "Impairment (credit cost)", "prov", crf, inv(g)) : "") +
     row("Net profit", (p) => p.pat, crf, g) +
-    row("NPM", npm, pctf, d) +
+    (fin ? (bank ? rrow("Cost-to-income <span class=\"dim\">(bank only)</span>", "cti", inv(d)) : frow("Cost-to-income", "cti", pctf, inv(d))) +
+      (bank ? rrow("Gross NPA", "gnpa", inv(d)) + rrow("Net NPA", "nnpa", inv(d)) + rrow("CET1 capital", "cet1", d) : "")
+      : row("NPM", npm, pctf, d)) +
     row("EPS ₹", (p) => p.eps, (v) => num1(v, 2), (a, b) => {
       // a split or bonus issue changes EPS but not profit: hide EPS growth that disagrees with profit growth
       const ge = grow(a, b), gp = grow(q.pat, a === q.eps && b === pq.eps ? pq.pat : py.pat);
       return ge != null && gp != null && Math.abs(ge - gp) > 25 ? '<span class="dim" title="Share count changed (split, bonus or new shares)">n/c</span>' : g(a, b);
     }) + `</tbody></table></div>`;
-  if (f.finco) h += `<div class="fund-note">Bank / lender / insurer format: operating profit and OPM are not meaningful here, so they are left out.</div>`;
+  if (fin) h += `<div class="fund-note">${bank
+    ? "Bank: net interest income = interest earned − interest paid. Gross / Net NPA, CET1 capital and the bank-only cost-to-income are from the bank's standalone filing (consolidated filings do not carry them)."
+    : "Lender: net interest income = interest income − finance costs. Profit before provisions = profit before tax + impairment. Gross NPA / stage 3 and capital adequacy are not in the NBFC filing format."}
+    Cost-to-income = operating costs ÷ (net interest income + other income); lower is better. A rise in provisions, NPAs or costs is shown in red.</div>`;
+  else if (f.finco) h += `<div class="fund-note">Bank / lender / insurer format: operating profit and OPM are not meaningful here, so they are left out.</div>`;
 
   // year to date and 12 months
   const y = f.ytd, yp = f.ytd_py;
   const bits = [];
-  if (y && yp) bits.push(`<b>${ytdLabel(y)}</b> vs ${ytdLabel(yp)}: sales ${g(y.rev, yp.rev)}, net profit ${g(y.pat, yp.pat)}`
+  if (y && yp) bits.push(`<b>${ytdLabel(y)}</b> vs ${ytdLabel(yp)}: ${fin ? "revenue" : "sales"} ${g(y.rev, yp.rev)}, net profit ${g(y.pat, yp.pat)}`
     + (!f.finco && y.op != null ? `, OPM ${pctf(opm(y))} (${d(opm(y), opm(yp))})` : ""));
-  if (t.pat != null) bits.push(`<b>Last 12 months</b>: sales ₹${cr(t.rev)} cr, net profit ₹${cr(t.pat)} cr, NPM ${pctf(ratio(t.pat, t.rev) * 100)}`);
+  if (t.pat != null) bits.push(`<b>Last 12 months</b>: ${fin ? "revenue" : "sales"} ₹${cr(t.rev)} cr, net profit ₹${cr(t.pat)} cr` + (fin ? "" : `, NPM ${pctf(ratio(t.pat, t.rev) * 100)}`));
   if (bits.length) h += `<div class="fund-lines">${bits.map((b) => `<div>${b}</div>`).join("")}</div>`;
 
   // sales / profit trend from the quarter series
