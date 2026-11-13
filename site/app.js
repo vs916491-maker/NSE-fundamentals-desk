@@ -764,6 +764,116 @@ function policySection(p, pol) {
   return h + `<div class="fund-note">Sector-level headlines matched by keywords, not about this company specifically. “Tailwind / headwind” is a guess from the headline’s wording, not an estimate of the effect on earnings; open the article before acting.</div>`;
 }
 
+// ---------- Stock Screener filters (boxes above the stock page; Run lists the matching stocks) ----------
+const SCR_MIN_MCAP = 500;                    // ₹ crore, same floor as the Ideas tab
+const SCR_RR_PROFIT_YOY = 25, SCR_RR_SALES_YOY = 15;   // run-rate P/E rule, same as collector/ideas.py
+const SCR_FIELDS = [   // box id, row key, "min" keeps rows at or above the number, "max" at or below
+  ["scrRevQ", "rev_qoq", "min"], ["scrPatQ", "pat_qoq", "min"], ["scrRevY", "rev_yoy", "min"], ["scrPatY", "pat_yoy", "min"],
+  ["scrCap", "mcap", "min"], ["scrPe", "pe", "max"], ["scrOpm", "opm", "min"], ["scrNpm", "npm", "min"],
+];
+const scrPrevQe = (qe) => { const d = new Date(qe + "T00:00:00Z"); return new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() - 2, 0)).toISOString().slice(0, 10); };
+const scrYearAgo = (qe) => (+qe.slice(0, 4) - 1) + qe.slice(4);
+const scrMonths = (p) => p?.s && p?.e ? Math.round((new Date(p.e) - new Date(p.s)) / 864e5 / 30.44) : null;
+// profit growth YoY of the quarter before the latest one (as prev_quarter_yoy in collector/ideas.py)
+function scrPrevPatYoy(f) {
+  if (!f.qe) return null;
+  const pqe = scrPrevQe(f.qe), qs = {};
+  (f.qs || []).forEach((x) => { qs[x.e] = x; });
+  const a = qs[pqe], b = qs[scrYearAgo(pqe)];
+  if (a && b) return grow(a.pat, b.pat);
+  const pq = f.pq, py = f.py, yp = f.ytd_py;
+  if (pq && py && yp && scrMonths(yp) === 6 && yp.rev != null && py.rev != null && yp.rev - py.rev > 0)
+    return yp.pat == null || py.pat == null ? null : grow(pq.pat, yp.pat - py.pat);
+  return null;
+}
+// one row per stock: growth, margins and the P/E the Ideas tab uses (run-rate P/E = market cap ÷ last two quarters'
+// profit × 2 when lower than the 12-month P/E and growth is proven; otherwise the 12-month P/E). pe -1 = loss.
+function scrRow(sym, f, px) {
+  const q = f.q || {}, pq = f.pq || {}, py = f.py || {}, t = f.ttm || {};
+  const mcap = f.sh && px ? f.sh * px / 1e7 : null;
+  const r1 = (v) => v == null || !isFinite(v) ? null : Math.round(v * 10) / 10;
+  const patY = grow(q.pat, py.pat), revY = grow(q.rev, py.rev);
+  const peTtm = mcap && t.pat ? mcap / t.pat : null;
+  let peRr = null;
+  const oneOff = q.pbt > 0 && ((q.oi || 0) / q.pbt > 0.5 || Math.abs(q.exc || 0) / q.pbt > 0.25);
+  if (mcap && q.pat != null && pq.pat != null && (py.pat || 0) > 0 && (patY || 0) >= SCR_RR_PROFIT_YOY &&
+      (scrPrevPatYoy(f) || 0) >= SCR_RR_PROFIT_YOY && (revY || 0) >= SCR_RR_SALES_YOY && !oneOff) {
+    const rr = (q.pat + pq.pat) * 2;
+    if (rr > 0) peRr = mcap / rr;
+  }
+  const useRr = peRr != null && (peTtm == null || peTtm < 0 || peRr < peTtm);
+  const pe = useRr ? peRr : peTtm == null ? null : peTtm < 0 ? -1 : peTtm;
+  return {
+    sym, name: f.n || "", qe: f.qe || "", mcap: mcap == null ? null : Math.round(mcap), px, rr: useRr,
+    rev: q.rev ?? null, pat: q.pat ?? null,
+    rev_qoq: r1(grow(q.rev, pq.rev)), pat_qoq: r1(grow(q.pat, pq.pat)), rev_yoy: r1(revY), pat_yoy: r1(patY),
+    pe, opm: f.finco ? null : r1(ratio(q.op, q.rev) == null ? null : ratio(q.op, q.rev) * 100),
+    npm: r1(ratio(q.pat, q.rev) == null ? null : ratio(q.pat, q.rev) * 100),
+  };
+}
+let scrLoad;
+function scrUniverse() {
+  // every stock's record (27 files, downloaded once on the first Run) plus the latest closing prices
+  scrLoad = scrLoad || (async () => {
+    const letters = ["0", ..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"];
+    await Promise.all(letters.map((c) => loadFund(c === "0" ? "0" : c)));
+    const rows = [];
+    for (const c of letters) for (const [sym, f] of Object.entries(S.fund[c] || {})) {
+      const r = scrRow(sym, f, S.prices?.p?.[sym]);
+      if (r.mcap != null && r.mcap >= SCR_MIN_MCAP) rows.push(r);
+    }
+    return rows;
+  })().catch((e) => { scrLoad = null; throw e; });
+  return scrLoad;
+}
+const SCR_COLS = [
+  { key: "sym", label: "Stock", l: 1, f: (r) => `${symLink(r.sym)}<span class="name">${esc(r.name)}</span>`, sv: (r) => r.sym },
+  { key: "qe", label: "Quarter", l: 1, f: (r) => `<span class="dim">${r.qe ? qLabel(r.qe) : "–"}</span>` },
+  { key: "mcap", label: "MCap ₹cr", f: (r) => cr(r.mcap) },
+  { key: "rev", label: "Sales ₹cr", f: (r) => cr(r.rev) },
+  { key: "rev_qoq", label: "Sales QoQ", f: (r) => pct(r.rev_qoq) },
+  { key: "rev_yoy", label: "Sales YoY", f: (r) => pct(r.rev_yoy) },
+  { key: "pat", label: "PAT ₹cr", f: (r) => cr(r.pat) },
+  { key: "pat_qoq", label: "PAT QoQ", f: (r) => pct(r.pat_qoq) },
+  { key: "pat_yoy", label: "PAT YoY", f: (r) => pct(r.pat_yoy) },
+  { key: "pe", label: "P/E", f: (r) => peCell(r.pe) + (r.rr ? ' <span class="dim" title="Run-rate P/E: last two quarters\' profit × 2">rr</span>' : ""), sv: (r) => r.pe == null || r.pe === -1 ? null : r.pe },
+  { key: "opm", label: "OPM %", f: (r) => num1(r.opm) },
+  { key: "npm", label: "NPM %", f: (r) => num1(r.npm) },
+];
+function scrRead() {
+  const v = {};
+  SCR_FIELDS.forEach(([id, key]) => { const t = $("#" + id).value.trim(); if (t !== "" && isFinite(+t)) v[key] = +t; });
+  return v;
+}
+function scrSave(v) { try { localStorage.setItem("fd_screener", JSON.stringify(v)); } catch (e) { /* private mode */ } }
+function scrRestore() {
+  let v = {};
+  try { v = JSON.parse(localStorage.getItem("fd_screener") || "{}") || {}; } catch (e) { v = {}; }
+  SCR_FIELDS.forEach(([id, key]) => { if (v[key] != null) $("#" + id).value = v[key]; });
+}
+async function renderScreen() {
+  const box = $("#scrOut");
+  if (!S.scr) { box.hidden = true; return; }
+  box.hidden = false;
+  if (!scrLoad) { $("#scrNote").textContent = "Loading every company's latest results…"; $("#scrTable").innerHTML = ""; }
+  const all = await scrUniverse();
+  const v = S.scr, used = SCR_FIELDS.filter(([, key]) => v[key] != null);
+  const rows = all.filter((r) => used.every(([, key, kind]) => {
+    const x = r[key];
+    if (x == null) return false;                       // no number on file = cannot pass that filter
+    if (key === "pe") return x !== -1 && x <= v.pe;    // a loss-making company has no P/E
+    return kind === "min" ? x >= v[key] : x <= v[key];
+  }));
+  const names = { rev_qoq: "Sales QoQ", pat_qoq: "PAT QoQ", rev_yoy: "Sales YoY", pat_yoy: "PAT YoY", mcap: "MCap", pe: "P/E", opm: "OPM", npm: "NPM" };
+  const said = used.map(([, key, kind]) => `${names[key]} ${kind === "min" ? "≥" : "≤"} ${inr(v[key], 1).replace(/\.0$/, "")}${key === "mcap" ? " cr" : key === "pe" ? "" : "%"}`).join(" · ");
+  $("#scrNote").innerHTML = `<b>${rows.length}</b> of ${all.length} companies with market cap ≥ ₹${SCR_MIN_MCAP} cr` + (said ? ` match: ${said}. ` : " (no filter set). ") +
+    `Latest quarter on file for each company (see Quarter), consolidated where filed; prices at the ${S.prices?.d ? shortDate(S.prices.d) : "latest"} close. ` +
+    `<b>P/E</b> = market cap ÷ net profit of the last 4 quarters; marked <b>rr</b> where the run-rate P/E (last two quarters' profit × 2) is lower and growth is proven, as on the Ideas tab. ` +
+    `A company with no number for a filter you set is left out (banks and lenders have no OPM; loss-makers have no P/E; a year-ago quarter is needed for YoY). ` +
+    `Growth from a loss or a tiny base can look huge. Click a column to sort, a symbol to open the stock.`;
+  table($("#scrTable"), "scr", SCR_COLS, rows, ["pat_yoy", false]);
+}
+
 // ---------- stock search (box in the header and on the Stock Screener tab) ----------
 let searchLoad;
 function ensureSearch() {
@@ -791,7 +901,13 @@ async function goToStock(text) {
 async function renderStock(sym) {
   const out = $("#stockOut");
   await ensureSearch();
-  if (!sym) { out.innerHTML = '<div class="empty">Type a symbol to see its results, shareholding and filings from the last 120 days.</div>'; return; }
+  if (!sym) {
+    $("#stockQ").value = "";
+    out.innerHTML = S.scr ? "" : '<div class="empty">Type a symbol to see its results, shareholding and filings from the last 120 days, or set the filters above and press Run to list matching stocks.</div>';
+    await renderScreen();
+    return;
+  }
+  $("#scrOut").hidden = true;
   $("#stockQ").value = sym;
   out.innerHTML = '<div class="empty">Loading…</div>';
   const res = [], hold = [];
@@ -1295,6 +1411,17 @@ async function init() {
   ["#todayQ", "#resQ", "#holdQ", "#dealQ", "#addQ", "#newsQ", "#ideaQ"].forEach((s) => $(s).addEventListener("input", render));
   ["#showOther", "#resCap", "#resVerdict", "#holdMin", "#instOnly", "#dealSide", "#addSide", "#addMin", "#ideaTheme", "#ideaLabel"].forEach((s) => $(s).addEventListener("change", render));
   $("#stockQ").addEventListener("change", () => goToStock($("#stockQ").value));
+  scrRestore();
+  $("#scrForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    S.scr = scrRead(); scrSave(S.scr);
+    if (location.hash === "#stock") render(); else location.hash = "#stock";
+  });
+  $("#scrClear").onclick = () => {
+    SCR_FIELDS.forEach(([id]) => { $("#" + id).value = ""; });
+    S.scr = null; scrSave({});
+    if (location.hash === "#stock") render();
+  };
   const gq = $("#globalQ");
   gq.addEventListener("focus", ensureSearch);
   gq.addEventListener("change", async () => { await goToStock(gq.value); gq.value = ""; gq.blur(); });

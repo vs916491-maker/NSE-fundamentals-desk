@@ -16,6 +16,7 @@ Daily digest of NSE corporate filings for all listed stocks, plus a nightly emai
 - **FII/DII Adding** – stocks institutions are buying via bulk/block deals, ranked over 7/30/90 days
 - **FII/DII Activity** – cash + index F&O trend charts with short-term and swing bullish/bearish verdicts
 - **Stock Screener** (tab renamed 13 Nov 2026; hash still `#stock`) – per-symbol timeline + fundamentals (P/E, run-rate P/E, margins, growth, quality flags; 4 trend charts: sales, profit, margins, daily price & TTM P/E); header search box (symbol or company name) opens it from any tab; **About** box (theme, NSE industry, 2-line AI-written description) and **Policy & Budget watch** (sector-level government/regulator headlines with a rough tailwind/headwind guess)
+  - **Filter boxes + Run** (added 13 Nov 2026, all in `site/app.js`, no collector change): minimum Sales/PAT growth QoQ and YoY, minimum market cap, maximum P/E, minimum OPM/NPM; Run lists matching stocks in a sortable table, Clear resets; boxes are remembered in the browser. Universe = market cap ≥ ₹500 cr with a results record (`site/data/fund/*.json`, all 27 files loaded on the first Run). P/E follows the Ideas rule (run-rate when lower and growth is proven, marked `rr`). A stock with no number for a filter that is set is left out (banks have no OPM, loss-makers no P/E)
 - **News** – market headlines from RSS feeds, hourly 8 AM–11 PM
 - **Watchlist** – private, Supabase table `fd_watchlist`, shared with Sector Strength (the F&O Desk has its own separate watchlist)
 - **Refresh** button – runs an on-demand refresh (needs sign-in)
@@ -60,6 +61,7 @@ Optional `SUPABASE_URL`, `SUPABASE_SERVICE_KEY` (same as the other two repos): l
 - Theme score (7 Nov 2026): orders ignored as a probable misread only if above 3x revenue AND above 1.5x market cap (GRSE's ₹32,000 cr NGC order was being dropped); bulk/block buying ranked as % of the theme's market cap, not ₹ cr, so big themes get no head start. Theme score is still percentile ranks, so a 33% order book scores the same as a 3% one if both rank first.
 - Price timing label (7 Nov 2026): "Not tracked" = stock is outside Sector Strength's ~765 stocks (Nifty 500 + Microcap 250, tracked indices, F&O) so no price history exists (24 of 60 ideas on 7 Nov); "No price data" = tracked but no RS rating yet. Vivek chose to label it, not widen Sector Strength's universe (that would shift every RS rating).
 - Stock page profile (13 Nov 2026): description = free AI API, cached; tailwinds = theme-level keyword match on news (noisy, labelled as a guess, sector-level not company-level); coverage = market cap ≥ ₹500 cr.
+- Screener filters (13 Nov 2026): Vivek chose minimum-only boxes for growth, market cap and margins, maximum-only for P/E, the Ideas P/E, and the ≥ ₹500 cr universe.
 - Banks and lenders (13 Nov 2026): Stock Screener replaces Mcap/Sales, OPM and NPM with Price/Book, ROE, ROA, NPAs, CET1, NII rows (P/E kept). Shown only; the Ideas score is unchanged for now, to be revisited after a few weeks of data.
 
 ## How to ask for changes
