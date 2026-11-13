@@ -149,10 +149,13 @@ async function renderFlowsCompact() {
 // tiny SVG chart: one y-axis, crosshair tooltip
 const compact = (v) => Math.abs(v) >= 1e7 ? inr(v / 1e7, 1) + " Cr" : Math.abs(v) >= 1e5 ? inr(v / 1e5, Math.abs(v) >= 1e6 ? 0 : 1) + " L" : inr(v);
 function svgChart(el, { dates, series, kind = "line", fmt = (v) => inr(v), zero = false, yMin = null, yMax = null,
-                         xfmt = shortDay, tfmt = niceDate, labels = false, points = false }) {
-  const W = Math.max(280, el.clientWidth || 560), H = 190, m = { l: 52, r: 14, t: labels ? 22 : 10, b: 24 };
+                         xfmt = shortDay, tfmt = niceDate, labels = false, points = false, fmt2 = null }) {
+  // series with axis: 2 use their own scale, labelled on the right (fmt2)
+  const right = series.filter((s) => s.axis === 2 && s.values.some((v) => v != null));
+  const W = Math.max(280, el.clientWidth || 560), H = 190, m = { l: 52, r: right.length ? 44 : 14, t: labels ? 22 : 10, b: 24 };
   const iw = W - m.l - m.r, ih = H - m.t - m.b, n = dates.length;
-  let vals = series.flatMap((s) => s.values.filter((v) => v != null));
+  let vals = series.filter((s) => s.axis !== 2).flatMap((s) => s.values.filter((v) => v != null));
+  if (!vals.length && right.length) vals = right.flatMap((s) => s.values.filter((v) => v != null));
   if (!vals.length) { el.innerHTML = '<div class="empty" style="padding:40px 0">No data for this range yet.</div>'; return; }
   let lo = Math.min(...vals), hi = Math.max(...vals);
   if (zero || kind === "bar") { lo = Math.min(lo, 0); hi = Math.max(hi, 0); }
@@ -162,11 +165,28 @@ function svgChart(el, { dates, series, kind = "line", fmt = (v) => inr(v), zero 
   const step = [1, 2, 2.5, 5, 10].map((k) => k * mag).find((s) => s >= step0);
   lo = Math.floor(lo / step) * step; hi = Math.ceil(hi / step) * step;
   const y = (v) => m.t + ih - (v - lo) / (hi - lo) * ih;
+  // right axis: same number of gridlines as the left, with its own round steps
+  let y2 = y, lo2 = lo, step2 = step;
+  if (right.length) {
+    const rv = right.flatMap((s) => s.values.filter((v) => v != null)), k = Math.max(1, Math.round((hi - lo) / step));
+    let a = Math.min(...rv), b = Math.max(...rv);
+    if (a === b) { a -= 1; b += 1; }
+    const nice = (x) => { const g = Math.pow(10, Math.floor(Math.log10(x))); return [1, 2, 2.5, 5, 10].map((q) => q * g).find((s) => s >= x * 0.999); };
+    step2 = nice((b - a) / k);
+    for (let i = 0; i < 20; i++) {
+      lo2 = Math.floor(a / step2) * step2;
+      if (lo2 + k * step2 >= b) break;
+      step2 = nice(step2 * 1.01);
+    }
+    const hi2 = lo2 + k * step2;
+    y2 = (v) => m.t + ih - (v - lo2) / (hi2 - lo2) * ih;
+  }
   const bw = iw / n, x = (i) => m.l + bw * i + bw / 2;
   let g = "";
-  for (let t = lo; t <= hi + step / 2; t += step) {
+  for (let t = lo, j = 0; t <= hi + step / 2; t += step, j++) {
     g += `<line x1="${m.l}" x2="${W - m.r}" y1="${y(t)}" y2="${y(t)}" class="${Math.abs(t) < step / 1e6 && lo < 0 ? "zl" : "gl"}"/>`;
     g += `<text x="${m.l - 6}" y="${y(t) + 4}" class="yt">${fmt(Math.abs(t) < step / 1e6 ? 0 : t)}</text>`;
+    if (right.length) g += `<text x="${W - m.r + 6}" y="${y(t) + 4}" class="yt" style="text-anchor:start">${(fmt2 || fmt)(lo2 + j * step2)}</text>`;
   }
   const ticks = n <= 8 ? n : Math.max(2, Math.min(6, n, Math.floor(iw / 75) + 1));
   for (let k = 0; k < ticks; k++) {
@@ -185,12 +205,13 @@ function svgChart(el, { dates, series, kind = "line", fmt = (v) => inr(v), zero 
         if (labels) marks += `<text x="${x(i)}" y="${v >= 0 ? y1 - 5 : y1 + 13}" class="bl">${fmt(v)}</text>`;
       });
     } else {
+      const yy = s.axis === 2 ? y2 : y;
       let d = "", pen = false;
-      s.values.forEach((v, i) => { if (v == null) { pen = false; return; } d += `${pen ? "L" : "M"}${x(i).toFixed(1)},${y(v).toFixed(1)}`; pen = true; });
-      marks += `<path d="${d}" class="ln" style="stroke:var(${s.color || "--c1"})"/>`;
-      if (points) s.values.forEach((v, i) => { if (v != null) marks += `<circle cx="${x(i)}" cy="${y(v)}" r="4" style="fill:var(${s.color || "--c1"})" class="endpt"/>`; });
+      s.values.forEach((v, i) => { if (v == null) { pen = false; return; } d += `${pen ? "L" : "M"}${x(i).toFixed(1)},${yy(v).toFixed(1)}`; pen = true; });
+      marks += `<path d="${d}" class="ln" style="stroke:var(${s.color || "--c1"})${s.dash ? ";stroke-dasharray:5 4" : ""}"/>`;
+      if (points) s.values.forEach((v, i) => { if (v != null) marks += `<circle cx="${x(i)}" cy="${yy(v)}" r="4" style="fill:var(${s.color || "--c1"})" class="endpt"/>`; });
       const li = s.values.map((v, i) => v == null ? -1 : i).filter((i) => i >= 0).pop();
-      if (li != null && li >= 0) marks += `<circle cx="${x(li)}" cy="${y(s.values[li])}" r="3.5" style="fill:var(${s.color || "--c1"})" class="endpt"/>`;
+      if (li != null && li >= 0) marks += `<circle cx="${x(li)}" cy="${yy(s.values[li])}" r="3.5" style="fill:var(${s.color || "--c1"})" class="endpt"/>`;
     }
   });
   el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img">${g}${marks}
@@ -202,7 +223,7 @@ function svgChart(el, { dates, series, kind = "line", fmt = (v) => inr(v), zero 
     const i = Math.max(0, Math.min(n - 1, Math.floor((px - m.l) / bw)));
     xh.setAttribute("x1", x(i)); xh.setAttribute("x2", x(i)); xh.style.display = "";
     tip.innerHTML = `<div class="tdate">${tfmt(dates[i])}</div>` + series.map((s) =>
-      `<div class="trow">${series.length > 1 || kind === "line" ? `<i style="background:var(${s.color || "--c1"})"></i>` : ""}<b>${s.values[i] == null ? "–" : fmt(s.values[i])}</b>${s.name ? `<span>${esc(s.name)}</span>` : ""}</div>`).join("");
+      `<div class="trow">${series.length > 1 || kind === "line" ? `<i style="background:var(${s.color || "--c1"})"></i>` : ""}<b>${s.values[i] == null ? "–" : (s.axis === 2 && fmt2 ? fmt2 : fmt)(s.values[i])}</b>${s.name ? `<span>${esc(s.name)}</span>` : ""}</div>`).join("");
     tip.hidden = false;
     const left = x(i) / W * r.width;
     tip.style.left = Math.min(Math.max(0, left + 12), r.width - tip.offsetWidth - 4) + "px";
@@ -673,6 +694,8 @@ function fundSection(sym, f) {
       <div class="ccard"><div class="chead"><h4>Net profit (PAT) · ₹ cr</h4></div><p class="csub">Last ${f.qs.length} quarters, ${esc((f.nat || "").toLowerCase())}</p><div class="chart" id="qsPat"></div></div>
       <div class="ccard"><div class="chead"><h4>Margins · %</h4><div class="legend">${f.finco ? "" : '<span><i style="background:var(--c1)"></i>OPM</span>'}<span><i style="background:var(--c2)"></i>NPM</span></div></div>
         <p class="csub">${f.finco ? "Net profit ÷ income. Operating margin isn't meaningful for banks, NBFCs and insurers." : "OPM = operating profit ÷ sales · NPM = net profit ÷ sales"}</p><div class="chart" id="qsMargin"></div></div>
+      <div class="ccard"><div class="chead"><h4>Price &amp; P/E</h4><div class="legend"><span><i style="background:var(--c1)"></i>Price ₹ (left)</span><span><i style="background:var(--c2)"></i>P/E (right)</span></div></div>
+        <p class="csub">Closing price on each quarter's last trading day · P/E = that price ÷ EPS of the 4 quarters to then (needs 4 quarters, so the first 3 points have none)</p><div class="chart" id="qsPe"></div></div>
     </div>`;
   }
 
@@ -827,6 +850,19 @@ function drawQTrend(f) {
   const mseries = [];
   if (!f.finco) mseries.push({ name: "OPM", color: "--c1", values: f.qs.map((r) => pctOf(r.op, r.rev)) });
   mseries.push({ name: "NPM", color: "--c2", values: f.qs.map((r) => pctOf(r.pat, r.rev)) });
+  // price at each quarter end and trailing P/E (price ÷ last 4 quarters' EPS; none for a 12-month loss)
+  const qs = f.qs, peQ = qs.map((r, i) => {
+    if (i < 3 || r.px == null) return null;
+    const w = qs.slice(i - 3, i + 1).map((x) => x.eps);
+    if (w.some((v) => v == null)) return null;
+    const e4 = w.reduce((a, b) => a + b, 0);
+    return e4 > 0 ? Math.round(r.px / e4 * 10) / 10 : null;
+  });
+  const pxQ = qs.map((r) => r.px ?? null);
+  if (pxQ.some((v) => v != null)) svgChart($("#qsPe"), { dates, kind: "line", points: true, xfmt, tfmt,
+    fmt: (v) => narrow ? short(v) : inr(v, v < 100 ? 1 : 0), fmt2: (v) => inr(v, 1) + "×",
+    series: [{ name: "Price ₹", color: "--c1", values: pxQ }, { name: "P/E", color: "--c2", axis: 2, values: peQ }] });
+  else $("#qsPe").innerHTML = '<div class="empty" style="padding:40px 0">Quarter-end prices arrive with the next data refresh.</div>';
   svgChart($("#qsMargin"), { dates, kind: "line", points: true, zero: mseries.some((x) => x.values.some((v) => v < 0)),
     fmt: (v) => inr(v, 1) + "%", xfmt, tfmt, series: mseries });
 }

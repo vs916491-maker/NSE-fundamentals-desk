@@ -131,6 +131,30 @@ class Collector:
             return
         log.warning("no bhavcopy found near %s", d)
 
+    def closes_on(self, d: date):
+        """(trading date, {symbol: close}) for the last trading day on or before d, from NSE's bhavcopy.
+        Used for the quarter-end prices on the Stock Screener's Price and P/E chart."""
+        for i in range(0, 7):
+            dd = d - timedelta(days=i)
+            url = f"https://nsearchives.nseindia.com/products/content/sec_bhavdata_full_{dd.strftime('%d%m%Y')}.csv"
+            try:
+                raw = self.n.get(url, raw=True, tries=2).decode(errors="ignore")
+            except Exception:
+                continue
+            rows = csv.reader(io.StringIO(raw))
+            hdr = [h.strip() for h in next(rows)]
+            si, se, ci = hdr.index("SYMBOL"), hdr.index("SERIES"), hdr.index("CLOSE_PRICE")
+            out = {}
+            for r in rows:
+                if len(r) > ci and r[se].strip() in ("EQ", "BE", "BZ", "SM", "ST"):
+                    try:
+                        out[r[si].strip()] = float(r[ci])
+                    except ValueError:
+                        pass
+            if out:
+                return dd.isoformat(), out
+        return None, {}
+
     # ----- shareholding cache -----
     def shp_history(self, sym):
         """{qe_iso: parsed shp} for the symbol, fetching missing quarters lazily (latest 2)."""
@@ -568,6 +592,7 @@ def run_fund(c: Collector, results_rows, minutes):
         f = fundamentals.Fund(c, DATA, CACHE, jload, jsave, parse_nse_date)
         f.run([r["sym"] for r in results_rows if r.get("sym")], minutes)
         f.fill_series()
+        f.quarter_prices()
         f.save()
         try:
             finco.fill(f, FINCO_MINUTES)
@@ -698,7 +723,7 @@ def main():
     ap.add_argument("--flow-days", type=int, default=7, help="days of derivatives data to (re)check")
     ap.add_argument("--fund-minutes", type=float, default=30, help="minutes for filling stock fundamentals")
     ap.add_argument("--fund-only", action="store_true", help="only fill stock fundamentals (and prices)")
-    ap.add_argument("--series-only", action="store_true", help="only add quarter series to stored fundamentals (no downloads)")
+    ap.add_argument("--series-only", action="store_true", help="only rebuild quarter series (no filing downloads) and quarter-end prices")
     ap.add_argument("--industry-probe", help="comma-separated symbols: test where NSE publishes industry (testing)")
     ap.add_argument("--ideas-only", action="store_true", help="only rebuild the Ideas tab (and look up missing industries)")
     ap.add_argument("--industry-minutes", type=float, default=6, help="minutes for looking up stock industries")
@@ -785,6 +810,7 @@ def main():
     if a.series_only:
         f = fundamentals.Fund(c, DATA, CACHE, jload, jsave, parse_nse_date)
         f.fill_series()
+        f.quarter_prices()
         f.save()
         return
     if a.fund_only:

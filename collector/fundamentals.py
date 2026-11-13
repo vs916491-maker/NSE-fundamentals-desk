@@ -104,7 +104,7 @@ def quarter_series(cache, nature, latest, n=6):
 
     def sub(a, *bs):
         out = {}
-        for f in ("rev", "pat", "op"):
+        for f in ("rev", "pat", "op", "eps"):
             vals = [a.get(f)] + [b.get(f) for b in bs]
             out[f] = None if any(x is None for x in vals) else round(vals[0] - sum(vals[1:]), 2)
         out["derived"] = True
@@ -128,7 +128,7 @@ def quarter_series(cache, nature, latest, n=6):
         q = Q[e]
         if q.get("rev") is None or q["rev"] <= 0:  # a calculated quarter that can't be right: stop the series here
             break
-        row = {"e": e, "rev": q.get("rev"), "pat": q.get("pat")}
+        row = {"e": e, "rev": q.get("rev"), "pat": q.get("pat"), "eps": q.get("eps")}
         if q.get("op") is not None:
             row["op"] = q["op"]
         if q.get("derived"):
@@ -301,7 +301,7 @@ class Fund:
         """Add the quarter series to records that don't have it yet, from the local cache (no downloads)."""
         added = 0
         for sym, r in self.rows.items():
-            if r.get("qs") and r["qs"][-1]["e"] == r.get("qe"):
+            if r.get("qs") and r["qs"][-1]["e"] == r.get("qe") and "eps" in r["qs"][-1]:
                 continue
             cache = self.jload(os.path.join(self.c.cache_dir, "fin", f"{sym}.json"), {})
             qs = quarter_series(cache, r.get("nat") or "Standalone", r.get("qe") or "")
@@ -309,6 +309,39 @@ class Fund:
                 r["qs"] = qs
                 added += 1
         log.info("quarter series added for %d stocks", added)
+
+    def quarter_prices(self, keep=10):
+        """Closing price at each quarter end in the quarter series (qs[i]["px"]), for the Price and P/E chart.
+        One bhavcopy per quarter end, downloaded once and kept in cache/qclose.json."""
+        path = os.path.join(self.c.cache_dir, "qclose.json")
+        qc = self.jload(path, {})
+        today = date.today().isoformat()
+        ends = sorted({q["e"] for r in self.rows.values() for q in r.get("qs") or []}, reverse=True)
+        ends = [e for e in ends if e < today][:keep]
+        got = 0
+        for e in ends:
+            if e in qc:
+                continue
+            try:
+                d, p = self.c.closes_on(date.fromisoformat(e))
+            except Exception as ex:  # noqa: BLE001
+                log.warning("quarter-end prices %s: %s", e, ex)
+                continue
+            if p:
+                qc[e] = {"d": d, "p": p}
+                got += 1
+        qc = {e: qc[e] for e in ends if e in qc}
+        self.jsave(path, qc)
+        n = 0
+        for sym, r in self.rows.items():
+            for q in r.get("qs") or []:
+                v = ((qc.get(q["e"]) or {}).get("p") or {}).get(sym)
+                if v:
+                    q["px"] = v
+                    n += 1
+                else:
+                    q.pop("px", None)
+        log.info("quarter-end prices: %d quarter ends (%d downloaded now), %d stock-quarters priced", len(qc), got, n)
 
     def save(self):
         os.makedirs(self.dir, exist_ok=True)
